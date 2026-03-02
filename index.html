@@ -597,7 +597,7 @@
       </div>
       <div style="margin-bottom: 24px;">
         <h3 id="staff-modal-name" style="font-weight: 800; font-size: 20px;"></h3>
-        <p style="color: var(--text-muted); font-size: 14px; font-weight: 600;">Tim Operasional RePack</p>
+        <p style="color: var(--text-muted); font-size: 14px; font-weight: 600;">Tim Operasional SIRIUS</p>
       </div>
       <button class="btn-primary" onclick="document.getElementById('staff-profile-modal').classList.remove('active')" type="button">Tutup Profil</button>
     </div>
@@ -643,7 +643,7 @@
     </div>
 
     <button id="btn-install" class="btn-secondary" style="display: none; width: 100%; max-width: 300px; margin: 24px auto 0; background: rgba(52, 199, 89, 0.1); color: var(--success); border: 1px solid rgba(52, 199, 89, 0.3); position: relative; z-index: 1000;">
-    📲 Install Aplikasi RePack
+    📲 Install Aplikasi SIRIUS
 </button>
     <div style="text-align:center; margin-top: 32px; font-size: 13px; color: var(--text-muted); font-weight: 600;">
   Creator & Development<br><b style="color:var(--primary); cursor:pointer;" onclick="window.open('https://www.instagram.com/mynameaa_', '_blank')">Alfian Ananda (162331)</b><br>© 2026 
@@ -801,7 +801,7 @@
         <button class="btn-secondary" style="margin-top: 16px;" onclick="document.getElementById('help-modal').classList.remove('active')">Tutup Bantuan</button>
         
         <div style="margin-top:24px; font-size:12px; color:var(--text-muted); font-weight:600;">
-  RePack App v3.1<br>Creator & Development <span style="color:var(--primary); font-weight:800; cursor:pointer;" onclick="window.open('https://www.instagram.com/mynameaa_', '_blank')">Alfian Ananda (162331)</span><br>© 2026 
+  SIRIUS App v3.1<br>Creator & Development <span style="color:var(--primary); font-weight:800; cursor:pointer;" onclick="window.open('https://www.instagram.com/mynameaa_', '_blank')">Alfian Ananda (162331)</span><br>© 2026 
 </div>
      </div>
   </div>
@@ -1211,7 +1211,7 @@
   
   let pendingDuplicateDoc = "";
   
-  let draftQueue = JSON.parse(localStorage.getItem('repack_drafts') || '[]');
+  let draftQueue = JSON.parse(localStorage.getItem('SIRIUS_drafts') || '[]');
   let isProcessingDrafts = false; 
 
   function generateTxId() {
@@ -1232,7 +1232,7 @@
 
   function saveToDraft(action, payload, docName) {
       draftQueue.push({ action: action, payload: payload, docName: docName, time: new Date().getTime() });
-      localStorage.setItem('repack_drafts', JSON.stringify(draftQueue));
+      localStorage.setItem('SIRIUS_drafts', JSON.stringify(draftQueue));
       updateDraftBadge();
       showToast('Sinyal lemah! Tersimpan di Draft.', 'warning');
   }
@@ -1254,7 +1254,7 @@
           }
       }
       draftQueue = remainingDrafts;
-      localStorage.setItem('repack_drafts', JSON.stringify(draftQueue));
+      localStorage.setItem('SIRIUS_drafts', JSON.stringify(draftQueue));
       updateDraftBadge();
       isProcessingDrafts = false; 
   }
@@ -1290,7 +1290,7 @@ function setDefaultDates() {
   }
 
   async function callAPI(action, payload = {}, quiet = false) {
-    let session = JSON.parse(localStorage.getItem('repack_session_v3') || '{}');
+    let session = JSON.parse(localStorage.getItem('SIRIUS_session_v3') || '{}');
     let requestBody = { action: action, username: session.user ? session.user.username : "", token: session.token || "", payload: payload };
     try {
       let res = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(requestBody) });
@@ -1406,7 +1406,7 @@ function playScanBeep() {
     } catch(e) { console.log("Audio beep tidak didukung"); }
 }
 
-// ===== SUCCESS HANDLER (GABUNGAN RePack) =====
+// ===== SUCCESS HANDLER (GABUNGAN SIRIUS) =====
 function onScanSuccess(decodedText) {
     let decodedClean = decodedText.trim().toUpperCase();
     
@@ -2168,7 +2168,7 @@ async function openHelpMenu() {
     contentArea.innerHTML = '<div class="loader dark" style="display:block; margin: 40px auto;"></div>';
 
     // 1. Coba ambil dari Cache (Offline Data) terlebih dahulu
-    let cachedHelp = JSON.parse(localStorage.getItem('repack_help_info') || 'null');
+    let cachedHelp = JSON.parse(localStorage.getItem('SIRIUS_help_info') || 'null');
     
     // 2. Tarik data terbaru dari server (dengan quiet=true agar tidak muncul toast error kalau offline)
     let res = await callAPI("getHelpInfo", {}, true); 
@@ -2178,7 +2178,7 @@ async function openHelpMenu() {
 
     if (res && res.success && res.data) {
         // Jika online, simpan data terbaru ke HP
-        localStorage.setItem('repack_help_info', JSON.stringify(res.data));
+        localStorage.setItem('SIRIUS_help_info', JSON.stringify(res.data));
         guideUrl = res.data.guideUrl || guideUrl;
         waUrl = res.data.waUrl || waUrl;
     } else if (cachedHelp) {
@@ -2197,7 +2197,7 @@ async function openHelpMenu() {
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                     </div>
                     <div>
-                        <div style="font-weight: 800; font-size: 16px; margin-bottom: 2px;">Install RePack</div>
+                        <div style="font-weight: 800; font-size: 16px; margin-bottom: 2px;">Install SIRIUS</div>
                         <div style="font-size: 12px; font-weight: 600; opacity: 0.9; line-height: 1.3;">Akses lebih cepat & lancar dari Layar Utama</div>
                     </div>
                 </div>
@@ -2211,7 +2211,7 @@ async function openHelpMenu() {
         <div class="help-section-card" style="margin-bottom: 16px;">
             <div class="help-section-header">
                 <div class="help-icon-box" style="background: rgba(0, 122, 255, 0.1); color: var(--primary);">🚀</div>
-                <div class="help-section-title">Keunggulan RePack</div>
+                <div class="help-section-title">Keunggulan SIRIUS</div>
             </div>
             <div style="display:flex; flex-direction:column; gap:16px;">
                 <div style="display:flex; gap:12px; align-items:flex-start;">
@@ -2803,7 +2803,7 @@ function showHistoryDetail(id) {
   } 
   
 function checkLocalSession() {
-    const stored = localStorage.getItem('repack_session_v3');
+    const stored = localStorage.getItem('SIRIUS_session_v3');
     if (stored) {
       try {
         const session = JSON.parse(stored);
@@ -2813,7 +2813,7 @@ function checkLocalSession() {
            setupProfile(); 
            
            // 🌟 FITUR BARU: Cek staf terakhir buka menu apa sebelum aplikasi ditutup
-           let lastView = localStorage.getItem('repack_last_view');
+           let lastView = localStorage.getItem('SIRIUS_last_view');
            if (lastView && lastView !== 'dashboard-view' && lastView !== 'login-view' && document.getElementById(lastView)) {
                // Jika dia sedang buka form/menu, kembalikan langsung ke sana!
                switchView(lastView);
@@ -2831,8 +2831,8 @@ function checkLocalSession() {
            
            setTimeout(() => { document.getElementById('splash-screen').classList.add('hidden'); }, 1000);
            return; 
-        } else { localStorage.removeItem('repack_session_v3'); }
-      } catch(e) { localStorage.removeItem('repack_session_v3'); }
+        } else { localStorage.removeItem('SIRIUS_session_v3'); }
+      } catch(e) { localStorage.removeItem('SIRIUS_session_v3'); }
     }
     
     document.getElementById('session-loader').style.display = 'none'; 
@@ -2853,7 +2853,7 @@ function switchView(viewId) {
 
       // 💾 SIMPAN POSISI TERAKHIR (Fitur ingat menu saat HP ditutup paksa)
       if (viewId !== 'login-view') {
-          localStorage.setItem('repack_last_view', viewId);
+          localStorage.setItem('SIRIUS_last_view', viewId);
       }
 
       if(viewId === 'receipt-view') setTimeout(initCanvas, 300); 
@@ -2902,7 +2902,7 @@ function switchView(viewId) {
       currentUser = res.data;
       sessionToken = res.token;
       setupProfile();
-      localStorage.setItem('repack_session_v3', JSON.stringify({ user: currentUser, token: sessionToken }));
+      localStorage.setItem('SIRIUS_session_v3', JSON.stringify({ user: currentUser, token: sessionToken }));
       loadDashboard(); syncData();
       showToast('Login Berhasil!', 'success');
     } else { 
@@ -2930,8 +2930,8 @@ function switchView(viewId) {
 
  function forceLogoutLocal() {
     currentUser = {}; sessionToken = ""; 
-    localStorage.removeItem('repack_session_v3'); 
-    localStorage.removeItem('repack_last_view'); // 🗑️ Bersihkan ingatan saat Logout
+    localStorage.removeItem('SIRIUS_session_v3'); 
+    localStorage.removeItem('SIRIUS_last_view'); // 🗑️ Bersihkan ingatan saat Logout
     document.getElementById('username').value = ''; document.getElementById('password').value = ''; 
     switchView('login-view'); 
     document.getElementById('session-loader').style.display = 'none'; document.getElementById('login-form').style.display = 'block';
@@ -2942,7 +2942,7 @@ async function loadDashboard() {
   document.getElementById('dashboard-view').classList.add('active');
   
   // 💾 Reset ingatan posisi terakhir ke Dashboard
-  localStorage.setItem('repack_last_view', 'dashboard-view');
+  localStorage.setItem('SIRIUS_last_view', 'dashboard-view');
 
   // 🌟 FIX: Buat Buffer History ("Nyawa Cadangan") 
   history.replaceState({ view: 'base' }, "");
@@ -3931,7 +3931,7 @@ function saveFormDraft(type) {
         draft.img1 = getBase64FromImg('prev-pck1');
         draft.img2 = getBase64FromImg('prev-pck2');
         draft.img3 = getBase64FromImg('prev-pck3');
-        localStorage.setItem('repack_draft_packing', JSON.stringify(draft));
+        localStorage.setItem('SIRIUS_draft_packing', JSON.stringify(draft));
     } else if (type === 'receipt') {
         draft.doc = document.getElementById('rec-doc').value || '';
         draft.exp = document.getElementById('rec-exp').value || '';
@@ -3946,14 +3946,14 @@ function saveFormDraft(type) {
         if(cvs && cvs.width > 0) {
            draft.ttd = cvs.toDataURL();
         }
-        localStorage.setItem('repack_draft_receipt', JSON.stringify(draft));
+        localStorage.setItem('SIRIUS_draft_receipt', JSON.stringify(draft));
     }
 }
   
 function restoreFormDraft(type) {
     try {
         if (type === 'packing') {
-            let draftStr = localStorage.getItem('repack_draft_packing');
+            let draftStr = localStorage.getItem('SIRIUS_draft_packing');
             if (draftStr) {
                 let draft = JSON.parse(draftStr);
                 if (draft.doc) document.getElementById('pck-doc').value = draft.doc;
@@ -3963,7 +3963,7 @@ function restoreFormDraft(type) {
                 if (draft.img3) { document.getElementById('prev-pck3').src = 'data:image/jpeg;base64,' + draft.img3; document.getElementById('prev-pck3').style.display = 'block'; }
             }
         } else if (type === 'receipt') {
-            let draftStr = localStorage.getItem('repack_draft_receipt');
+            let draftStr = localStorage.getItem('SIRIUS_draft_receipt');
             if (draftStr) {
                 let draft = JSON.parse(draftStr);
                 if (draft.doc) document.getElementById('rec-doc').value = draft.doc;
@@ -3991,8 +3991,8 @@ function restoreFormDraft(type) {
     } catch (e) { console.error("Gagal load draft:", e); }
 }
 function clearFormDraft(type) {
-    if (type === 'packing') localStorage.removeItem('repack_draft_packing');
-    if (type === 'receipt') localStorage.removeItem('repack_draft_receipt');
+    if (type === 'packing') localStorage.removeItem('SIRIUS_draft_packing');
+    if (type === 'receipt') localStorage.removeItem('SIRIUS_draft_receipt');
 }
 
 setInterval(() => {
