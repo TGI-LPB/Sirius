@@ -887,7 +887,7 @@
       <div class="glass menu-card" onclick="showToast('Menu ADF sedang dalam pengembangan', 'warning')"><div style="font-size:36px; margin-bottom:12px;">📄</div><div style="font-weight:800; font-size:16px;">ADF</div></div>
       <div class="glass menu-card" onclick="showToast('Menu Transfer Barang sedang dalam pengembangan', 'warning')"><div style="font-size:36px; margin-bottom:12px;">🚛</div><div style="font-weight:800; font-size:16px;">Transfer Barang</div></div>
 
-      <div class="glass menu-card" onclick="showToast('Menu Purchase Order sedang dalam pengembangan', 'warning')"><div style="font-size:36px; margin-bottom:12px;">🛒</div><div style="font-weight:800; font-size:16px;">Purchase Order</div></div>
+      <div class="glass menu-card" onclick="openPurchaseOrderMenu()"><div style="font-size:36px; margin-bottom:12px;">🛒</div><div style="font-weight:800; font-size:16px;">Purchase Order</div></div>
       <div class="glass menu-card" onclick="showToast('Menu Retur Barang sedang dalam pengembangan', 'warning')"><div style="font-size:36px; margin-bottom:12px;">↩️</div><div style="font-weight:800; font-size:16px;">Retur Barang</div></div>
 
       <div class="glass menu-card" onclick="openHistoryMenu()" id="hist-menu-card" style="grid-column: span 1; padding: 20px 16px;"><div style="font-size:32px; margin-bottom:12px;">🕒</div><div style="font-weight:800; font-size:15px;">History</div></div>
@@ -1056,6 +1056,66 @@
     </div>
   </div>
 
+<div id="po-view" class="view">
+    <div class="dash-header">
+      <button onclick="showUnivModal('cancel-form', 'po')" class="btn-ios-nav" type="button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      </button>
+      <h2 style="margin:0; font-size: 22px; font-weight:800;">Purchase Order</h2>
+      <div style="width:48px;"></div>
+    </div>
+    
+    <div class="glass" style="padding:24px;">
+      <div class="input-group">
+        <label class="input-label">Kode UPC / Artikel Number (Wajib)</label>
+        <div class="scan-wrapper">
+          <input type="text" id="po-upc" class="custom-input" placeholder="Ketik atau Scan Barcode" oninput="this.value = this.value.toUpperCase()" onchange="fetchMasterDataPO()">
+          <button class="scan-btn" onclick="startScanner('po-upc')" type="button" style="background: #1C1C1E; color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+               <path d="M3 7V5a2 2 0 0 1 2-2h2"></path><path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
+               <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path><path d="M7 21H5a2 2 0 0 1-2-2v-2"></path>
+               <path d="M8 8v8"></path><path d="M12 8v8"></path><path d="M16 8v8"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div id="po-master-info" style="display: none; background: rgba(0,122,255,0.05); border: 1px solid rgba(0,122,255,0.15); border-radius: 16px; padding: 16px; margin-bottom: 20px;">
+          <div style="font-size: 11px; font-weight: 800; color: var(--primary); text-transform: uppercase; margin-bottom: 8px;">Detail Produk (Auto-Fill)</div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+              <div style="display: flex; justify-content: space-between; font-size: 13px;">
+                  <span style="color: var(--text-muted); font-weight: 600;">SKU</span>
+                  <span id="po-info-sku" style="font-weight: 800; color: var(--text-main);">-</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 13px;">
+                  <span style="color: var(--text-muted); font-weight: 600;">Deskripsi</span>
+                  <span id="po-info-desc" style="font-weight: 800; color: var(--text-main); text-align: right; max-width: 70%;">-</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 13px;">
+                  <span style="color: var(--text-muted); font-weight: 600;">DEPT</span>
+                  <span id="po-info-dept" style="font-weight: 800; color: var(--text-main);">-</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 13px;">
+                  <span style="color: var(--text-muted); font-weight: 600;">Vendor</span>
+                  <span id="po-info-vendor" style="font-weight: 800; color: var(--text-main); text-align: right; max-width: 70%;">-</span>
+              </div>
+          </div>
+      </div>
+      
+      <div class="input-group">
+        <label class="input-label">Jumlah / QTY (Wajib)</label>
+        <input type="number" id="po-qty" class="custom-input" placeholder="Masukkan jumlah barang..." min="1">
+      </div>
+
+      <div class="input-group">
+        <label class="input-label">Catatan / Note (Opsional)</label>
+        <textarea id="po-note" class="custom-input" rows="2" placeholder="Tambahkan keterangan jika ada..." oninput="this.value = this.value.toUpperCase()"></textarea>
+      </div>
+
+      <button class="btn-primary" id="btn-save-po" style="margin-top: 16px;" onclick="savePurchaseOrder()" type="button">Kirim Pengajuan PO</button>
+    </div>
+  </div>
+  
   <div id="history-view" class="view">
     <div class="dash-header">
       <button onclick="loadDashboard()" class="btn-ios-nav" type="button">
@@ -3184,6 +3244,7 @@ function checkIndividualAppr() {
     document.querySelectorAll('input:not([type="hidden"]), textarea').forEach(function(i) {if(i.type !== 'date') i.value=''});
     document.querySelectorAll('.img-preview').forEach(function(i) {i.src=''; i.style.display='none'});
     if(type==='receipt') clearCanvas();
+    if(type==='po') resetFormPO();
     document.getElementById('univ-input-box').innerHTML = ''; 
     document.getElementById('btn-proceed-action').parentElement.style.display = 'flex';
     
@@ -4243,6 +4304,99 @@ function showStaffDetailModal(username) {
     document.getElementById('staff-detail-modal').classList.add('active');
 }
 
+
+// ==========================================
+// LOGIKA PURCHASE ORDER (PO)
+// ==========================================
+function openPurchaseOrderMenu() {
+    switchView('po-view');
+    resetFormPO();
+}
+
+function resetFormPO() {
+    let upcEl = document.getElementById('po-upc');
+    let qtyEl = document.getElementById('po-qty');
+    let noteEl = document.getElementById('po-note');
+    let infoEl = document.getElementById('po-master-info');
+
+    if (upcEl) upcEl.value = '';
+    if (qtyEl) qtyEl.value = '';
+    if (noteEl) noteEl.value = '';
+    if (infoEl) infoEl.style.display = 'none';
+}
+
+async function fetchMasterDataPO() {
+    let upc = document.getElementById('po-upc').value.trim();
+    if (!upc) {
+        document.getElementById('po-master-info').style.display = 'none';
+        return;
+    }
+
+    showToast('Mencari data produk...', 'success');
+    
+    // --- SIMULASI SEMENTARA UNTUK UI (Nanti diganti pemanggilan Apps Script) ---
+    setTimeout(() => {
+        if (upc.length >= 5) {
+            document.getElementById('po-info-sku').innerText = "SKU-998877";
+            document.getElementById('po-info-desc').innerText = "Kemeja Kerja Merah Kerah Abu (Simulasi)";
+            document.getElementById('po-info-dept').innerText = "APPAREL";
+            document.getElementById('po-info-vendor').innerText = "PT. Baju Nusantara";
+            
+            document.getElementById('po-master-info').style.display = 'block';
+            showToast('Produk ditemukan!', 'success');
+        } else {
+            document.getElementById('po-master-info').style.display = 'none';
+            showToast('UPC tidak ditemukan di Data Master!', 'error');
+            if("vibrate" in navigator) navigator.vibrate([200]);
+        }
+    }, 800);
+}
+
+async function savePurchaseOrder() {
+    let upc = document.getElementById('po-upc').value.trim();
+    let qty = document.getElementById('po-qty').value.trim();
+    let note = document.getElementById('po-note').value.trim();
+
+    if (!upc) return showToast('Kode UPC wajib diisi!', 'error');
+    if (!qty || qty <= 0) return showToast('QTY harus lebih dari 0!', 'error');
+    if (document.getElementById('po-master-info').style.display === 'none') {
+        return showToast('Pastikan UPC valid & ditemukan di data master!', 'warning');
+    }
+
+    let sku = document.getElementById('po-info-sku').innerText;
+    let desc = document.getElementById('po-info-desc').innerText;
+    let dept = document.getElementById('po-info-dept').innerText;
+    let vendor = document.getElementById('po-info-vendor').innerText;
+
+    let btn = document.getElementById('btn-save-po');
+    let oldText = btn.innerText;
+    btn.innerText = 'Mengirim...';
+    btn.disabled = true;
+
+    let payload = {
+        txId: generateTxId(),
+        staff: currentUser.name || currentUser.username, 
+        upc: upc,
+        sku: sku,
+        deskripsi: desc,
+        dept: dept,
+        vendor: vendor,
+        qty: qty,
+        note: note,
+        status: "Pengajuan",
+        ip: clientIP
+    };
+
+    // --- SIMULASI SEMENTARA PENYIMPANAN DATA ---
+    setTimeout(() => {
+        showToast('Pengajuan PO Berhasil Disimpan!', 'success');
+        btn.innerText = oldText;
+        btn.disabled = false;
+        
+        resetFormPO();
+        loadDashboard();
+    }, 1500);
+}
   
 </script>
 </body>
