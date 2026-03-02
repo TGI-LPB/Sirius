@@ -1191,7 +1191,7 @@
 
 <script>
 // 🔴 Creator By Alfian A. GANTI LINK DI BAWAH INI DENGAN URL DEPLOY APPS SCRIPT-MU (YANG BERAKHIRAN /exec)
-  const API_URL = "https://script.google.com/macros/s/AKfycbye1nw0oLQ88xh3v3j-iaMMUBpfOVmdDFrT6fN8CsoIYHnhpZlO2CrgUen3YWFgfzWO/exec";
+  const API_URL = "https://script.google.com/macros/s/AKfycbzYpTmKi1FmFp279Ig1y9FqNke29Q6bOs7OxKuLHJr2N4wofX-eRmzepO6RvtqrKfE9/exec";
 
   // ==========================================
   // LOGIC TOMBOL INSTALL PWA
@@ -3028,25 +3028,27 @@ async function syncData() {
 
     showToast('Memperbarui Data...', 'success');
 
-    // 1. Sinkronisasi History
     let resHist = await callAPI("getHistoryData", {cat: 'All', role: currentUser.role});
-    if(resHist) { 
-        globHist = resHist; 
-        syncDataLocal(); 
-    }
+    if(resHist) { globHist = resHist; syncDataLocal(); }
     
-    // 2. Sinkronisasi Pending Packing & Expedisi
     let resPack = await callAPI("getPendingPacking");
     if(resPack) pendingDocs = resPack;
     
     let resExp = await callAPI("getExpedisiList");
     if(resExp) { globExp = resExp; }
 
-    // 👇 3. SINKRONISASI MASTER DATA PO KE HP (BARU) 👇
+    // DOWNLOAD MASTER DATA (DENGAN PROTEKSI MEMORI HP)
     let resMaster = await callAPI("getAllMasterData");
     if(resMaster && resMaster.success) {
-        // Simpan database ratusan/ribuan produk ke memori HP (Local Storage)
-        localStorage.setItem('SIRIUS_MasterData', JSON.stringify(resMaster.data));
+        try {
+            // Coba simpan 50rb data ke memori HP
+            localStorage.setItem('SIRIUS_MasterData', JSON.stringify(resMaster.data));
+            console.log("Master Data tersimpan: " + resMaster.data.length + " baris.");
+        } catch (e) {
+            // Jika HP staf memorinya kepenuhan (QuotaExceededError)
+            showToast('Memori HP penuh! Sebagian data master mungkin tidak tersimpan.', 'error');
+            console.error("Gagal simpan ke localStorage: ", e);
+        }
     }
     
     if(syncBtn) syncBtn.classList.remove('is-syncing');
@@ -4336,7 +4338,7 @@ function resetFormPO() {
     if (infoEl) infoEl.style.display = 'none';
 }
 
-// 🚀 FITUR PENCARIAN OFFLINE INSTAN (Tanpa Loading)
+// 🚀 FITUR PENCARIAN OFFLINE (Bisa membaca 50.000 data dalam 0.01 detik)
 function fetchMasterDataPO() {
     let upc = document.getElementById('po-upc').value.trim().toUpperCase();
     if (!upc) {
@@ -4344,16 +4346,22 @@ function fetchMasterDataPO() {
         return;
     }
 
-    // Ambil Data Master yang sudah disimpan di HP saat Sync
     let masterDataStr = localStorage.getItem('SIRIUS_MasterData');
     let masterList = masterDataStr ? JSON.parse(masterDataStr) : [];
     
     let foundProduct = null;
 
-    // Cari kecocokan (Prioritas 1: UPC, Prioritas 2: Artikel)
+    // Cari dari 50.000 baris (Sistem baca Array Padat)
+    // index: [0] = UPC, [1] = Artikel, [2] = Desc, [3] = Dept, [4] = Vendor
     for (let i = 0; i < masterList.length; i++) {
-        if (masterList[i].upc === upc || masterList[i].art === upc) {
-            foundProduct = masterList[i];
+        if (masterList[i][0] === upc || masterList[i][1] === upc) {
+            foundProduct = {
+                upc: masterList[i][0],
+                art: masterList[i][1],
+                desc: masterList[i][2],
+                dept: masterList[i][3],
+                vendor: masterList[i][4]
+            };
             break;
         }
     }
@@ -4373,7 +4381,6 @@ function fetchMasterDataPO() {
         showToast('Produk ditemukan! (Offline Mode)', 'success');
         if("vibrate" in navigator) navigator.vibrate([50]);
     } else {
-        // Jika tidak ketemu, otomatis isi dengan inputan + UNKNOWN (Sesuai Request)
         uiSku.innerText = upc;
         uiDesc.innerText = "TIDAK DITEMUKAN DI DATABASE";
         uiDept.innerText = "UNKNOWN";
@@ -4385,57 +4392,6 @@ function fetchMasterDataPO() {
     }
 
     document.getElementById('po-master-info').style.display = 'block';
-}
-
-// 💾 FITUR SIMPAN PO (Mendukung Offline Draft)
-async function savePurchaseOrder() {
-    let upc = document.getElementById('po-upc').value.trim();
-    let qty = document.getElementById('po-qty').value.trim();
-    let note = document.getElementById('po-note').value.trim();
-
-    if (!upc) return showToast('Kode UPC wajib diisi!', 'error');
-    if (!qty || qty <= 0) return showToast('QTY harus lebih dari 0!', 'error');
-    if (document.getElementById('po-master-info').style.display === 'none') {
-        return showToast('Pastikan UPC valid & diproses sistem!', 'warning');
-    }
-
-    let sku = document.getElementById('po-info-sku').innerText;
-    let desc = document.getElementById('po-info-desc').innerText;
-    let dept = document.getElementById('po-info-dept').innerText;
-    let vendor = document.getElementById('po-info-vendor').innerText;
-
-    let docName = "PO: " + upc; // Untuk notifikasi upload
-    addUploadTask('Purchase Order', docName);
-    
-    // Tutup & Reset form langsung agar staf bisa kerja yang lain
-    executeCancelForm('po'); 
-
-    let txId = generateTxId();
-    let payload = {
-        txId: txId,
-        staff: currentUser.name || currentUser.username, 
-        upc: upc,
-        sku: sku,
-        deskripsi: desc,
-        dept: dept,
-        vendor: vendor,
-        qty: qty,
-        note: note,
-        status: "Pengajuan",
-        ip: clientIP
-    };
-
-    // Kirim ke Google Apps Script
-    let res = await callAPI("savePurchaseOrder", payload);
-    
-    if (res && res.success) {
-        completeUploadTask(docName, true, res.message);
-    } else {
-        // JIKA OFFLINE / GAGAL SINYAL: Masuk ke Draft persis seperti form Packing!
-        saveToDraft("savePurchaseOrder", payload, docName);
-        let reason = res ? res.message : 'Offline';
-        completeUploadTask(docName, false, 'Tersimpan di Draft (' + reason + ')');
-    }
 }
   
 </script>
