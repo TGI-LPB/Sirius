@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>RePack (Receipt & Packing)</title>
+  <title>SIRIUS Application</title>
   
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
@@ -15,7 +15,7 @@
   <link rel="manifest" href="./manifest.json">
   
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="RePack">
+  <meta name="apple-mobile-web-app-title" content="SIRIUS">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <script>
     if ('serviceWorker' in navigator) {
@@ -575,15 +575,11 @@
 <body>
   <div id="splash-screen">
   <div class="splash-content">
-    <div class="splash-logo-box">
-      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-        <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-        <line x1="12" y1="22.08" x2="12" y2="12"></line>
-      </svg>
+<div class="splash-logo-box">
+      <img src="apple-touch-icon.png" alt="SIRIUS Logo" style="width: 60px; height: 60px; border-radius: 12px; object-fit: contain;">
     </div>
-    <div class="splash-title">RePack</div>
-    <div class="splash-subtitle">Receipt & Packing</div>
+    <div class="splash-title">SIRIUS</div>
+    <div class="splash-subtitle">Application</div>
   </div>
   <div class="splash-loader-bar"></div>
   
@@ -622,12 +618,12 @@
     </div>
   </div>
   <div id="login-view" class="view active">
-    <div class="brand-logo">
-      <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" style="margin-bottom:6px;" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
-      <div>RePack</div>
+    <div class="brand-logo" style="background: transparent; box-shadow: none;">
+      <img src="apple-touch-icon.png" alt="SIRIUS Logo" style="width: 72px; height: 72px; margin-bottom: 6px; border-radius: 16px; box-shadow: 0 10px 20px rgba(0,0,0,0.1);">
+      <div style="color: var(--primary); margin-top: 8px;">SIRIUS</div>
     </div>
     
-    <p class="subtitle" style="margin-top:-10px;">Receipt & Packing</p>
+    <p class="subtitle" style="margin-top:-10px;">Application</p>
 
     <div id="session-loader" style="display:none; text-align:center; padding: 20px;">
        <div class="loader dark" style="display:block; margin: 0 auto 16px;"></div>
@@ -1766,7 +1762,7 @@ async function compressImg(file, skipWatermark = false) {
             let staffName = (typeof currentUser !== "undefined" && currentUser && currentUser.name) ? currentUser.name : "Unknown Staff";
 
             let lines = [
-              "RePack (Receipt & Packing)",
+  "SIRIUS Application",
               `📍 ${addressStr}`,
               latLonStr ? `${latLonStr} ${accuracyStr}` : latLonStr,
               `📅 ${datePart}  🕒 ${timePart} WIB`,
