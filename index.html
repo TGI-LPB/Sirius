@@ -3018,7 +3018,7 @@ async function loadDashboard() {
   window.scrollTo(0,0);
 }
 
-  async function syncData() {
+async function syncData() {
     let syncBtn = document.getElementById('btn-sync');
     if(syncBtn) syncBtn.classList.add('is-syncing');
     
@@ -3028,18 +3028,25 @@ async function loadDashboard() {
 
     showToast('Memperbarui Data...', 'success');
 
+    // 1. Sinkronisasi History
     let resHist = await callAPI("getHistoryData", {cat: 'All', role: currentUser.role});
     if(resHist) { 
         globHist = resHist; 
         syncDataLocal(); 
     }
     
+    // 2. Sinkronisasi Pending Packing & Expedisi
     let resPack = await callAPI("getPendingPacking");
     if(resPack) pendingDocs = resPack;
     
     let resExp = await callAPI("getExpedisiList");
-    if(resExp) {
-        globExp = resExp; 
+    if(resExp) { globExp = resExp; }
+
+    // 👇 3. SINKRONISASI MASTER DATA PO KE HP (BARU) 👇
+    let resMaster = await callAPI("getAllMasterData");
+    if(resMaster && resMaster.success) {
+        // Simpan database ratusan/ribuan produk ke memori HP (Local Storage)
+        localStorage.setItem('SIRIUS_MasterData', JSON.stringify(resMaster.data));
     }
     
     if(syncBtn) syncBtn.classList.remove('is-syncing');
@@ -4308,6 +4315,10 @@ function showStaffDetailModal(username) {
 // ==========================================
 // LOGIKA PURCHASE ORDER (PO)
 // ==========================================
+// ==========================================
+// LOGIKA PURCHASE ORDER (PO) & MASTER DATA OFFLINE
+// ==========================================
+
 function openPurchaseOrderMenu() {
     switchView('po-view');
     resetFormPO();
@@ -4325,33 +4336,58 @@ function resetFormPO() {
     if (infoEl) infoEl.style.display = 'none';
 }
 
-async function fetchMasterDataPO() {
-    let upc = document.getElementById('po-upc').value.trim();
+// 🚀 FITUR PENCARIAN OFFLINE INSTAN (Tanpa Loading)
+function fetchMasterDataPO() {
+    let upc = document.getElementById('po-upc').value.trim().toUpperCase();
     if (!upc) {
         document.getElementById('po-master-info').style.display = 'none';
         return;
     }
 
-    showToast('Mencari data produk...', 'success');
+    // Ambil Data Master yang sudah disimpan di HP saat Sync
+    let masterDataStr = localStorage.getItem('SIRIUS_MasterData');
+    let masterList = masterDataStr ? JSON.parse(masterDataStr) : [];
     
-    // --- SIMULASI SEMENTARA UNTUK UI (Nanti diganti pemanggilan Apps Script) ---
-    setTimeout(() => {
-        if (upc.length >= 5) {
-            document.getElementById('po-info-sku').innerText = "SKU-998877";
-            document.getElementById('po-info-desc').innerText = "Kemeja Kerja Merah Kerah Abu (Simulasi)";
-            document.getElementById('po-info-dept').innerText = "APPAREL";
-            document.getElementById('po-info-vendor').innerText = "PT. Baju Nusantara";
-            
-            document.getElementById('po-master-info').style.display = 'block';
-            showToast('Produk ditemukan!', 'success');
-        } else {
-            document.getElementById('po-master-info').style.display = 'none';
-            showToast('UPC tidak ditemukan di Data Master!', 'error');
-            if("vibrate" in navigator) navigator.vibrate([200]);
+    let foundProduct = null;
+
+    // Cari kecocokan (Prioritas 1: UPC, Prioritas 2: Artikel)
+    for (let i = 0; i < masterList.length; i++) {
+        if (masterList[i].upc === upc || masterList[i].art === upc) {
+            foundProduct = masterList[i];
+            break;
         }
-    }, 800);
+    }
+
+    let uiSku = document.getElementById('po-info-sku');
+    let uiDesc = document.getElementById('po-info-desc');
+    let uiDept = document.getElementById('po-info-dept');
+    let uiVendor = document.getElementById('po-info-vendor');
+
+    if (foundProduct) {
+        uiSku.innerText = foundProduct.upc || foundProduct.art || upc;
+        uiDesc.innerText = foundProduct.desc;
+        uiDept.innerText = foundProduct.dept;
+        uiVendor.innerText = foundProduct.vendor;
+        
+        uiDesc.style.color = "var(--success)";
+        showToast('Produk ditemukan! (Offline Mode)', 'success');
+        if("vibrate" in navigator) navigator.vibrate([50]);
+    } else {
+        // Jika tidak ketemu, otomatis isi dengan inputan + UNKNOWN (Sesuai Request)
+        uiSku.innerText = upc;
+        uiDesc.innerText = "TIDAK DITEMUKAN DI DATABASE";
+        uiDept.innerText = "UNKNOWN";
+        uiVendor.innerText = "UNKNOWN";
+
+        uiDesc.style.color = "var(--danger)";
+        showToast('Produk tidak terdaftar! Mode Input Manual.', 'warning');
+        if("vibrate" in navigator) navigator.vibrate([200]);
+    }
+
+    document.getElementById('po-master-info').style.display = 'block';
 }
 
+// 💾 FITUR SIMPAN PO (Mendukung Offline Draft)
 async function savePurchaseOrder() {
     let upc = document.getElementById('po-upc').value.trim();
     let qty = document.getElementById('po-qty').value.trim();
@@ -4360,7 +4396,7 @@ async function savePurchaseOrder() {
     if (!upc) return showToast('Kode UPC wajib diisi!', 'error');
     if (!qty || qty <= 0) return showToast('QTY harus lebih dari 0!', 'error');
     if (document.getElementById('po-master-info').style.display === 'none') {
-        return showToast('Pastikan UPC valid & ditemukan di data master!', 'warning');
+        return showToast('Pastikan UPC valid & diproses sistem!', 'warning');
     }
 
     let sku = document.getElementById('po-info-sku').innerText;
@@ -4368,13 +4404,15 @@ async function savePurchaseOrder() {
     let dept = document.getElementById('po-info-dept').innerText;
     let vendor = document.getElementById('po-info-vendor').innerText;
 
-    let btn = document.getElementById('btn-save-po');
-    let oldText = btn.innerText;
-    btn.innerText = 'Mengirim...';
-    btn.disabled = true;
+    let docName = "PO: " + upc; // Untuk notifikasi upload
+    addUploadTask('Purchase Order', docName);
+    
+    // Tutup & Reset form langsung agar staf bisa kerja yang lain
+    executeCancelForm('po'); 
 
+    let txId = generateTxId();
     let payload = {
-        txId: generateTxId(),
+        txId: txId,
         staff: currentUser.name || currentUser.username, 
         upc: upc,
         sku: sku,
@@ -4387,15 +4425,17 @@ async function savePurchaseOrder() {
         ip: clientIP
     };
 
-    // --- SIMULASI SEMENTARA PENYIMPANAN DATA ---
-    setTimeout(() => {
-        showToast('Pengajuan PO Berhasil Disimpan!', 'success');
-        btn.innerText = oldText;
-        btn.disabled = false;
-        
-        resetFormPO();
-        loadDashboard();
-    }, 1500);
+    // Kirim ke Google Apps Script
+    let res = await callAPI("savePurchaseOrder", payload);
+    
+    if (res && res.success) {
+        completeUploadTask(docName, true, res.message);
+    } else {
+        // JIKA OFFLINE / GAGAL SINYAL: Masuk ke Draft persis seperti form Packing!
+        saveToDraft("savePurchaseOrder", payload, docName);
+        let reason = res ? res.message : 'Offline';
+        completeUploadTask(docName, false, 'Tersimpan di Draft (' + reason + ')');
+    }
 }
   
 </script>
