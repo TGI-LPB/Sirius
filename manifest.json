@@ -1,8 +1,10 @@
 {
-  "name": "SIRIUS Applicattion",
+  "id": "/SIRIUS-App-Baru/", 
+  "name": "SIRIUS Application",
   "short_name": "SIRIUS",
   "description": "The Brightest Core of Operation",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#007AFF",
   "theme_color": "#007AFF",
