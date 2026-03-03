@@ -1481,14 +1481,13 @@ function playScanBeep() {
 function onScanSuccess(decodedText) {
     let decodedClean = decodedText.trim().toUpperCase();
     
-    // 🌟 PERBAIKAN: Potong paksa angka 0 "siluman" dari barcode barang (UPC-A)
-    // Syarat: Panjang persis 13, awalan '0', dan isinya MURNI ANGKA (bukan resi ekspedisi huruf)
+    // Potong paksa angka 0 "siluman" dari barcode barang (UPC-A)
     if (decodedClean.length === 13 && decodedClean.startsWith("0") && /^\d+$/.test(decodedClean)) {
         decodedClean = decodedClean.substring(1); 
     }
 
-    // 1. Buang hasil scan setengah jalan sebelum ngunci sistem
-    if (!decodedClean || decodedClean.length < 6) return;
+    // 1. Buang hasil scan setengah jalan
+    if (!decodedClean || decodedClean.length < 3) return;
     
     // 2. Kunci double-scan
     if (scanCooldown || decodedClean === lastScannedCode) return;
@@ -1510,33 +1509,28 @@ function onScanSuccess(decodedText) {
     lastScannedCode = decodedClean;
 
     if(activeScanTarget === 'rec-doc') { 
+        // --------- LOGIKA FORM RECEIPT ---------
         let currentArray = el.value.split(',').map(x => x.trim()).filter(x => x !== "");
         let duplicateCount = currentArray.filter(x => x.toUpperCase() === decodedClean).length;
         let isExistInPending = pendingDocs.some(x => String(x.noDoc).trim().toUpperCase() === decodedClean);
 
-        // Kasus A: Duplikat di form Receipt
         if(duplicateCount > 0) {
             flashFrame("rgba(255,59,48,0.8)");
             showToast(`⚠️ Ditolak: ${decodedClean} sudah ada!`, 'error');
             if("vibrate" in navigator) navigator.vibrate([200,100,200]);
-
             setTimeout(() => { scanCooldown = false; lastScannedCode = ""; }, 1500);
             return;
         }
 
-        // Kasus B: Resi Tidak Ditemukan di Data Packing
         if (!isExistInPending) {
             isScanning = false;
             pendingDuplicateDoc = decodedClean;
             showUnivModal('confirm-not-found', { doc: decodedClean });
-            
-            // 🌟 FIX: Wajib lepaskan kunci cooldown sebelum return, agar setelah modal ditutup bisa nyecan lagi!
             scanCooldown = false; 
             lastScannedCode = "";
             return;
         }
 
-        // Kasus C: Sukses Masuk
         currentArray.push(decodedClean);
         el.value = currentArray.join(', ');
 
@@ -1550,8 +1544,24 @@ function onScanSuccess(decodedText) {
 
         setTimeout(() => { scanCooldown = false; lastScannedCode = ""; }, 800);
 
+    } else if (activeScanTarget === 'po-upc') {
+        // --------- LOGIKA FORM PURCHASE ORDER (BARU) ---------
+        el.value = decodedClean; 
+        
+        flashFrame("rgba(52,199,89,0.8)");
+        playScanBeep();
+        if("vibrate" in navigator) navigator.vibrate([100]);
+        
+        stopScanner(); // Tutup kamera
+        
+        // 🔥 FITUR UTAMA: JALANKAN PENCARIAN DATA MASTER SECARA OTOMATIS 🔥
+        fetchMasterDataPO();
+        
+        scanCooldown = false; 
+        lastScannedCode = "";
+
     } else {
-        // FORM PACKING
+        // --------- LOGIKA FORM PACKING ---------
         let isDuplicate = globHist.some(x =>
             x.type === 'Packing' &&
             String(x.doc).toUpperCase() === decodedClean &&
@@ -1577,7 +1587,6 @@ function onScanSuccess(decodedText) {
         stopScanner();
         saveFormDraft('packing');
 
-        // 🌟 FIX: Karena scanner distop, kita bebas buka kunci cooldown langsung
         scanCooldown = false; 
         lastScannedCode = "";
     }
