@@ -1128,11 +1128,14 @@
 
 <div id="po-history-modal" class="modal-overlay" onclick="closeModalOutside(event, this)">
       <div class="glass modal-content" style="max-height: 85vh; display:flex; flex-direction:column; padding: 24px; background: #fdfdfd;">
+         
          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 16px;">
              <h3 style="margin:0; font-weight:800; font-size:20px;">Riwayat PO</h3>
-             <button onclick="document.getElementById('po-history-modal').classList.remove('active')" style="background:rgba(0,0,0,0.05); border:none; width:36px; height:36px; border-radius:50%; font-weight:bold; cursor:pointer;">✖</button>
+             <div style="display:flex; gap:10px;">
+                 <button id="btn-refresh-po" onclick="openPOHistory(true)" style="background:rgba(0,122,255,0.1); color:var(--primary); border:none; width:36px; height:36px; border-radius:50%; font-weight:bold; cursor:pointer; display:flex; align-items:center; justify-content:center; transition: transform 0.5s ease;" title="Refresh Data">🔄</button>
+                 <button onclick="document.getElementById('po-history-modal').classList.remove('active')" style="background:rgba(0,0,0,0.05); border:none; width:36px; height:36px; border-radius:50%; font-weight:bold; cursor:pointer;">✖</button>
+             </div>
          </div>
-
          <div class="filter-tabs" style="margin-bottom: 16px; background: rgba(0,122,255,0.05);">
             <button class="tab-btn po-tab-btn active" id="tab-po-pengajuan" onclick="filterPOHist('Pengajuan')">⏳ Pengajuan</button>
             <button class="tab-btn po-tab-btn" id="tab-po-selesai" onclick="filterPOHist('Selesai')">✅ Done</button>
@@ -1152,7 +1155,9 @@
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
       </button>
       <h2 style="margin:0; font-size: 22px; font-weight:800;">History Data</h2>
-      <div style="width:48px;"></div>
+      <button id="btn-refresh-hist" onclick="openHistoryMenu(true)" class="btn-ios-nav" type="button" style="color: var(--primary); background: rgba(0,122,255,0.1); font-size: 18px; transition: transform 0.5s ease;">
+        🔄
+      </button>
     </div>
     
     <div class="glass" style="padding:16px; margin-bottom:24px; display:flex; gap:12px; align-items:center;">
@@ -3578,11 +3583,25 @@ async function openReceiptMenu() {
   }
 
 
-  async function openHistoryMenu() {
-    switchView('history-view'); document.getElementById('history-list').innerHTML = '<div class="loader dark" style="display:block; margin-top:40px;"></div>';
+  async function openHistoryMenu(isRefresh = false) {
+    if (!isRefresh) switchView('history-view'); 
+    
+    let refreshBtn = document.getElementById('btn-refresh-hist');
+    if (isRefresh && refreshBtn) {
+        // Animasi putar ikon
+        refreshBtn.style.transform = 'rotate(360deg)';
+        setTimeout(() => { refreshBtn.style.transform = 'rotate(0deg)'; }, 500);
+    }
+
+    document.getElementById('history-list').innerHTML = '<div class="loader dark" style="display:block; margin-top:40px;"></div>';
+    
     let data = await callAPI("getHistoryData", { cat: 'All', role: currentUser.role });
-    if(data) { globHist = data; renderHistory(); }
-  }
+    if(data) { 
+        globHist = data; 
+        renderHistory(); 
+        if (isRefresh) showToast("History Data Diperbarui!", "success");
+    }
+}
 
 function renderHistory() {
     let cat = document.getElementById('hist-cat').value; 
@@ -4591,14 +4610,25 @@ async function savePurchaseOrder() {
 let globalPOHist = [];
 let activePOTab = 'Pengajuan'; // Default Tab
 
-async function openPOHistory() {
-    document.getElementById('po-history-modal').classList.add('active');
+async function openPOHistory(isRefresh = false) {
+    let refreshBtn = document.getElementById('btn-refresh-po');
+    if (isRefresh && refreshBtn) {
+        // Animasi putar ikon
+        refreshBtn.style.transform = 'rotate(360deg)';
+        setTimeout(() => { refreshBtn.style.transform = 'rotate(0deg)'; }, 500);
+    } else {
+        document.getElementById('po-history-modal').classList.add('active');
+    }
+
     document.getElementById('po-history-container').innerHTML = '<div class="loader dark" style="display:block; margin: 40px auto;"></div>';
     
     let res = await callAPI("getPOHistoryData", { role: currentUser.role });
-    if(res) { globalPOHist = res; filterPOHist('Pengajuan'); }
+    if(res) { 
+        globalPOHist = res; 
+        filterPOHist(activePOTab); // Tetap di tab yang sedang dibuka saat di-refresh
+        if (isRefresh) showToast("Riwayat PO Diperbarui!", "success");
+    }
 }
-
 function filterPOHist(tabStatus) {
     activePOTab = tabStatus;
     document.querySelectorAll('.po-tab-btn').forEach(btn => btn.classList.remove('active'));
