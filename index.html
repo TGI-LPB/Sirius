@@ -3041,19 +3041,19 @@ async function syncData() {
     let resExp = await callAPI("getExpedisiList");
     if(resExp) { globExp = resExp; }
 
-    // DOWNLOAD MASTER DATA (DENGAN PROTEKSI MEMORI HP)
+    // 👇 SINKRONISASI MASTER DATA MENGGUNAKAN INDEXED-DB 👇
     let resMaster = await callAPI("getAllMasterData");
     if(resMaster && resMaster.success) {
         try {
-            // Coba simpan 50rb data ke memori HP
-            localStorage.setItem('SIRIUS_MasterData', JSON.stringify(resMaster.data));
-            console.log("Master Data tersimpan: " + resMaster.data.length + " baris.");
+            // Gunakan mesin baru untuk menyimpan 50rb data tanpa limit!
+            await saveMasterToOfflineDB(resMaster.data);
+            console.log("Master Data tersimpan di HP: " + resMaster.data.length + " baris.");
         } catch (e) {
-            // Jika HP staf memorinya kepenuhan (QuotaExceededError)
-            showToast('Memori HP penuh! Sebagian data master mungkin tidak tersimpan.', 'error');
-            console.error("Gagal simpan ke localStorage: ", e);
+            showToast('Gagal menyimpan data master ke sistem HP.', 'error');
+            console.error("IndexedDB error: ", e);
         }
     }
+    // 👆 SAMPAI SINI 👆
     
     if(syncBtn) syncBtn.classList.remove('is-syncing');
   }
@@ -4317,6 +4317,48 @@ function showStaffDetailModal(username) {
     document.getElementById('staff-detail-modal').classList.add('active');
 }
 
+// ==========================================
+// 🗄️ MESIN INDEXED-DB (DATABASE OFFLINE TAHAN 50.000+ DATA)
+// ==========================================
+const DB_NAME = 'SiriusOfflineDB';
+const DB_VERSION = 1;
+const STORE_NAME = 'MasterDataStore';
+
+function openOfflineDB() {
+    return new Promise((resolve, reject) => {
+        let request = indexedDB.open(DB_NAME, DB_VERSION);
+        request.onupgradeneeded = (e) => {
+            let db = e.target.result;
+            if (!db.objectStoreNames.contains(STORE_NAME)) {
+                db.createObjectStore(STORE_NAME, { keyPath: 'id' });
+            }
+        };
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+    });
+}
+
+async function saveMasterToOfflineDB(dataArray) {
+    let db = await openOfflineDB();
+    return new Promise((resolve, reject) => {
+        let tx = db.transaction(STORE_NAME, 'readwrite');
+        let store = tx.objectStore(STORE_NAME);
+        store.put({ id: 'masterList', data: dataArray });
+        tx.oncomplete = () => resolve(true);
+        tx.onerror = () => reject(tx.error);
+    });
+}
+
+async function getMasterFromOfflineDB() {
+    let db = await openOfflineDB();
+    return new Promise((resolve, reject) => {
+        let tx = db.transaction(STORE_NAME, 'readonly');
+        let store = tx.objectStore(STORE_NAME);
+        let request = store.get('masterList');
+        request.onsuccess = () => resolve(request.result ? request.result.data : []);
+        request.onerror = () => reject(tx.error);
+    });
+}
 
 // ==========================================
 // LOGIKA PURCHASE ORDER (PO) & MASTER DATA OFFLINE
@@ -4339,25 +4381,25 @@ function resetFormPO() {
     if (infoEl) infoEl.style.display = 'none';
 }
 
-// 🚀 FITUR PENCARIAN OFFLINE DENGAN 3 KONDISI
-function fetchMasterDataPO() {
+// 🚀 FITUR PENCARIAN OFFLINE (MEMBACA DARI INDEXED-DB)
+async function fetchMasterDataPO() {
     let upc = document.getElementById('po-upc').value.trim().toUpperCase();
     if (!upc) {
         document.getElementById('po-master-info').style.display = 'none';
         return;
     }
 
-    let masterDataStr = localStorage.getItem('SIRIUS_MasterData');
-    let masterList = masterDataStr ? JSON.parse(masterDataStr) : [];
+    // Ambil Data Master dari IndexedDB (Bisa nampung 50rb data lebih tanpa ngelag)
+    let masterList = await getMasterFromOfflineDB();
     
     let foundProduct = null;
 
-    // Cari dari data yang di-download (Sistem baca Array Padat)
+    // Cari dari 50.000 baris
     // index: [0]=UPC, [1]=Artikel, [2]=Manuf. Part No, [3]=Desc, [4]=Dept, [5]=Vendor Code, [6]=Vendor Name
     for (let i = 0; i < masterList.length; i++) {
         if (masterList[i][0] === upc || masterList[i][1] === upc || masterList[i][2] === upc) {
             foundProduct = {
-                upc: masterList[i][0] || masterList[i][1] || masterList[i][2], // Pilih yg pertama ada
+                upc: masterList[i][0] || masterList[i][1] || masterList[i][2], 
                 desc: masterList[i][3],
                 dept: masterList[i][4],
                 venCode: masterList[i][5],
