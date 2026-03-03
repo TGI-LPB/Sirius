@@ -1127,11 +1127,17 @@
   </div>
 
 <div id="po-history-modal" class="modal-overlay" onclick="closeModalOutside(event, this)">
-      <div class="glass modal-content" style="max-height: 85vh; display:flex; flex-direction:column; padding: 24px;">
-         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+      <div class="glass modal-content" style="max-height: 85vh; display:flex; flex-direction:column; padding: 24px; background: #fdfdfd;">
+         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 16px;">
              <h3 style="margin:0; font-weight:800; font-size:20px;">Riwayat PO</h3>
              <button onclick="document.getElementById('po-history-modal').classList.remove('active')" style="background:rgba(0,0,0,0.05); border:none; width:36px; height:36px; border-radius:50%; font-weight:bold; cursor:pointer;">✖</button>
          </div>
+
+         <div class="filter-tabs" style="margin-bottom: 16px; background: rgba(0,122,255,0.05);">
+            <button class="tab-btn po-tab-btn active" id="tab-po-pengajuan" onclick="filterPOHist('Pengajuan')">⏳ Pengajuan</button>
+            <button class="tab-btn po-tab-btn" id="tab-po-selesai" onclick="filterPOHist('Selesai')">✅ Selesai</button>
+         </div>
+
          <input type="text" id="po-hist-search" class="custom-input" placeholder="Cari SKU / UPC / Desc..." onkeyup="renderPOHistory()" style="margin-bottom: 16px; padding: 14px; font-size: 14px;">
          
          <div id="po-history-container" style="flex:1; overflow-y:auto; border-radius:20px; margin-bottom:16px; min-height: 250px; padding: 4px; display: flex; flex-direction: column; gap: 12px;">
@@ -1214,7 +1220,7 @@
 
 <script>
 // 🔴 Creator By Alfian A. GANTI LINK DI BAWAH INI DENGAN URL DEPLOY APPS SCRIPT-MU (YANG BERAKHIRAN /exec)
-  const API_URL = "https://script.google.com/macros/s/AKfycbzwKy9Ppvkuvx1WMKvJ-G6X7GAUjWaW469WiqGBsDT_wO9v1VgIZRPoTky66PLW5Jdx/exec";
+  const API_URL = "https://script.google.com/macros/s/AKfycbxCfPdxtnGO374nPbBibrmd2cU7ku-ab3rHxk65iFVTzIeVCaJu8rP9-sNufunyMjSi/exec";
 
   // ==========================================
   // LOGIC TOMBOL INSTALL PWA
@@ -1959,35 +1965,59 @@ async function compressImg(file, skipWatermark = false) {
       noteBox.style.display = 'block'; btn.style.background = 'var(--warning)'; btn.innerText = 'Ajukan Return';
     }
     else if(type === 'req-edit' && payload) {
-      title.innerText = 'Edit Data & Foto'; desc.innerText = 'Ubah teks dan pilih ulang foto jika perlu, lalu ajukan ke Admin.'; icon.innerText = '✏️';
+      title.innerText = 'Edit Data'; desc.innerText = 'Ubah data dan ajukan persetujuan ke Admin.'; icon.innerText = '✏️';
       let htmlStr = '<input type="hidden" id="edit-id" value="' + payload.id + '"><input type="hidden" id="edit-type" value="' + payload.type + '">';
       
-      // Jika PO, kunci No Dokumen agar tidak kacau master datanya
+      // 👇 TAMPILAN FORM EDIT KHUSUS PO (MIRIP FORM AWAL) 👇
       if(payload.type === 'PO') {
-         htmlStr += '<label class="input-label">Kode UPC / SKU:</label><input type="text" id="edit-doc" class="custom-input" value="' + (payload.upc || payload.doc) + '" style="margin-bottom:12px;" disabled>';
-         htmlStr += '<label class="input-label">Ubah QTY:</label><input type="number" id="edit-po-qty" class="custom-input" value="' + payload.qty + '" style="margin-bottom:12px;">';
-      } else {
+         let poData = globalPOHist.find(x => x.id === payload.id) || payload;
+         htmlStr += `
+         <label class="input-label">Kode UPC / Artikel Number:</label>
+         <div class="scan-wrapper" style="margin-bottom:12px;">
+             <input type="text" id="edit-po-upc" class="custom-input" value="${poData.upc}" onblur="fetchEditMasterDataPO()" onkeypress="if(event.key === 'Enter') fetchEditMasterDataPO()">
+             <button class="scan-btn" onclick="fetchEditMasterDataPO()" type="button" style="right: 6px; background: rgba(0,122,255,0.15); color: var(--primary);">🔍</button>
+         </div>
+         
+         <div id="edit-po-master-info" style="background: rgba(0,122,255,0.05); border: 1px solid rgba(0,122,255,0.15); border-radius: 16px; padding: 12px; margin-bottom: 16px;">
+             <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;"><span style="color:var(--text-muted); font-weight:600;">SKU</span><b id="edit-po-sku" style="color:var(--text-main);">${poData.sku}</b></div>
+             <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;"><span style="color:var(--text-muted); font-weight:600;">Desc</span><b id="edit-po-desc" style="color:var(--text-main); text-align:right; max-width:70%;">${poData.desc}</b></div>
+             <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;"><span style="color:var(--text-muted); font-weight:600;">Dept</span><b id="edit-po-dept" style="color:var(--text-main);">${poData.dept}</b></div>
+             <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;"><span style="color:var(--text-muted); font-weight:600;">Ven. Code</span><b id="edit-po-vencode" style="color:var(--text-main);">${poData.venCode}</b></div>
+             <div style="display:flex; justify-content:space-between; font-size:12px;"><span style="color:var(--text-muted); font-weight:600;">Vendor</span><b id="edit-po-vendor" style="color:var(--text-main); text-align:right; max-width:70%;">${poData.vendor}</b></div>
+         </div>
+
+         <label class="input-label">Ubah QTY:</label>
+         <input type="number" id="edit-po-qty" class="custom-input" value="${poData.qty}" style="margin-bottom:12px;">
+         <label class="input-label">Catatan/Note:</label>
+         <textarea id="edit-note" class="custom-input" rows="2" style="margin-bottom:12px;">${poData.note}</textarea>
+         <label class="input-label" style="color:var(--danger);">Alasan Edit (Wajib):</label>
+         <input type="text" id="edit-reason" class="custom-input" placeholder="Misal: Salah QTY / Ubah Barang...">
+         `;
+      } 
+      // 👆 SAMPAI SINI UNTUK PO 👆
+      else {
          htmlStr += '<label class="input-label">No. Dokumen:</label><input type="text" id="edit-doc" class="custom-input" value="' + payload.doc + '" style="margin-bottom:12px;">';
+         
+         if(payload.type === 'Packing') {
+            htmlStr += '<label class="input-label">Ubah Foto (Opsional):</label><div class="img-grid-3">';
+            htmlStr += '<div class="img-upload-box"><div class="icon">🖼️</div><span>Before</span><img id="edit-prev1" class="img-preview"><input type="file" id="edit-img1" accept="image/*" capture="environment" onchange="previewImage(this, \'edit-prev1\')"><label style="position:absolute; top:6px; right:6px; background:white; padding:4px; border-radius:8px; font-size:14px; z-index:20; cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,0.15);" onclick="event.stopPropagation()">🖼️<input type="file" accept="image/*" onchange="previewImage(this, \'edit-prev1\')" style="display:none !important;"></label></div>';
+            htmlStr += '<div class="img-upload-box"><div class="icon">📦</div><span>Packing</span><img id="edit-prev2" class="img-preview"><input type="file" id="edit-img2" accept="image/*" capture="environment" onchange="previewImage(this, \'edit-prev2\')"><label style="position:absolute; top:6px; right:6px; background:white; padding:4px; border-radius:8px; font-size:14px; z-index:20; cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,0.15);" onclick="event.stopPropagation()">🖼️<input type="file" accept="image/*" onchange="previewImage(this, \'edit-prev2\')" style="display:none !important;"></label></div>';
+            htmlStr += '<div class="img-upload-box"><div class="icon">✅</div><span>After</span><img id="edit-prev3" class="img-preview"><input type="file" id="edit-img3" accept="image/*" capture="environment" onchange="previewImage(this, \'edit-prev3\')"><label style="position:absolute; top:6px; right:6px; background:white; padding:4px; border-radius:8px; font-size:14px; z-index:20; cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,0.15);" onclick="event.stopPropagation()">🖼️<input type="file" accept="image/*" onchange="previewImage(this, \'edit-prev3\')" style="display:none !important;"></label></div></div>';
+         } else if(payload.type === 'Receipt') {
+            htmlStr += '<label class="input-label">Expedisi:</label><input type="text" id="edit-exp" class="custom-input" value="' + (payload.expedisi || '') + '" style="margin-bottom:12px;">';
+            htmlStr += '<label class="input-label">Supir:</label><input type="text" id="edit-drv" class="custom-input" value="' + (payload.driver || '') + '" style="margin-bottom:12px;">';
+            htmlStr += '<label class="input-label">No HP:</label><input type="text" id="edit-ph" class="custom-input" value="' + (payload.phone || '') + '" style="margin-bottom:12px;">';
+            htmlStr += '<label class="input-label">Plat:</label><input type="text" id="edit-plt" class="custom-input" value="' + (payload.plat || '') + '" style="margin-bottom:12px;">';
+            htmlStr += '<label class="input-label">Ubah Foto Penerima (Opsional):</label>';
+            htmlStr += '<div class="img-upload-box" style="height:120px; margin-bottom: 12px;"><div class="icon">📸</div><span>Tap untuk Foto Baru</span><img id="edit-prev-rec" class="img-preview"><input type="file" id="edit-img-rec" accept="image/*" capture="environment" onchange="previewImage(this, \'edit-prev-rec\')"><label style="position:absolute; top:10px; right:10px; background:white; padding:6px 10px; border-radius:10px; font-size:12px; font-weight:800; color:var(--primary); z-index:20; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,0.15);" onclick="event.stopPropagation()">🖼️ Galeri<input type="file" accept="image/*" onchange="previewImage(this, \'edit-prev-rec\')" style="display:none !important;"></label></div>';
+         }
+         htmlStr += '<label class="input-label">Catatan/Note:</label><textarea id="edit-note" class="custom-input" rows="2" style="margin-bottom:12px;">' + (payload.note || '') + '</textarea>';
+         htmlStr += '<label class="input-label" style="color:var(--danger);">Alasan Edit (Wajib):</label><input type="text" id="edit-reason" class="custom-input" placeholder="Ganti foto / Revisi Note...">';
       }
-      
-      if(payload.type === 'Packing') {
-         htmlStr += '<label class="input-label">Ubah Foto (Opsional):</label><div class="img-grid-3">';
-         htmlStr += '<div class="img-upload-box"><div class="icon">🖼️</div><span>Before</span><img id="edit-prev1" class="img-preview"><input type="file" id="edit-img1" accept="image/*" capture="environment" onchange="previewImage(this, \'edit-prev1\')"><label style="position:absolute; top:6px; right:6px; background:white; padding:4px; border-radius:8px; font-size:14px; z-index:20; cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,0.15);" onclick="event.stopPropagation()">🖼️<input type="file" accept="image/*" onchange="previewImage(this, \'edit-prev1\')" style="display:none !important;"></label></div>';
-         htmlStr += '<div class="img-upload-box"><div class="icon">📦</div><span>Packing</span><img id="edit-prev2" class="img-preview"><input type="file" id="edit-img2" accept="image/*" capture="environment" onchange="previewImage(this, \'edit-prev2\')"><label style="position:absolute; top:6px; right:6px; background:white; padding:4px; border-radius:8px; font-size:14px; z-index:20; cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,0.15);" onclick="event.stopPropagation()">🖼️<input type="file" accept="image/*" onchange="previewImage(this, \'edit-prev2\')" style="display:none !important;"></label></div>';
-         htmlStr += '<div class="img-upload-box"><div class="icon">✅</div><span>After</span><img id="edit-prev3" class="img-preview"><input type="file" id="edit-img3" accept="image/*" capture="environment" onchange="previewImage(this, \'edit-prev3\')"><label style="position:absolute; top:6px; right:6px; background:white; padding:4px; border-radius:8px; font-size:14px; z-index:20; cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,0.15);" onclick="event.stopPropagation()">🖼️<input type="file" accept="image/*" onchange="previewImage(this, \'edit-prev3\')" style="display:none !important;"></label></div></div>';
-      } else if(payload.type === 'Receipt') {
-         htmlStr += '<label class="input-label">Expedisi:</label><input type="text" id="edit-exp" class="custom-input" value="' + (payload.expedisi || '') + '" style="margin-bottom:12px;">';
-         htmlStr += '<label class="input-label">Supir:</label><input type="text" id="edit-drv" class="custom-input" value="' + (payload.driver || '') + '" style="margin-bottom:12px;">';
-         htmlStr += '<label class="input-label">No HP:</label><input type="text" id="edit-ph" class="custom-input" value="' + (payload.phone || '') + '" style="margin-bottom:12px;">';
-         htmlStr += '<label class="input-label">Plat:</label><input type="text" id="edit-plt" class="custom-input" value="' + (payload.plat || '') + '" style="margin-bottom:12px;">';
-         htmlStr += '<label class="input-label">Ubah Foto Penerima (Opsional):</label>';
-         htmlStr += '<div class="img-upload-box" style="height:120px; margin-bottom: 12px;"><div class="icon">📸</div><span>Tap untuk Foto Baru</span><img id="edit-prev-rec" class="img-preview"><input type="file" id="edit-img-rec" accept="image/*" capture="environment" onchange="previewImage(this, \'edit-prev-rec\')"><label style="position:absolute; top:10px; right:10px; background:white; padding:6px 10px; border-radius:10px; font-size:12px; font-weight:800; color:var(--primary); z-index:20; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,0.15);" onclick="event.stopPropagation()">🖼️ Galeri<input type="file" accept="image/*" onchange="previewImage(this, \'edit-prev-rec\')" style="display:none !important;"></label></div>';
-      }
-      htmlStr += '<label class="input-label">Catatan/Note:</label><textarea id="edit-note" class="custom-input" rows="2" style="margin-bottom:12px;">' + (payload.note || '') + '</textarea>';
-      htmlStr += '<label class="input-label" style="color:var(--danger);">Alasan Edit (Wajib):</label><input type="text" id="edit-reason" class="custom-input" placeholder="Misal: Ganti foto / Revisi Note / Ubah Qty...">';
 
       noteBox.innerHTML = htmlStr; noteBox.style.display = 'block'; btn.style.background = 'var(--primary)'; btn.innerText = 'Ajukan Edit';
     }
+      
 else if(type === 'confirm-not-found' && payload) {
       title.innerText = 'Data Tidak Ditemukan'; 
       
@@ -3896,16 +3926,32 @@ async function executeReqEdit(payload) {
      let oldText = btn.innerText;
      btn.innerText = 'Mempersiapkan File...'; btn.disabled = true;
 
-     let newData = { doc: document.getElementById('edit-doc').value, note: document.getElementById('edit-note').value };
+     let newData = { note: document.getElementById('edit-note').value };
      let changes = []; 
 
-     if (newData.doc !== payload.doc) changes.push(`No Dokumen: <i>${payload.doc}</i> ➡️ <b>${newData.doc}</b>`);
      if (newData.note !== (payload.note || '')) changes.push(`Catatan (Note) diperbarui`);
      
-     // LOGIKA EDIT QTY PO
+     // LOGIKA MENGIRIM EDIT PO
      if (payload.type === 'PO') {
+         let pUpc = document.getElementById('edit-po-upc').value.trim();
+         let pSku = document.getElementById('edit-po-sku').innerText;
+         if (pSku === 'TIDAK DITEMUKAN' || pSku === '') return showToast('Harap Cek Kaca Pembesar UPC dulu!', 'warning');
+
+         newData.upc = pUpc;
+         newData.sku = pSku;
+         newData.deskripsi = document.getElementById('edit-po-desc').innerText;
+         newData.dept = document.getElementById('edit-po-dept').innerText;
+         newData.vendorCode = document.getElementById('edit-po-vencode').innerText;
+         newData.vendorName = document.getElementById('edit-po-vendor').innerText;
          newData.qty = document.getElementById('edit-po-qty').value;
-         if (newData.qty !== payload.qty) changes.push(`QTY: <i>${payload.qty}</i> ➡️ <b>${newData.qty}</b>`);
+         newData.doc = pUpc; // Samakan doc dengan upc
+
+         let poData = globalPOHist.find(x => x.id === payload.id) || payload;
+         if (newData.upc !== poData.upc) changes.push(`UPC/Barang: <i>${poData.upc}</i> ➡️ <b>${newData.upc}</b>`);
+         if (newData.qty !== String(poData.qty)) changes.push(`QTY: <i>${poData.qty}</i> ➡️ <b>${newData.qty}</b>`);
+     } else {
+         newData.doc = document.getElementById('edit-doc').value;
+         if (newData.doc !== payload.doc) changes.push(`No Dokumen: <i>${payload.doc}</i> ➡️ <b>${newData.doc}</b>`);
      }
 
      if(payload.type === 'Packing') {
@@ -3913,52 +3959,30 @@ async function executeReqEdit(payload) {
         let f2 = document.getElementById('edit-img2') ? document.getElementById('edit-img2').files[0] : null;
         let f3 = document.getElementById('edit-img3') ? document.getElementById('edit-img3').files[0] : null;
         
-        if(f1) { 
-            newData.imgBefore = await compressImg(f1); 
-            let oldImg = fixDriveUrl(payload.img1);
-            changes.push(`Foto Before:<br><img src="${oldImg}" class="chat-thumb" onclick="openImageViewer('${oldImg}')"> ➡️ <span class="chat-new-img">📸 Diganti Baru</span>`); 
-        }
-        if(f2) { 
-            newData.imgPacking = await compressImg(f2); 
-            let oldImg = fixDriveUrl(payload.img2);
-            changes.push(`Foto Packing:<br><img src="${oldImg}" class="chat-thumb" onclick="openImageViewer('${oldImg}')"> ➡️ <span class="chat-new-img">📸 Diganti Baru</span>`); 
-        }
-        if(f3) { 
-            newData.imgAfter = await compressImg(f3); 
-            let oldImg = fixDriveUrl(payload.img3);
-            changes.push(`Foto After:<br><img src="${oldImg}" class="chat-thumb" onclick="openImageViewer('${oldImg}')"> ➡️ <span class="chat-new-img">📸 Diganti Baru</span>`); 
-        }
+        if(f1) { newData.imgBefore = await compressImg(f1); changes.push(`Foto Before ➡️ <span class="chat-new-img">📸 Baru</span>`); }
+        if(f2) { newData.imgPacking = await compressImg(f2); changes.push(`Foto Packing ➡️ <span class="chat-new-img">📸 Baru</span>`); }
+        if(f3) { newData.imgAfter = await compressImg(f3); changes.push(`Foto After ➡️ <span class="chat-new-img">📸 Baru</span>`); }
      } else if(payload.type === 'Receipt') {
         newData.expedisi = document.getElementById('edit-exp').value;
         newData.driver = document.getElementById('edit-drv').value;
         newData.phone = document.getElementById('edit-ph').value;
         newData.plat = document.getElementById('edit-plt').value;
         
-        if (newData.expedisi !== (payload.expedisi || '')) changes.push(`Expedisi: <i>${payload.expedisi || '-'}</i> ➡️ <b>${newData.expedisi}</b>`);
-        if (newData.driver !== (payload.driver || '')) changes.push(`Penerima: <i>${payload.driver || '-'}</i> ➡️ <b>${newData.driver}</b>`);
-        if (newData.phone !== (payload.phone || '')) changes.push(`No HP: <i>${payload.phone || '-'}</i> ➡️ <b>${newData.phone}</b>`);
-        if (newData.plat !== (payload.plat || '')) changes.push(`Plat: <i>${payload.plat || '-'}</i> ➡️ <b>${newData.plat}</b>`);
-
+        if (newData.expedisi !== (payload.expedisi || '')) changes.push(`Expedisi ➡️ <b>${newData.expedisi}</b>`);
+        if (newData.driver !== (payload.driver || '')) changes.push(`Penerima ➡️ <b>${newData.driver}</b>`);
+        
         let fr = document.getElementById('edit-img-rec') ? document.getElementById('edit-img-rec').files[0] : null;
-        if(fr) { 
-            newData.imgReceipt = await compressImg(fr); 
-            let oldImg = fixDriveUrl(payload.img); 
-            changes.push(`Foto Penerima:<br><img src="${oldImg}" class="chat-thumb" onclick="openImageViewer('${oldImg}')"> ➡️ <span class="chat-new-img">📸 Diganti Baru</span>`); 
-        }
+        if(fr) { newData.imgReceipt = await compressImg(fr); changes.push(`Foto Penerima ➡️ <span class="chat-new-img">📸 Baru</span>`); }
      }
      
-     let changesText = changes.length > 0 
-        ? `<div class="chat-change-box"><b>Rincian Perubahan:</b><br><br> ${changes.join('<br><br>')}</div>` 
-        : `<div class="chat-change-box" style="color:var(--warning); border-color:var(--warning);">Tidak ada data yang diubah.</div>`;
-        
+     let changesText = changes.length > 0 ? `<div class="chat-change-box"><b>Perubahan:</b><br><br> ${changes.join('<br>')}</div>` : ``;
      let chatText = `<span class="chat-title-badge">✏️ [Pengajuan Edit]</span><br>Alasan: ${reason}${changesText}`;
-
-    let updatedHistory = appendChatHistory(payload.reqHistory, 'staff', currentUser.name || currentUser.username, currentUser.profilePic, chatText);
+     let updatedHistory = appendChatHistory(payload.reqHistory, 'staff', currentUser.name || currentUser.username, currentUser.profilePic, chatText);
 
     let res = await callAPI("requestEditData", { id: payload.id, type: payload.type, data: newData, ip: clientIP, reason: reason, reqHistory: updatedHistory });
     if(res) { 
         showToast(res); closeActionModal(); 
-        if (payload.type === 'PO') openPOHistory(); else openHistoryMenu();
+        if (payload.type === 'PO') { openPOHistory(); } else { openHistoryMenu(); }
     }
     else { btn.innerText = oldText; btn.disabled = false; }
 }
@@ -4533,23 +4557,46 @@ async function savePurchaseOrder() {
     }
 }
 
-// 🕒 FITUR HISTORY PO (MODERN & FILTERED)
+// ==========================================
+// 🕒 FITUR HISTORY & DETAIL PO (MODERN & FILTERED)
+// ==========================================
 let globalPOHist = [];
+let activePOTab = 'Pengajuan'; // Default Tab
+
 async function openPOHistory() {
     document.getElementById('po-history-modal').classList.add('active');
     document.getElementById('po-history-container').innerHTML = '<div class="loader dark" style="display:block; margin: 40px auto;"></div>';
     
     let res = await callAPI("getPOHistoryData", { role: currentUser.role });
-    if(res) { globalPOHist = res; renderPOHistory(); }
+    if(res) { globalPOHist = res; filterPOHist('Pengajuan'); }
+}
+
+function filterPOHist(tabStatus) {
+    activePOTab = tabStatus;
+    document.querySelectorAll('.po-tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById('tab-po-' + tabStatus.toLowerCase()).classList.add('active');
+    renderPOHistory();
 }
 
 function renderPOHistory() {
     let container = document.getElementById('po-history-container');
     let q = document.getElementById('po-hist-search').value.toLowerCase();
     
-    let f = globalPOHist.filter(x => String(x.upc).toLowerCase().includes(q) || String(x.sku).toLowerCase().includes(q) || String(x.desc).toLowerCase().includes(q));
+    let f = globalPOHist.filter(x => {
+        let s = String(x.status).toUpperCase();
+        let isMatchSearch = String(x.upc).toLowerCase().includes(q) || String(x.sku).toLowerCase().includes(q) || String(x.desc).toLowerCase().includes(q);
+        if (!isMatchSearch) return false;
+
+        // LOGIKA FILTER TAB
+        if (activePOTab === 'Pengajuan') {
+            return s.includes('PENGAJUAN') || s.includes('PENDING') || s === ''; 
+        } else if (activePOTab === 'Selesai') {
+            return s.includes('SELESAI') || s.includes('DONE') || s.includes('APPROVED') || s.includes('REJECTED') || s.includes('DELETED') || s.includes('RETURN');
+        }
+        return true; 
+    });
     
-    if(f.length === 0) return container.innerHTML = '<div style="text-align:center; padding:40px; color:var(--text-muted); font-weight:600;">Data PO tidak ditemukan.</div>';
+    if(f.length === 0) return container.innerHTML = '<div style="text-align:center; padding:40px; color:var(--text-muted); font-weight:600;">Data PO tidak ditemukan di tab ini.</div>';
     
     let htmlStr = '';
     f.forEach(x => {
@@ -4558,22 +4605,22 @@ function renderPOHistory() {
 
         if(s.includes('RETURN')) { statusColor = 'var(--warning)'; statusBg = 'rgba(255,149,0,0.15)'; statusText = '🔄 DIRETUR'; } 
         else if(s.includes('DELETE') || s.includes('HAPUS')) { statusColor = 'var(--danger)'; statusBg = 'rgba(255,59,48,0.15)'; statusText = '🗑️ DIHAPUS'; } 
-        else if(s.includes('PENDING')) { 
+        else if(s.includes('PENDING') || s.includes('PENGAJUAN') || s === '') { 
             statusColor = 'var(--warning)'; statusBg = 'rgba(255,149,0,0.15)'; 
             if(s.includes('EDIT')) statusText = '⏳ PENG. EDIT';
             else if(s.includes('DELETE')) statusText = '⏳ PENG. HAPUS';
             else statusText = '⏳ PENGAJUAN'; 
         } 
-        else if(s.includes('REJECTED')) { statusColor = 'var(--danger)'; statusBg = 'rgba(255,59,48,0.15)'; statusText = '❌ DITOLAK'; } 
-        else if(s.includes('APPROVED') || s.includes('COMPLETED')) { statusColor = 'var(--success)'; statusBg = 'rgba(52,199,89,0.15)'; statusText = '✅ SELESAI'; } 
+        else if(s.includes('REJECTED') || s.includes('TOLAK')) { statusColor = 'var(--danger)'; statusBg = 'rgba(255,59,48,0.15)'; statusText = '❌ DITOLAK'; } 
+        else if(s.includes('APPROVED') || s.includes('COMPLETED') || s.includes('SELESAI')) { statusColor = 'var(--success)'; statusBg = 'rgba(52,199,89,0.15)'; statusText = '✅ SELESAI'; } 
 
-        let statusBadge = `<div style="background:${statusBg}; color:${statusColor}; font-size:10px; font-weight:800; padding:4px 8px; border-radius:8px; display:inline-block;">${statusText}</div>`;
-        let fDate = new Date(x.ts); let strDate = isNaN(fDate) ? x.ts : fDate.toLocaleDateString('id-ID', {day:'numeric', month:'short'}) + ', ' + fDate.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'});
+        let statusBadge = `<div style="background:${statusBg}; color:${statusColor}; font-size:10px; font-weight:800; padding:4px 8px; border-radius:8px; display:inline-block; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">${statusText}</div>`;
+        let strDate = new Date(x.ts).toLocaleDateString('id-ID', {day:'numeric', month:'short'}) + ', ' + new Date(x.ts).toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'});
 
-        // KLIK UNTUK MUNCULIN MODAL RIANCIAN (Dan Tombol Aksi)
+        // KLIK UNTUK MUNCULIN DETAIL PO
         htmlStr += `
-        <div class="hist-card" onclick="showUnivModal('req-edit', {id: '${x.id}', type: 'PO', doc: '${x.upc}', upc: '${x.upc}', qty: '${x.qty}', reqHistory: '${x.reqHistory}'})" style="align-items:flex-start; padding: 16px;">
-            <div class="hist-img-wrapper" style="width: 55px; height: 55px; border-radius: 12px; flex-shrink: 0; background:rgba(0,122,255,0.1); display:flex; align-items:center; justify-content:center; font-size:24px;">🛒</div>
+        <div class="hist-card" onclick="showPODetail('${x.id}')" style="align-items:flex-start; padding: 16px;">
+            <div class="hist-img-wrapper" style="width: 55px; height: 55px; border-radius: 14px; flex-shrink: 0; background:rgba(0,122,255,0.1); border: 1px solid rgba(0,122,255,0.2); display:flex; align-items:center; justify-content:center; font-size:24px; box-shadow: 0 4px 10px rgba(0,122,255,0.1);">🛒</div>
             <div class="hist-info" style="display:flex; flex-direction:column; justify-content:space-between; width: 100%;">
                 <div style="display:flex; justify-content:space-between; align-items:flex-start; width: 100%; gap: 8px;">
                     <div style="overflow:hidden;">
@@ -4590,6 +4637,122 @@ function renderPOHistory() {
         </div>`;
     });
     container.innerHTML = htmlStr;
+}
+
+// 📦 MODAL DETAIL PO LENGKAP & TOMBOL AKSI
+function showPODetail(id) {
+   let data = globalPOHist.find(x => x.id === id);
+   if(!data) return;
+   
+   let s = String(data.status).toUpperCase();
+   let isPending = s.includes('PENDING') || s.includes('PENGAJUAN') || s === '';
+   
+   let htmlStr = `
+     <style>
+         .ios-po-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed rgba(0,0,0,0.06); align-items: center; }
+         .ios-po-row:last-child { border-bottom: none; }
+         .ios-po-label { font-size: 11px; color: var(--text-muted); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+         .ios-po-value { font-size: 14px; color: var(--text-main); font-weight: 800; text-align: right; max-width: 65%; word-break: break-word; }
+     </style>
+     <div style="text-align:left; margin-top: -10px;">
+         <div style="background: white; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.04); padding: 16px; margin-bottom: 16px;">
+             <div class="ios-po-row"><span class="ios-po-label">UPC / Artikel</span><span class="ios-po-value">${data.upc}</span></div>
+             <div class="ios-po-row"><span class="ios-po-label">SKU</span><span class="ios-po-value" style="color:var(--primary);">${data.sku}</span></div>
+             <div class="ios-po-row"><span class="ios-po-label">Deskripsi</span><span class="ios-po-value">${data.desc}</span></div>
+             <div class="ios-po-row"><span class="ios-po-label">Dept</span><span class="ios-po-value">${data.dept}</span></div>
+             <div class="ios-po-row"><span class="ios-po-label">Vendor Code</span><span class="ios-po-value">${data.venCode}</span></div>
+             <div class="ios-po-row"><span class="ios-po-label">Vendor Name</span><span class="ios-po-value">${data.vendor}</span></div>
+             <div class="ios-po-row"><span class="ios-po-label">Catatan</span><span class="ios-po-value" style="font-weight:600;">${data.note || '-'}</span></div>
+             <div class="ios-po-row" style="border:none; padding-bottom:0; padding-top:16px;">
+                 <span class="ios-po-label" style="font-size:14px;">Total QTY</span>
+                 <span class="ios-po-value" style="color:var(--success); font-size:22px;">${data.qty} <span style="font-size:12px; color:var(--text-muted);">Pcs</span></span>
+             </div>
+         </div>
+         
+         <div style="background: rgba(52, 199, 89, 0.05); border: 1px solid rgba(52, 199, 89, 0.2); border-radius: 20px; padding: 16px;">
+             <div style="font-size: 11px; font-weight: 800; color: var(--success); margin-bottom: 8px; display:flex; align-items:center; gap:6px;"><span>✅</span> RINCIAN PROSES ADMIN</div>
+             <div class="ios-po-row" style="border-color: rgba(52, 199, 89, 0.2);"><span class="ios-po-label">Tgl Proses</span><span class="ios-po-value">${data.tglProses || '-'}</span></div>
+             <div class="ios-po-row" style="border-color: rgba(52, 199, 89, 0.2);"><span class="ios-po-label">No STR</span><span class="ios-po-value">${data.noStr || '-'}</span></div>
+             <div class="ios-po-row" style="border-color: rgba(52, 199, 89, 0.2);"><span class="ios-po-label">No PO</span><span class="ios-po-value" style="color:var(--success);">${data.noPo || '-'}</span></div>
+             <div class="ios-po-row" style="border-color: rgba(52, 199, 89, 0.2);"><span class="ios-po-label">PIC Admin</span><span class="ios-po-value">${data.picStr || '-'}</span></div>
+             <div class="ios-po-row" style="border:none; padding-bottom:0;"><span class="ios-po-label">Note PIC</span><span class="ios-po-value" style="font-weight:600;">${data.notePic || '-'}</span></div>
+         </div>
+   `;
+
+   // Munculin History Chat Admin kalau ada
+   let chatHtml = buildChatHistory(data);
+   if ((data.reqHistory && data.reqHistory !== '-') || (data.adminNote && data.adminNote !== '-')) {
+       htmlStr += `
+       <div style="background: rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.05); border-radius: 16px; padding: 12px 16px; margin-top: 16px; cursor: pointer;" onclick="toggleChatHistory()">
+           <div style="display:flex; justify-content:space-between; align-items:center;">
+               <span style="font-size: 13px; font-weight: 800; color: var(--primary);">💬 Riwayat Pengajuan Admin</span>
+               <span id="pending-arrow" style="color: var(--text-muted); font-weight: bold; font-size: 20px;">▾</span>
+           </div>
+       </div>
+       <div id="req-chat-history" style="display: none; margin-top: 8px;">
+           <div class="chat-wrap">${chatHtml}</div>
+       </div>`;
+   }
+   
+   let actBtns = '<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 24px; padding-top: 16px; border-top: 1px solid rgba(0,0,0,0.05);">';
+   
+   // HANYA MUNCUL JIKA BELUM SELESAI ATAU BELUM DIHAPUS
+   if(!s.includes('DELETED') && !s.includes('HAPUS') && !isPending && !s.includes('SELESAI') && !s.includes('APPROVED')) {
+       actBtns += `
+        <button class="icon-action-btn" onclick="showUnivModal('req-edit', {id: '${data.id}', type: 'PO', upc: '${data.upc}', qty: '${data.qty}', note: '${data.note}', reqHistory: '${data.reqHistory}'})" style="margin:0; box-shadow:none; border:1px solid rgba(0,0,0,0.08);">
+            <div style="font-size:20px;">✏️</div><span>Edit</span>
+        </button>
+        <button class="icon-action-btn danger" onclick="showUnivModal('req-delete', {id: '${data.id}', type: 'PO', doc: '${data.upc}', reqHistory: '${data.reqHistory}'})" style="margin:0; box-shadow:none;">
+            <div style="font-size:20px;">🗑️</div><span>Hapus</span>
+        </button>
+       `;
+   } else {
+       actBtns += `<div></div><div></div>`;
+   }
+   // Biar rapi di grid
+   actBtns += `<div></div>
+    <button class="icon-action-btn" onclick="closeActionModal()" style="margin:0; background: var(--primary); color: white; border: none; box-shadow: 0 4px 12px rgba(0,122,255,0.3);">
+        <div style="font-size:20px;">✖</div><span>Tutup</span>
+    </button></div>`;
+
+   document.getElementById('action-title').innerText = 'Detail Purchase Order';
+   document.getElementById('action-desc').style.display = 'none'; 
+   document.getElementById('action-icon').style.display = 'none';
+   document.getElementById('univ-input-box').innerHTML = htmlStr + actBtns;
+   document.getElementById('univ-input-box').style.display = 'block';
+   document.getElementById('btn-proceed-action').parentElement.style.display = 'none'; 
+   document.getElementById('action-modal').classList.add('active');
+}
+
+// 🔍 FUNGSI PENCARIAN MASTER DATA DI DALAM MODAL EDIT PO
+async function fetchEditMasterDataPO() {
+    let upc = document.getElementById('edit-po-upc').value.trim().toUpperCase();
+    if(!upc) return;
+    let masterList = await getMasterFromOfflineDB();
+    let found = null;
+    for(let i=0; i<masterList.length; i++) {
+        let dbUpc = String(masterList[i][0]||"").trim().toUpperCase();
+        let dbArt = String(masterList[i][1]||"").trim().toUpperCase();
+        let dbManuf = String(masterList[i][2]||"").trim().toUpperCase();
+        if(dbUpc===upc || dbArt===upc || dbManuf===upc) {
+            found = { sku: dbUpc||dbArt||dbManuf, desc: masterList[i][3], dept: masterList[i][4], venCode: masterList[i][5], vendor: masterList[i][6] }; break;
+        }
+    }
+    if(found) {
+        document.getElementById('edit-po-sku').innerText = found.sku;
+        document.getElementById('edit-po-desc').innerText = found.desc;
+        document.getElementById('edit-po-dept').innerText = found.dept;
+        document.getElementById('edit-po-vencode').innerText = found.venCode;
+        document.getElementById('edit-po-vendor').innerText = found.vendor;
+        showToast('Produk valid!', 'success');
+    } else {
+        document.getElementById('edit-po-sku').innerText = upc;
+        document.getElementById('edit-po-desc').innerText = "TIDAK DITEMUKAN";
+        document.getElementById('edit-po-dept').innerText = "-";
+        document.getElementById('edit-po-vencode').innerText = "-";
+        document.getElementById('edit-po-vendor').innerText = "-";
+        showToast('Produk tidak terdaftar!', 'warning');
+    }
 }
   
 </script>
