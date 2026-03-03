@@ -1195,7 +1195,7 @@
 
 <script>
 // 🔴 Creator By Alfian A. GANTI LINK DI BAWAH INI DENGAN URL DEPLOY APPS SCRIPT-MU (YANG BERAKHIRAN /exec)
-  const API_URL = "https://script.google.com/macros/s/AKfycbxkCKoYab-ozB40lOx_cvIAYixVbtKsvNf4bxzyiGm12eXW_NWOnqkQizHB1L4chfzl/exec";
+  const API_URL = "https://script.google.com/macros/s/AKfycbxFR88DjvIJJ_CGXM-7b3VnvXZejsT_ZKbzcGqPdvjVoDCL1oJ3ihkxIFGcOB6NdTaS/exec";
 
   // ==========================================
   // LOGIC TOMBOL INSTALL PWA
@@ -4389,23 +4389,28 @@ async function fetchMasterDataPO() {
         return;
     }
 
-    // Ambil Data Master dari IndexedDB (Bisa nampung 50rb data lebih tanpa ngelag)
+    // Ambil Data Master dari IndexedDB
     let masterList = await getMasterFromOfflineDB();
-    
     let foundProduct = null;
 
     // Cari dari 50.000 baris
-    // index: [0]=UPC, [1]=Artikel, [2]=Manuf. Part No, [3]=Desc, [4]=Dept, [5]=Vendor Code, [6]=Vendor Name
     for (let i = 0; i < masterList.length; i++) {
-        if (masterList[i][0] === upc || masterList[i][1] === upc || masterList[i][2] === upc) {
+        // PAKSA JADI TEKS MURNI agar angka tidak error saat dicocokkan
+        let dbUpc = String(masterList[i][0] || "").trim().toUpperCase();
+        let dbArt = String(masterList[i][1] || "").trim().toUpperCase();
+        let dbManuf = String(masterList[i][2] || "").trim().toUpperCase();
+
+        // Jika input cocok dengan UPC, ATAU Artikel, ATAU Manuf Part No
+        if (dbUpc === upc || dbArt === upc || dbManuf === upc) {
             foundProduct = {
-                upc: masterList[i][0] || masterList[i][1] || masterList[i][2], 
-                desc: masterList[i][3],
-                dept: masterList[i][4],
-                venCode: masterList[i][5],
-                vendor: masterList[i][6]
+                // Tampilkan Kode UPC dari Data Master. Jika kosong, baru pakai Artikel/Manuf
+                sku: dbUpc !== "" ? dbUpc : (dbArt !== "" ? dbArt : dbManuf),
+                desc: masterList[i][3] || "-",
+                dept: masterList[i][4] || "-",
+                venCode: masterList[i][5] || "-",
+                vendor: masterList[i][6] || "-"
             };
-            break;
+            break; // Berhenti mencari jika sudah ketemu
         }
     }
 
@@ -4416,14 +4421,14 @@ async function fetchMasterDataPO() {
     let uiVendor = document.getElementById('po-info-vendor');
 
     if (foundProduct) {
-        uiSku.innerText = foundProduct.upc;
-        uiDesc.innerText = foundProduct.desc;
-        uiDept.innerText = foundProduct.dept;
-        uiVendorCode.innerText = foundProduct.venCode;
-        uiVendor.innerText = foundProduct.vendor;
+        uiSku.innerText = foundProduct.sku;          // Menampilkan KODE UPC dari Master
+        uiDesc.innerText = foundProduct.desc;        // Menampilkan Deskripsi
+        uiDept.innerText = foundProduct.dept;        // Menampilkan Dept
+        uiVendorCode.innerText = foundProduct.venCode; // Menampilkan Vendor Code
+        uiVendor.innerText = foundProduct.vendor;    // Menampilkan Vendor Name
         
         uiDesc.style.color = "var(--success)";
-        showToast('Produk ditemukan! (Offline Mode)', 'success');
+        showToast('Produk ditemukan!', 'success');
         if("vibrate" in navigator) navigator.vibrate([50]);
     } else {
         uiSku.innerText = upc;
