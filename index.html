@@ -1220,7 +1220,7 @@
 
 <script>
 // 🔴 Creator By Alfian A. GANTI LINK DI BAWAH INI DENGAN URL DEPLOY APPS SCRIPT-MU (YANG BERAKHIRAN /exec)
-  const API_URL = "https://script.google.com/macros/s/AKfycbzqjWLnghiB-dIhSmSTBSRINBYW6400fE9m9ESZTIqjLz8-0QZnQ_zA7Z7w08YTd1ay/exec";
+  const API_URL = "https://script.google.com/macros/s/AKfycbyYGHu1m2jd1SSjXstTTlw7XfpZUBaDKdnhbs5yP_fF2zRA--6_8UMIro7RcFsvHb-F/exec";
 
   // ==========================================
   // LOGIC TOMBOL INSTALL PWA
@@ -1965,12 +1965,33 @@ async function compressImg(file, skipWatermark = false) {
       noteBox.style.display = 'block'; btn.style.background = 'var(--warning)'; btn.innerText = 'Ajukan Return';
     }
     else if(type === 'req-edit' && payload) {
-      title.innerText = 'Edit Data'; desc.innerText = 'Ubah data dan ajukan persetujuan ke Admin.'; icon.innerText = '✏️';
       let htmlStr = '<input type="hidden" id="edit-id" value="' + payload.id + '"><input type="hidden" id="edit-type" value="' + payload.type + '">';
       
-      // 👇 TAMPILAN FORM EDIT KHUSUS PO (MIRIP FORM AWAL) 👇
+      // 👇 LOGIKA AUTO-APPROVE 2 JAM KHUSUS PO 👇
+      let isAutoApprove = false;
       if(payload.type === 'PO') {
          let poData = globalPOHist.find(x => x.id === payload.id) || payload;
+         let s = String(poData.status).toUpperCase();
+         
+         // Cek selisih waktu dari dibuat sampai sekarang (dalam jam)
+         let diffHours = (new Date() - new Date(poData.ts)) / (1000 * 60 * 60);
+         
+         if ((s.includes('PENGAJUAN') || s === '') && diffHours <= 2) {
+             isAutoApprove = true;
+         }
+
+         if (isAutoApprove) {
+             title.innerText = 'Edit Data (Auto-Save)'; 
+             desc.innerText = '⏳ Data dibuat kurang dari 2 jam lalu. Perubahan akan langsung tersimpan otomatis.'; icon.innerText = '⚡';
+             btn.innerText = 'Simpan Langsung';
+             btn.style.background = 'var(--success)';
+         } else {
+             title.innerText = 'Ajukan Edit Data'; 
+             desc.innerText = '🔒 Batas 2 jam lewat / Status sudah Selesai. Harus disetujui Admin.'; icon.innerText = '✏️';
+             btn.innerText = 'Ajukan Edit';
+             btn.style.background = 'var(--primary)';
+         }
+
          htmlStr += `
          <label class="input-label">Kode UPC / Artikel Number:</label>
          <div class="scan-wrapper" style="margin-bottom:12px;">
@@ -1996,6 +2017,7 @@ async function compressImg(file, skipWatermark = false) {
       } 
       // 👆 SAMPAI SINI UNTUK PO 👆
       else {
+         title.innerText = 'Ajukan Edit Data'; desc.innerText = 'Ubah data dan ajukan persetujuan ke Admin.'; icon.innerText = '✏️'; btn.innerText = 'Ajukan Edit'; btn.style.background = 'var(--primary)';
          htmlStr += '<label class="input-label">No. Dokumen:</label><input type="text" id="edit-doc" class="custom-input" value="' + payload.doc + '" style="margin-bottom:12px;">';
          
          if(payload.type === 'Packing') {
@@ -2015,7 +2037,7 @@ async function compressImg(file, skipWatermark = false) {
          htmlStr += '<label class="input-label" style="color:var(--danger);">Alasan Edit (Wajib):</label><input type="text" id="edit-reason" class="custom-input" placeholder="Ganti foto / Revisi Note...">';
       }
 
-      noteBox.innerHTML = htmlStr; noteBox.style.display = 'block'; btn.style.background = 'var(--primary)'; btn.innerText = 'Ajukan Edit';
+      noteBox.innerHTML = htmlStr; noteBox.style.display = 'block'; btn.parentElement.style.display = 'flex';
     }
       
 else if(type === 'confirm-not-found' && payload) {
@@ -3918,24 +3940,30 @@ function appendChatHistory(existingHistoryStr, senderType, senderName, senderPic
     return JSON.stringify(hist);
 }
 async function executeReqEdit(payload) { 
-     let reason = document.getElementById('edit-reason').value.trim();
-     if(!reason) return showToast('Alasan Edit wajib diisi!', 'error');
-
      let btn = document.getElementById('btn-proceed-action');
      if(btn.disabled) return;
      let oldText = btn.innerText;
-     btn.innerText = 'Mempersiapkan File...'; btn.disabled = true;
+
+     let reason = document.getElementById('edit-reason').value.trim();
+     if(!reason) { return showToast('Alasan Edit wajib diisi!', 'error'); }
+
+     btn.innerText = 'Memproses...'; btn.disabled = true;
 
      let newData = { note: document.getElementById('edit-note').value };
      let changes = []; 
 
      if (newData.note !== (payload.note || '')) changes.push(`Catatan (Note) diperbarui`);
      
-     // LOGIKA MENGIRIM EDIT PO
+     // LOGIKA EDIT QTY PO
      if (payload.type === 'PO') {
          let pUpc = document.getElementById('edit-po-upc').value.trim();
          let pSku = document.getElementById('edit-po-sku').innerText;
-         if (pSku === 'TIDAK DITEMUKAN' || pSku === '') return showToast('Harap Cek Kaca Pembesar UPC dulu!', 'warning');
+         
+         // FIX BUG: Kembalikan fungsi tombol jika error
+         if (pSku === 'TIDAK DITEMUKAN' || pSku === '') {
+             btn.innerText = oldText; btn.disabled = false;
+             return showToast('Harap tap Kaca Pembesar (Cek Produk) dulu!', 'warning');
+         }
 
          newData.upc = pUpc;
          newData.sku = pSku;
@@ -3986,7 +4014,6 @@ async function executeReqEdit(payload) {
     }
     else { btn.innerText = oldText; btn.disabled = false; }
 }
-
  async function executeReqDelete(payload) { 
     let reason = document.getElementById('delete-reason').value.trim();
     if(!reason) return showToast('Alasan Hapus wajib diisi!', 'error');
@@ -4645,8 +4672,10 @@ function showPODetail(id) {
    if(!data) return;
    
    let s = String(data.status).toUpperCase();
-   // Cek apakah data SEDANG diajukan edit/hapus ke admin (Biar gak bisa diklik dobel)
+   
+   // 👇 DETEKSI STATUS UNTUK KUNCI TOMBOL 👇
    let isWaitingAdmin = s.includes('PENDING EDIT') || s.includes('PENDING HAPUS') || s.includes('PENDING DELETE');
+   let isDone = s.includes('DELETED') || s.includes('HAPUS') || s.includes('SELESAI') || s.includes('APPROVED');
    
    let htmlStr = `
      <style>
@@ -4694,28 +4723,38 @@ function showPODetail(id) {
        </div>`;
    }
    
-   let actBtns = '<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 24px; padding-top: 16px; border-top: 1px solid rgba(0,0,0,0.05);">';
+   // 👇 LOGIKA TAMPILAN TOMBOL / BANNER 👇
+   let actBtns = '<div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid rgba(0,0,0,0.05);">';
    
-   // 👇 PERBAIKAN LOGIKA: Tombol muncul jika belum Selesai/Approved/Dihapus/MenungguKonfirmasiEditHapus 👇
-   let canEdit = !s.includes('DELETED') && !s.includes('HAPUS') && !s.includes('SELESAI') && !s.includes('APPROVED') && !isWaitingAdmin;
-   
-   if(canEdit) {
+   if (isWaitingAdmin) {
+       // Kunci Tombol & Tampilkan Banner Waiting
        actBtns += `
-        <button class="icon-action-btn" onclick="showUnivModal('req-edit', {id: '${data.id}', type: 'PO', upc: '${data.upc}', qty: '${data.qty}', note: '${data.note}', reqHistory: '${data.reqHistory}'})" style="margin:0; box-shadow:none; border:1px solid rgba(0,0,0,0.08);">
-            <div style="font-size:20px;">✏️</div><span>Edit</span>
-        </button>
-        <button class="icon-action-btn danger" onclick="showUnivModal('req-delete', {id: '${data.id}', type: 'PO', doc: '${data.upc}', reqHistory: '${data.reqHistory}'})" style="margin:0; box-shadow:none;">
-            <div style="font-size:20px;">🗑️</div><span>Hapus</span>
-        </button>
+       <div style="background: rgba(255, 149, 0, 0.1); border: 1px dashed rgba(255, 149, 0, 0.4); border-radius: 16px; padding: 16px; text-align: center; margin-bottom: 16px;">
+           <div style="font-size: 14px; font-weight: 800; color: var(--warning); margin-bottom: 6px;">⏳ Menunggu Keputusan Admin</div>
+           <div style="font-size: 12px; color: var(--text-main); font-weight: 600; line-height: 1.5;">Aksi Edit/Hapus dikunci sementara hingga Admin memproses pengajuan sebelumnya.</div>
+       </div>
+       <button class="btn-secondary" onclick="closeActionModal()" style="width: 100%; border-radius: 16px; font-weight: 800; padding: 14px;">Tutup Detail</button>
        `;
+   } else if (!isDone) {
+       // Bebas Edit / Hapus
+       actBtns += `
+       <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+           <button class="icon-action-btn" onclick="showUnivModal('req-edit', {id: '${data.id}', type: 'PO', upc: '${data.upc}', qty: '${data.qty}', note: '${data.note}', reqHistory: '${data.reqHistory}'})" style="margin:0; box-shadow:none; border:1px solid rgba(0,0,0,0.08);">
+               <div style="font-size:20px;">✏️</div><span>Edit</span>
+           </button>
+           <button class="icon-action-btn danger" onclick="showUnivModal('req-delete', {id: '${data.id}', type: 'PO', doc: '${data.upc}', reqHistory: '${data.reqHistory}'})" style="margin:0; box-shadow:none;">
+               <div style="font-size:20px;">🗑️</div><span>Hapus</span>
+           </button>
+           <button class="icon-action-btn" onclick="closeActionModal()" style="margin:0; background: var(--primary); color: white; border: none; box-shadow: 0 4px 12px rgba(0,122,255,0.3);">
+               <div style="font-size:20px;">✖</div><span>Tutup</span>
+           </button>
+       </div>`;
    } else {
-       actBtns += `<div></div><div></div>`;
+       // Sudah Done (Selesai/Approved/Deleted), Kunci Tombol
+       actBtns += `<button class="btn-secondary" onclick="closeActionModal()" style="width: 100%; border-radius: 16px; font-weight: 800; padding: 14px;">Tutup Detail</button>`;
    }
    
-   actBtns += `<div></div>
-    <button class="icon-action-btn" onclick="closeActionModal()" style="margin:0; background: var(--primary); color: white; border: none; box-shadow: 0 4px 12px rgba(0,122,255,0.3);">
-        <div style="font-size:20px;">✖</div><span>Tutup</span>
-    </button></div>`;
+   actBtns += `</div>`; // Tutup bungkus
 
    document.getElementById('action-title').innerText = 'Detail Purchase Order';
    document.getElementById('action-desc').style.display = 'none'; 
