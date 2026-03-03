@@ -1135,7 +1135,8 @@
 
          <div class="filter-tabs" style="margin-bottom: 16px; background: rgba(0,122,255,0.05);">
             <button class="tab-btn po-tab-btn active" id="tab-po-pengajuan" onclick="filterPOHist('Pengajuan')">⏳ Pengajuan</button>
-            <button class="tab-btn po-tab-btn" id="tab-po-selesai" onclick="filterPOHist('Selesai')">✅ Selesai</button>
+            <button class="tab-btn po-tab-btn" id="tab-po-selesai" onclick="filterPOHist('Selesai')">✅ Done</button>
+            <button class="tab-btn po-tab-btn" id="tab-po-cancel" onclick="filterPOHist('Cancel')">❌ Cancel</button>
          </div>
 
          <input type="text" id="po-hist-search" class="custom-input" placeholder="Cari SKU / UPC / Desc..." onkeyup="renderPOHistory()" style="margin-bottom: 16px; padding: 14px; font-size: 14px;">
@@ -4614,11 +4615,14 @@ function renderPOHistory() {
         let isMatchSearch = String(x.upc).toLowerCase().includes(q) || String(x.sku).toLowerCase().includes(q) || String(x.desc).toLowerCase().includes(q);
         if (!isMatchSearch) return false;
 
-        // LOGIKA FILTER TAB
+        // 👇 LOGIKA FILTER 3 TAB 👇
         if (activePOTab === 'Pengajuan') {
             return s.includes('PENGAJUAN') || s.includes('PENDING') || s === ''; 
         } else if (activePOTab === 'Selesai') {
-            return s.includes('SELESAI') || s.includes('DONE') || s.includes('APPROVED') || s.includes('REJECTED') || s.includes('DELETED') || s.includes('RETURN');
+            return s.includes('SELESAI') || s.includes('DONE') || s.includes('APPROVED');
+        } else if (activePOTab === 'Cancel') {
+            // Memasukkan kata Cancel, Batal, Ditolak/Rejected, dan Dihapus ke tab ini
+            return s.includes('CANCEL') || s.includes('BATAL') || s.includes('REJECTED') || s.includes('TOLAK') || s.includes('DELETED') || s.includes('HAPUS');
         }
         return true; 
     });
@@ -4630,21 +4634,29 @@ function renderPOHistory() {
         let s = String(x.status).toUpperCase();
         let statusColor = 'var(--text-muted)'; let statusBg = 'rgba(0,0,0,0.05)'; let statusText = 'UNKNOWN';
 
-        if(s.includes('RETURN')) { statusColor = 'var(--warning)'; statusBg = 'rgba(255,149,0,0.15)'; statusText = '🔄 DIRETUR'; } 
-        else if(s.includes('DELETE') || s.includes('HAPUS')) { statusColor = 'var(--danger)'; statusBg = 'rgba(255,59,48,0.15)'; statusText = '🗑️ DIHAPUS'; } 
+        // 👇 LOGIKA WARNA & TEKS BADGE STATUS 👇
+        if(s.includes('RETURN')) { 
+            statusColor = 'var(--warning)'; statusBg = 'rgba(255,149,0,0.15)'; statusText = '🔄 DIRETUR'; 
+        } 
+        else if(s.includes('CANCEL') || s.includes('BATAL') || s.includes('REJECTED') || s.includes('TOLAK')) { 
+            statusColor = 'var(--danger)'; statusBg = 'rgba(255,59,48,0.15)'; statusText = '❌ CANCEL'; 
+        }
+        else if(s.includes('DELETE') || s.includes('HAPUS')) { 
+            statusColor = 'var(--danger)'; statusBg = 'rgba(255,59,48,0.15)'; statusText = '🗑️ DIHAPUS'; 
+        } 
         else if(s.includes('PENDING') || s.includes('PENGAJUAN') || s === '') { 
             statusColor = 'var(--warning)'; statusBg = 'rgba(255,149,0,0.15)'; 
             if(s.includes('EDIT')) statusText = '⏳ PENG. EDIT';
-            else if(s.includes('DELETE')) statusText = '⏳ PENG. HAPUS';
+            else if(s.includes('DELETE') || s.includes('HAPUS')) statusText = '⏳ PENG. HAPUS';
             else statusText = '⏳ PENGAJUAN'; 
         } 
-        else if(s.includes('REJECTED') || s.includes('TOLAK')) { statusColor = 'var(--danger)'; statusBg = 'rgba(255,59,48,0.15)'; statusText = '❌ DITOLAK'; } 
-        else if(s.includes('APPROVED') || s.includes('COMPLETED') || s.includes('SELESAI')) { statusColor = 'var(--success)'; statusBg = 'rgba(52,199,89,0.15)'; statusText = '✅ SELESAI'; } 
+        else if(s.includes('APPROVED') || s.includes('COMPLETED') || s.includes('SELESAI') || s.includes('DONE')) { 
+            statusColor = 'var(--success)'; statusBg = 'rgba(52,199,89,0.15)'; statusText = '✅ DONE'; 
+        } 
 
         let statusBadge = `<div style="background:${statusBg}; color:${statusColor}; font-size:10px; font-weight:800; padding:4px 8px; border-radius:8px; display:inline-block; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">${statusText}</div>`;
         let strDate = new Date(x.ts).toLocaleDateString('id-ID', {day:'numeric', month:'short'}) + ', ' + new Date(x.ts).toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'});
 
-        // KLIK UNTUK MUNCULIN DETAIL PO
         htmlStr += `
         <div class="hist-card" onclick="showPODetail('${x.id}')" style="align-items:flex-start; padding: 16px;">
             <div class="hist-img-wrapper" style="width: 55px; height: 55px; border-radius: 14px; flex-shrink: 0; background:rgba(0,122,255,0.1); border: 1px solid rgba(0,122,255,0.2); display:flex; align-items:center; justify-content:center; font-size:24px; box-shadow: 0 4px 10px rgba(0,122,255,0.1);">🛒</div>
@@ -4675,7 +4687,7 @@ function showPODetail(id) {
    
    // 👇 DETEKSI STATUS UNTUK KUNCI TOMBOL 👇
    let isWaitingAdmin = s.includes('PENDING EDIT') || s.includes('PENDING HAPUS') || s.includes('PENDING DELETE');
-   let isDone = s.includes('DELETED') || s.includes('HAPUS') || s.includes('SELESAI') || s.includes('APPROVED');
+   let isDoneOrCanceled = s.includes('DELETED') || s.includes('HAPUS') || s.includes('SELESAI') || s.includes('APPROVED') || s.includes('DONE') || s.includes('CANCEL') || s.includes('BATAL') || s.includes('REJECTED');
    
    let htmlStr = `
      <style>
@@ -4723,7 +4735,6 @@ function showPODetail(id) {
        </div>`;
    }
    
-   // 👇 LOGIKA TAMPILAN TOMBOL / BANNER 👇
    let actBtns = '<div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid rgba(0,0,0,0.05);">';
    
    if (isWaitingAdmin) {
@@ -4735,7 +4746,7 @@ function showPODetail(id) {
        </div>
        <button class="btn-secondary" onclick="closeActionModal()" style="width: 100%; border-radius: 16px; font-weight: 800; padding: 14px;">Tutup Detail</button>
        `;
-   } else if (!isDone) {
+   } else if (!isDoneOrCanceled) {
        // Bebas Edit / Hapus
        actBtns += `
        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
@@ -4750,11 +4761,11 @@ function showPODetail(id) {
            </button>
        </div>`;
    } else {
-       // Sudah Done (Selesai/Approved/Deleted), Kunci Tombol
+       // Sudah Done/Cancel, Kunci Tombol
        actBtns += `<button class="btn-secondary" onclick="closeActionModal()" style="width: 100%; border-radius: 16px; font-weight: 800; padding: 14px;">Tutup Detail</button>`;
    }
    
-   actBtns += `</div>`; // Tutup bungkus
+   actBtns += `</div>`; 
 
    document.getElementById('action-title').innerText = 'Detail Purchase Order';
    document.getElementById('action-desc').style.display = 'none'; 
@@ -4764,7 +4775,7 @@ function showPODetail(id) {
    document.getElementById('btn-proceed-action').parentElement.style.display = 'none'; 
    document.getElementById('action-modal').classList.add('active');
 }
-
+  
 // 🔍 FUNGSI PENCARIAN MASTER DATA DI DALAM MODAL EDIT PO
 async function fetchEditMasterDataPO() {
     let upc = document.getElementById('edit-po-upc').value.trim().toUpperCase();
