@@ -4645,7 +4645,8 @@ function showPODetail(id) {
    if(!data) return;
    
    let s = String(data.status).toUpperCase();
-   let isPending = s.includes('PENDING') || s.includes('PENGAJUAN') || s === '';
+   // Cek apakah data SEDANG diajukan edit/hapus ke admin (Biar gak bisa diklik dobel)
+   let isWaitingAdmin = s.includes('PENDING EDIT') || s.includes('PENDING HAPUS') || s.includes('PENDING DELETE');
    
    let htmlStr = `
      <style>
@@ -4679,7 +4680,6 @@ function showPODetail(id) {
          </div>
    `;
 
-   // Munculin History Chat Admin kalau ada
    let chatHtml = buildChatHistory(data);
    if ((data.reqHistory && data.reqHistory !== '-') || (data.adminNote && data.adminNote !== '-')) {
        htmlStr += `
@@ -4696,8 +4696,10 @@ function showPODetail(id) {
    
    let actBtns = '<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 24px; padding-top: 16px; border-top: 1px solid rgba(0,0,0,0.05);">';
    
-   // HANYA MUNCUL JIKA BELUM SELESAI ATAU BELUM DIHAPUS
-   if(!s.includes('DELETED') && !s.includes('HAPUS') && !isPending && !s.includes('SELESAI') && !s.includes('APPROVED')) {
+   // 👇 PERBAIKAN LOGIKA: Tombol muncul jika belum Selesai/Approved/Dihapus/MenungguKonfirmasiEditHapus 👇
+   let canEdit = !s.includes('DELETED') && !s.includes('HAPUS') && !s.includes('SELESAI') && !s.includes('APPROVED') && !isWaitingAdmin;
+   
+   if(canEdit) {
        actBtns += `
         <button class="icon-action-btn" onclick="showUnivModal('req-edit', {id: '${data.id}', type: 'PO', upc: '${data.upc}', qty: '${data.qty}', note: '${data.note}', reqHistory: '${data.reqHistory}'})" style="margin:0; box-shadow:none; border:1px solid rgba(0,0,0,0.08);">
             <div style="font-size:20px;">✏️</div><span>Edit</span>
@@ -4709,7 +4711,7 @@ function showPODetail(id) {
    } else {
        actBtns += `<div></div><div></div>`;
    }
-   // Biar rapi di grid
+   
    actBtns += `<div></div>
     <button class="icon-action-btn" onclick="closeActionModal()" style="margin:0; background: var(--primary); color: white; border: none; box-shadow: 0 4px 12px rgba(0,122,255,0.3);">
         <div style="font-size:20px;">✖</div><span>Tutup</span>
