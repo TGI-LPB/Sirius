@@ -1095,6 +1095,10 @@
                   <span style="color: var(--text-muted); font-weight: 600;">DEPT</span>
                   <span id="po-info-dept" style="font-weight: 800; color: var(--text-main);">-</span>
               </div>
+               <div style="display: flex; justify-content: space-between; font-size: 13px;">
+                  <span style="color: var(--text-muted); font-weight: 600;">Vendor Code</span>
+                  <span id="po-info-vendor-code" style="font-weight: 800; color: var(--text-main);">-</span>
+              </div>
               <div style="display: flex; justify-content: space-between; font-size: 13px;">
                   <span style="color: var(--text-muted); font-weight: 600;">Vendor</span>
                   <span id="po-info-vendor" style="font-weight: 800; color: var(--text-main); text-align: right; max-width: 70%;">-</span>
@@ -1191,7 +1195,7 @@
 
 <script>
 // 🔴 Creator By Alfian A. GANTI LINK DI BAWAH INI DENGAN URL DEPLOY APPS SCRIPT-MU (YANG BERAKHIRAN /exec)
-  const API_URL = "https://script.google.com/macros/s/AKfycbzYpTmKi1FmFp279Ig1y9FqNke29Q6bOs7OxKuLHJr2N4wofX-eRmzepO6RvtqrKfE9/exec";
+  const API_URL = "https://script.google.com/macros/s/AKfycbxkCKoYab-ozB40lOx_cvIAYixVbtKsvNf4bxzyiGm12eXW_NWOnqkQizHB1L4chfzl/exec";
 
   // ==========================================
   // LOGIC TOMBOL INSTALL PWA
@@ -4315,9 +4319,6 @@ function showStaffDetailModal(username) {
 
 
 // ==========================================
-// LOGIKA PURCHASE ORDER (PO)
-// ==========================================
-// ==========================================
 // LOGIKA PURCHASE ORDER (PO) & MASTER DATA OFFLINE
 // ==========================================
 
@@ -4338,7 +4339,7 @@ function resetFormPO() {
     if (infoEl) infoEl.style.display = 'none';
 }
 
-// 🚀 FITUR PENCARIAN OFFLINE (Bisa membaca 50.000 data dalam 0.01 detik)
+// 🚀 FITUR PENCARIAN OFFLINE DENGAN 3 KONDISI
 function fetchMasterDataPO() {
     let upc = document.getElementById('po-upc').value.trim().toUpperCase();
     if (!upc) {
@@ -4351,16 +4352,16 @@ function fetchMasterDataPO() {
     
     let foundProduct = null;
 
-    // Cari dari 50.000 baris (Sistem baca Array Padat)
-    // index: [0] = UPC, [1] = Artikel, [2] = Desc, [3] = Dept, [4] = Vendor
+    // Cari dari data yang di-download (Sistem baca Array Padat)
+    // index: [0]=UPC, [1]=Artikel, [2]=Manuf. Part No, [3]=Desc, [4]=Dept, [5]=Vendor Code, [6]=Vendor Name
     for (let i = 0; i < masterList.length; i++) {
-        if (masterList[i][0] === upc || masterList[i][1] === upc) {
+        if (masterList[i][0] === upc || masterList[i][1] === upc || masterList[i][2] === upc) {
             foundProduct = {
-                upc: masterList[i][0],
-                art: masterList[i][1],
-                desc: masterList[i][2],
-                dept: masterList[i][3],
-                vendor: masterList[i][4]
+                upc: masterList[i][0] || masterList[i][1] || masterList[i][2], // Pilih yg pertama ada
+                desc: masterList[i][3],
+                dept: masterList[i][4],
+                venCode: masterList[i][5],
+                vendor: masterList[i][6]
             };
             break;
         }
@@ -4369,12 +4370,14 @@ function fetchMasterDataPO() {
     let uiSku = document.getElementById('po-info-sku');
     let uiDesc = document.getElementById('po-info-desc');
     let uiDept = document.getElementById('po-info-dept');
+    let uiVendorCode = document.getElementById('po-info-vendor-code');
     let uiVendor = document.getElementById('po-info-vendor');
 
     if (foundProduct) {
-        uiSku.innerText = foundProduct.upc || foundProduct.art || upc;
+        uiSku.innerText = foundProduct.upc;
         uiDesc.innerText = foundProduct.desc;
         uiDept.innerText = foundProduct.dept;
+        uiVendorCode.innerText = foundProduct.venCode;
         uiVendor.innerText = foundProduct.vendor;
         
         uiDesc.style.color = "var(--success)";
@@ -4384,6 +4387,7 @@ function fetchMasterDataPO() {
         uiSku.innerText = upc;
         uiDesc.innerText = "TIDAK DITEMUKAN DI DATABASE";
         uiDept.innerText = "UNKNOWN";
+        uiVendorCode.innerText = "UNKNOWN";
         uiVendor.innerText = "UNKNOWN";
 
         uiDesc.style.color = "var(--danger)";
@@ -4392,6 +4396,59 @@ function fetchMasterDataPO() {
     }
 
     document.getElementById('po-master-info').style.display = 'block';
+}
+
+// 💾 FITUR SIMPAN PO (Mendukung Offline Draft & TXID)
+async function savePurchaseOrder() {
+    let upc = document.getElementById('po-upc').value.trim();
+    let qty = document.getElementById('po-qty').value.trim();
+    let note = document.getElementById('po-note').value.trim();
+
+    if (!upc) return showToast('Kode UPC wajib diisi!', 'error');
+    if (!qty || qty <= 0) return showToast('QTY harus lebih dari 0!', 'error');
+    
+    // Validasi apakah staf sudah menekan ikon cek 
+    if (document.getElementById('po-master-info').style.display === 'none') {
+        return showToast('Silakan tap ikon Cek (Kaca Pembesar) dulu!', 'warning');
+    }
+
+    let sku = document.getElementById('po-info-sku').innerText;
+    let desc = document.getElementById('po-info-desc').innerText;
+    let dept = document.getElementById('po-info-dept').innerText;
+    let vendorCode = document.getElementById('po-info-vendor-code').innerText;
+    let vendorName = document.getElementById('po-info-vendor').innerText;
+
+    let docName = "PO: " + upc; 
+    addUploadTask('Purchase Order', docName);
+    
+    // Langsung tutup form agar staf bisa lanjut input yang lain
+    executeCancelForm('po'); 
+
+    let txId = generateTxId();
+    let payload = {
+        txId: txId,
+        staff: currentUser.name || currentUser.username, 
+        upc: upc,
+        sku: sku,
+        deskripsi: desc,
+        dept: dept,
+        vendorCode: vendorCode, 
+        vendorName: vendorName,
+        qty: qty,
+        note: note,
+        status: "Pengajuan",
+        ip: clientIP
+    };
+
+    let res = await callAPI("savePurchaseOrder", payload);
+    
+    if (res && res.success) {
+        completeUploadTask(docName, true, res.message);
+    } else {
+        saveToDraft("savePurchaseOrder", payload, docName);
+        let reason = res ? res.message : 'Offline';
+        completeUploadTask(docName, false, 'Tersimpan di Draft (' + reason + ')');
+    }
 }
   
 </script>
