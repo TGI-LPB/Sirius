@@ -299,7 +299,7 @@
           <div class="notch"></div>
           <div class="mockup-inner">
             <div class="brand-logo" style="margin-top:60px;">
-              <div style="font-size: 64px; margin-bottom:6px;">📦</div> RePack
+              <img src="https://tgi-lpb.github.io/RePack/android-chrome-512x512.png" alt="Logo RePack" style="width: 75px; height: 75px; margin-bottom: 8px; border-radius: 18px; object-fit: contain;">   RePack
             </div>
             <p style="color: var(--text-muted); font-size: 14px; margin-top:-10px; margin-bottom: 32px; text-align: center; font-weight:600;">Receipt & Packing</p>
             <div class="glass" style="padding: 30px 24px;">
@@ -330,7 +330,7 @@
           <div class="notch"></div>
           <div class="mockup-inner">
             <div class="brand-logo" style="margin-top:60px;">
-              <div style="font-size: 64px; margin-bottom:6px;">📦</div> RePack
+              <img src="https://tgi-lpb.github.io/RePack/android-chrome-512x512.png" alt="Logo RePack" style="width: 75px; height: 75px; margin-bottom: 8px; border-radius: 18px; object-fit: contain;">   RePack
             </div>
             <p style="color: var(--text-muted); font-size: 14px; margin-top:-10px; margin-bottom: 32px; text-align: center; font-weight:600;">Receipt & Packing</p>
             <div class="glass" style="padding: 30px 24px;">
@@ -364,7 +364,7 @@
           <div class="mockup-inner" style="position:relative;">
             <div id="toast" style="background: rgba(255, 59, 48, 0.9);">Username atau Password salah! (Percobaan gagal: 3/6)</div>
             <div class="brand-logo" style="margin-top:60px;">
-              <div style="font-size: 64px; margin-bottom:6px;">📦</div> RePack
+              <img src="https://tgi-lpb.github.io/RePack/android-chrome-512x512.png" alt="Logo RePack" style="width: 75px; height: 75px; margin-bottom: 8px; border-radius: 18px; object-fit: contain;">   RePack
             </div>
             <div class="glass" style="padding: 30px 24px; border: 1px solid var(--danger);">
               <div class="input-group"><input type="text" class="custom-input" value="Alfian_A"></div>
@@ -394,7 +394,7 @@
           <div class="mockup-inner" style="position:relative;">
             <div id="toast" style="background: rgba(255, 59, 48, 0.9);">🔒 Akses ditahan. Coba lagi dalam 15 menit.</div>
             <div class="brand-logo" style="margin-top:60px;">
-              <div style="font-size: 64px; margin-bottom:6px;">📦</div> RePack
+              <img src="https://tgi-lpb.github.io/RePack/android-chrome-512x512.png" alt="Logo RePack" style="width: 75px; height: 75px; margin-bottom: 8px; border-radius: 18px; object-fit: contain;">   RePack
             </div>
             <div class="glass" style="padding: 30px 24px; box-shadow: 0 0 20px rgba(255,59,48,0.2);">
               <div class="input-group"><input type="text" class="custom-input" value="Alfian_A" disabled></div>
@@ -423,7 +423,7 @@
           <div class="notch"></div>
           <div class="mockup-inner">
             <div class="brand-logo" style="margin-top:60px;">
-              <div style="font-size: 64px; margin-bottom:6px;">📦</div> RePack
+              <img src="https://tgi-lpb.github.io/RePack/android-chrome-512x512.png" alt="Logo RePack" style="width: 75px; height: 75px; margin-bottom: 8px; border-radius: 18px; object-fit: contain;">   RePack
             </div>
             <div class="glass" style="padding: 30px 24px;">
               <div class="input-group"><input type="text" class="custom-input" placeholder="Username"></div>
@@ -1011,7 +1011,7 @@
               <label class="input-label">Foto Dokumentasi (Wajib)</label>
               <div class="img-grid-3">
                 <div class="img-upload-box" style="border: 2px solid var(--primary); box-shadow: 0 0 15px rgba(0,122,255,0.3);">
-                    <img src="https://cdn.ruparupa.io/fit-in/850x850/filters:format(webp)/filters:watermark(content.ruparupa.io,products/wm/rr.png,0,-0,0,100,100)/ruparupa-com/image/upload/Products/10626489_1.jpg?auto=format&fit=crop&w=300&q=80" class="real-pic">
+                    <img src="https://github.com/TGI-LPB/Sirius/blob/main/INV161888271%20-%20Before.jpg?raw=true?auto=format&fit=crop&w=300&q=80" class="real-pic">
                     <span style="position:relative; z-index:10; background:rgba(255,255,255,0.9); padding:2px 6px; border-radius:6px; font-weight:bold; color:var(--primary);">Before</span>
                 </div>
                 <div class="img-upload-box"><div class="icon">📦</div><span>Packing</span></div>
@@ -1046,11 +1046,11 @@
               <label class="input-label">Foto Dokumentasi (Wajib)</label>
               <div class="img-grid-3">
                 <div class="img-upload-box">
-                    <img src="https://cdn.ruparupa.io/fit-in/850x850/filters:format(webp)/filters:watermark(content.ruparupa.io,products/wm/rr.png,0,-0,0,100,100)/ruparupa-com/image/upload/Products/10626489_1.jpg?auto=format&fit=crop&w=300&q=80" class="real-pic">
+                    <img src="https://github.com/TGI-LPB/Sirius/blob/main/INV161888271%20-%20Before.jpg?raw=true?auto=format&fit=crop&w=300&q=80" class="real-pic">
                     <span style="position:relative; z-index:10; background:rgba(255,255,255,0.9); padding:2px 6px; border-radius:6px; font-weight:bold;">Before</span>
                 </div>
                 <div class="img-upload-box" style="border: 2px solid var(--primary); box-shadow: 0 0 15px rgba(0,122,255,0.3);">
-                    <img src="https://ljrlogistics.com/wp-content/uploads/2022/05/Bubble-Wrap-Ekspedisi-Pengiriman-Barang-Murah.jpeg?auto=format&fit=crop&w=300&q=80" class="real-pic">
+                    <img src="https://github.com/TGI-LPB/Sirius/blob/main/INV161888271%20-%20Packing.jpg?raw=true?auto=format&fit=crop&w=300&q=80" class="real-pic">
                     <span style="position:relative; z-index:10; background:rgba(255,255,255,0.9); padding:2px 6px; border-radius:6px; font-weight:bold; color:var(--primary);">Packing</span>
                 </div>
                 <div class="img-upload-box"><div class="icon">✅</div><span>After</span></div>
@@ -1084,15 +1084,15 @@
               <label class="input-label">Foto Dokumentasi (Wajib)</label>
               <div class="img-grid-3">
                 <div class="img-upload-box">
-                    <img src="https://cdn.ruparupa.io/fit-in/850x850/filters:format(webp)/filters:watermark(content.ruparupa.io,products/wm/rr.png,0,-0,0,100,100)/ruparupa-com/image/upload/Products/10626489_1.jpg?auto=format&fit=crop&w=300&q=80" class="real-pic">
+                    <img src="https://github.com/TGI-LPB/Sirius/blob/main/INV161888271%20-%20Before.jpg?raw=true?auto=format&fit=crop&w=300&q=80" class="real-pic">
                     <span style="position:relative; z-index:10; background:rgba(255,255,255,0.9); padding:2px 6px; border-radius:6px; font-weight:bold;">Before</span>
                 </div>
                 <div class="img-upload-box">
-                    <img src="https://ljrlogistics.com/wp-content/uploads/2022/05/Bubble-Wrap-Ekspedisi-Pengiriman-Barang-Murah.jpeg?auto=format&fit=crop&w=300&q=80" class="real-pic">
+                    <img src="https://github.com/TGI-LPB/Sirius/blob/main/INV161888271%20-%20Packing.jpg?raw=true?auto=format&fit=crop&w=300&q=80" class="real-pic">
                     <span style="position:relative; z-index:10; background:rgba(255,255,255,0.9); padding:2px 6px; border-radius:6px; font-weight:bold;">Packing</span>
                 </div>
                 <div class="img-upload-box" style="border: 2px solid var(--primary); box-shadow: 0 0 15px rgba(0,122,255,0.3);">
-                    <img src="https://static.desty.app/desty-omni/20230531/874b3a4dbdca4b339a7be480e4d175e5.jpeg?auto=format&fit=crop&w=300&q=80" class="real-pic">
+                    <img src="https://github.com/TGI-LPB/Sirius/blob/main/INV161888271%20-%20After.jpg?raw=true?auto=format&fit=crop&w=300&q=80" class="real-pic">
                     <span style="position:relative; z-index:10; background:rgba(255,255,255,0.9); padding:2px 6px; border-radius:6px; font-weight:bold; color:var(--primary);">After</span>
                 </div>
               </div>
@@ -1124,7 +1124,7 @@
              <div class="glass" style="padding:24px;">
               <div class="input-group">
                 <label class="input-label">Catatan (Opsional)</label>
-                <textarea class="custom-input" rows="2" placeholder="Tambahkan keterangan jika ada...">KARDUS ADA PENYOK SEDIKIT DARI SUPLIER.</textarea>
+                <textarea class="custom-input" rows="2" placeholder="Tambahkan keterangan jika ada...">KARDUS RUPA-RUPA HABIS</textarea>
               </div>
 
               <button class="btn-primary" style="margin-top: 10px; background:var(--primary); box-shadow: 0 8px 20px rgba(0,122,255,0.3);">Simpan Data Packing</button>
@@ -1149,7 +1149,7 @@
           <div class="notch"></div>
           <div class="mockup-inner" style="justify-content:center; align-items:center; background:#000;">
             <div style="position:relative; width: 100%; aspect-ratio: 1/1; background:#333; border-radius: 20px; overflow:hidden;">
-               <img src="https://cdn.ruparupa.io/fit-in/850x850/filters:format(webp)/filters:watermark(content.ruparupa.io,products/wm/rr.png,0,-0,0,100,100)/ruparupa-com/image/upload/Products/10626489_1.jpg?auto=format&fit=crop&w=500&q=80" style="width:100%; height:100%; object-fit:cover;">
+               <img src="https://github.com/TGI-LPB/Sirius/blob/main/INV161888271%20-%20Before.jpg?raw=true?auto=format&fit=crop&w=500&q=80" style="width:100%; height:100%; object-fit:cover;">
                
                <div style="position:absolute; bottom:0; left:0; width:100%; background:rgba(0,0,0,0.65); padding: 15px; color:rgba(255,255,255,0.95); font-family:sans-serif; text-align:right; font-size: 11px; line-height: 1.5;">
                    <b>RePack (Receipt & Packing)</b><br>
@@ -1577,7 +1577,7 @@
               <label class="input-label" style="margin-top: 12px;">Foto Penerima / Bukti (Wajib)</label>
               
               <div class="img-upload-box" style="height:200px; margin-bottom: 20px; border-color:var(--primary); background:rgba(0,122,255,0.05); overflow:hidden;">
-                 <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSalX61q0dbW1EvpWbDHao1HSFbVf5MloGQag&s?auto=format&fit=crop&w=300&q=80" class="real-pic">
+                 <img src="https://github.com/TGI-LPB/Sirius/blob/main/INV950890289%20-%20Receipt.jpg?raw=true?auto=format&fit=crop&w=300&q=80" class="real-pic">
                  <span style="position:relative; z-index:10; background:rgba(0,122,255,0.9); padding:4px 10px; border-radius:8px; font-weight:bold; color:white; margin-top:140px;">📸 Foto Tersimpan</span>
               </div>
               
@@ -1741,7 +1741,9 @@
             </div>
             <div class="card-list">
                 <div class="hist-card">
-                    <div class="hist-img-wrapper" style="background:#000; color:white;">📦</div>
+                    <div class="hist-img-wrapper" style="background:#000; color:white;">
+    <img src="https://github.com/TGI-LPB/Sirius/blob/main/INV877633890%20-%20Before.jpg?raw=true" style="width:100%; height:100%; object-fit:cover;">
+</div>
                     <div class="hist-info">
                         <div style="display:flex; justify-content:space-between; align-items:flex-start; width: 100%; gap: 8px;">
                             <div style="overflow:hidden;">
@@ -1754,7 +1756,10 @@
                 </div>
 
                 <div class="hist-card">
-                    <div class="hist-img-wrapper" style="background:#f0f0f5; color:black;">👨🏻‍✈️<div class="hist-type-icon">🧾</div></div>
+                    <div class="hist-img-wrapper" style="background:#f0f0f5; color:black;">
+    <img src="https://github.com/TGI-LPB/Sirius/blob/main/INV219991288%20-%20Receipt.jpg?raw=true" style="width:100%; height:100%; object-fit:cover;">
+    <div class="hist-type-icon">🧾</div>
+</div>
                     <div class="hist-info">
                         <div style="display:flex; justify-content:space-between; align-items:flex-start; width: 100%; gap: 8px;">
                             <div style="overflow:hidden;">
@@ -1767,7 +1772,9 @@
                 </div>
 
                 <div class="hist-card" style="border:1px solid rgba(255,149,0,0.3);">
-                    <div class="hist-img-wrapper" style="background:#000; color:white;">📦</div>
+                    <div class="hist-img-wrapper" style="background:#000; color:white;">
+    <img src="https://github.com/TGI-LPB/Sirius/blob/main/INV642930531%20-%20Before.jpg?raw=true" style="width:100%; height:100%; object-fit:cover;">
+</div>
                     <div class="hist-info">
                         <div style="display:flex; justify-content:space-between; align-items:flex-start; width: 100%; gap: 8px;">
                             <div style="overflow:hidden;">
@@ -1847,15 +1854,15 @@
               <div style="font-size:14px; font-weight:800; color:var(--text-main); margin-top: 16px; margin-bottom: 8px;">📸 Dokumentasi</div>
               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                 <div style="position:relative; aspect-ratio: 1/1;">
-                  <img src="https://cdn.ruparupa.io/fit-in/850x850/filters:format(webp)/filters:watermark(content.ruparupa.io,products/wm/rr.png,0,-0,0,100,100)/ruparupa-com/image/upload/Products/10626489_1.jpg?auto=format&fit=crop&w=300&q=80" style="width:100%; height:100%; border-radius:18px; object-fit:cover; border:1px solid rgba(0,0,0,0.06);">
+                  <img src="https://github.com/TGI-LPB/Sirius/blob/main/INV161888271%20-%20Before.jpg?raw=true?auto=format&fit=crop&w=300&q=80" style="width:100%; height:100%; border-radius:18px; object-fit:cover; border:1px solid rgba(0,0,0,0.06);">
                   <div style="position: absolute; bottom: 8px; left: 8px; background: rgba(255,255,255,0.85); font-size: 11px; padding: 4px 10px; border-radius: 12px; font-weight: 800;">Before</div>
                 </div>
                 <div style="position:relative; aspect-ratio: 1/1;">
-                  <img src="https://ljrlogistics.com/wp-content/uploads/2022/05/Bubble-Wrap-Ekspedisi-Pengiriman-Barang-Murah.jpeg?auto=format&fit=crop&w=300&q=80" style="width:100%; height:100%; border-radius:18px; object-fit:cover; border:1px solid rgba(0,0,0,0.06);">
+                  <img src="https://github.com/TGI-LPB/Sirius/blob/main/INV161888271%20-%20Packing.jpg?raw=true?auto=format&fit=crop&w=300&q=80" style="width:100%; height:100%; border-radius:18px; object-fit:cover; border:1px solid rgba(0,0,0,0.06);">
                   <div style="position: absolute; bottom: 8px; left: 8px; background: rgba(255,255,255,0.85); font-size: 11px; padding: 4px 10px; border-radius: 12px; font-weight: 800;">Packing</div>
                 </div>
                 <div style="position:relative; grid-column: span 2; aspect-ratio: 16/9;">
-                  <img src="https://static.desty.app/desty-omni/20230531/874b3a4dbdca4b339a7be480e4d175e5.jpeg?auto=format&fit=crop&w=300&q=80" style="width:100%; height:100%; border-radius:18px; object-fit:cover; border:1px solid rgba(0,0,0,0.06);">
+                  <img src="https://github.com/TGI-LPB/Sirius/blob/main/INV161888271%20-%20After.jpg?raw=true?auto=format&fit=crop&w=300&q=80" style="width:100%; height:100%; border-radius:18px; object-fit:cover; border:1px solid rgba(0,0,0,0.06);">
                   <div style="position: absolute; bottom: 8px; left: 8px; background: rgba(255,255,255,0.85); font-size: 11px; padding: 4px 10px; border-radius: 12px; font-weight: 800;">After</div>
                 </div>
               </div>
@@ -1895,7 +1902,7 @@
               <div style="font-size:14px; font-weight:800; color:var(--text-main); margin-top: 16px; margin-bottom: 8px;">📸 Dokumentasi</div>
               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                 <div style="position:relative; aspect-ratio: 1/1;">
-                  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSalX61q0dbW1EvpWbDHao1HSFbVf5MloGQag&s?auto=format&fit=crop&w=300&q=80" style="width:100%; height:100%; border-radius:18px; object-fit:cover; border:1px solid rgba(0,0,0,0.06);">
+                  <img src="https://github.com/TGI-LPB/Sirius/blob/main/INV950890289%20-%20Receipt.jpg?raw=true?auto=format&fit=crop&w=300&q=80" style="width:100%; height:100%; border-radius:18px; object-fit:cover; border:1px solid rgba(0,0,0,0.06);">
                   <div style="position: absolute; bottom: 8px; left: 8px; background: rgba(255,255,255,0.85); font-size: 11px; padding: 4px 10px; border-radius: 12px; font-weight: 800;">Resi/Penerima</div>
                 </div>
                 <div style="position:relative; aspect-ratio: 1/1; border:1px solid rgba(0,0,0,0.06); border-radius:18px; background:white;">
@@ -1939,9 +1946,9 @@
                    <div style="padding: 16px;">
                        <div style="font-size: 11px; color: var(--text-muted); font-weight: 700; margin-bottom: 12px;">👤 Dipacking oleh: <b style="color:var(--text-main);">Alfian</b></div>
                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
-                          <img src="https://cdn.ruparupa.io/fit-in/850x850/filters:format(webp)/filters:watermark(content.ruparupa.io,products/wm/rr.png,0,-0,0,100,100)/ruparupa-com/image/upload/Products/10626489_1.jpg?auto=format&fit=crop&w=100&q=80" style="width:100%; aspect-ratio:1/1; border-radius:12px; object-fit:cover;">
-                          <img src="https://ljrlogistics.com/wp-content/uploads/2022/05/Bubble-Wrap-Ekspedisi-Pengiriman-Barang-Murah.jpeg?auto=format&fit=crop&w=100&q=80" style="width:100%; aspect-ratio:1/1; border-radius:12px; object-fit:cover;">
-                          <img src="https://static.desty.app/desty-omni/20230531/874b3a4dbdca4b339a7be480e4d175e5.jpeg?auto=format&fit=crop&w=100&q=80" style="width:100%; aspect-ratio:1/1; border-radius:12px; object-fit:cover;">
+                          <img src="https://github.com/TGI-LPB/Sirius/blob/main/INV161888271%20-%20Before.jpg?raw=true?auto=format&fit=crop&w=100&q=80" style="width:100%; aspect-ratio:1/1; border-radius:12px; object-fit:cover;">
+                          <img src="https://github.com/TGI-LPB/Sirius/blob/main/INV161888271%20-%20Packing.jpg?raw=true?auto=format&fit=crop&w=100&q=80" style="width:100%; aspect-ratio:1/1; border-radius:12px; object-fit:cover;">
+                          <img src="https://github.com/TGI-LPB/Sirius/blob/main/INV161888271%20-%20After.jpg?raw=true?auto=format&fit=crop&w=100&q=80" style="width:100%; aspect-ratio:1/1; border-radius:12px; object-fit:cover;">
                        </div>
                    </div>
                </div>
@@ -2647,7 +2654,7 @@
                 </div>
 
                 <div style="display:flex; gap:12px; margin-top: 16px;">
-                    <button class="btn-primary" style="flex:1; background:#007AFF; font-size:12px; padding:14px; border-radius: 16px; margin:0;">📖 Unduh PDF</button>
+                    <button class="btn-primary" style="flex:1; background:#007AFF; font-size:12px; padding:14px; border-radius: 16px; margin:0;">📖 Lihat Panduan</button>
                     <button class="btn-primary" style="flex:1; background:#25D366; font-size:12px; padding:14px; border-radius: 16px; margin:0; box-shadow: 0 4px 10px rgba(37,211,102,0.3);">💬 Chat Admin</button>
                 </div>
                 <button class="btn-secondary" style="width:100%; margin-top:12px;">Tutup</button>
