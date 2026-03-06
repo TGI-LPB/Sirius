@@ -1,0 +1,2762 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Training RePack ( Receipt & Packing) - Panduan Lengkap</title>
+  <style>
+    /* =========================================================
+       CSS CORE REPACK (IDENTIK DENGAN APLIKASI ASLI)
+       ========================================================= */
+    :root {
+      --bg-color: #F2F2F7; 
+      --card-bg: rgba(255, 255, 255, 0.75); 
+      --glass-border: 1px solid rgba(255, 255, 255, 0.8);
+      --primary: #007AFF; 
+      --primary-dark: #0056b3;
+      --text-main: #1C1C1E; 
+      --text-muted: #8E8E93;
+      --danger: #FF3B30; 
+      --success: #34C759; 
+      --warning: #FF9500; 
+      --radius: 24px;
+      --shadow-soft: 0 10px 40px rgba(0, 0, 0, 0.05);
+    }
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif; }
+    
+    body { background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%); color: var(--text-main); -webkit-font-smoothing: antialiased; overflow: hidden; height: 100vh; display: flex; flex-direction: column; }
+
+    /* RePack Classes */
+    .glass { background: var(--card-bg); backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%); border: var(--glass-border); border-radius: var(--radius); box-shadow: var(--shadow-soft); }
+    .brand-logo { width: 120px; height: 120px; background: transparent; border-radius: 28px; margin: 40px auto 20px; display: flex; align-items: center; justify-content: center; flex-direction: column; color: #8B4513; font-weight: 800; font-size: 20px; letter-spacing: 0.5px; }
+    
+    .input-group { margin-bottom: 16px; position: relative; display: flex; align-items: center; width: 100%; flex-wrap: wrap;}
+    .input-group input, .input-group textarea, .custom-input, select.custom-input { width: 100%; padding: 18px 20px; border-radius: 18px; border: 1px solid rgba(0,0,0,0.06); background: rgba(255,255,255,0.9); font-size: 16px; outline: none; color: var(--text-main); font-weight: 500; }
+    .icon-btn { position: absolute; right: 16px; background: none; border: none; color: var(--text-muted); display: flex; align-items: center; justify-content: center; padding: 0; z-index: 10;}
+    
+    button.btn-primary { width: 100%; padding: 18px; background: var(--primary); color: white; border: none; border-radius: 18px; font-size: 17px; font-weight: 700; margin-top: 8px; box-shadow: 0 8px 20px rgba(0,122,255,0.3);}
+    button.btn-secondary { width: 100%; padding: 18px; background: rgba(0,0,0,0.05); color: var(--text-main); border: none; border-radius: 18px; font-size: 17px; font-weight: 700; margin-top: 8px; }
+    button.btn-danger { width: 100%; padding: 18px; background: rgba(255,59,48,0.1); color: var(--danger); border: none; border-radius: 18px; font-size: 17px; font-weight: 700; margin-top: 8px;}
+    
+    .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-top: 10px;}
+    .profile-info { display: flex; align-items: center; gap: 12px; padding: 6px 16px 6px 6px; border-radius: 28px; background: rgba(255, 255, 255, 0.85); border: 1px solid rgba(255, 255, 255, 0.9); box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+    .profile-pic { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.08); background: #f0f0f5; font-size:24px; display:flex; align-items:center; justify-content:center;}
+    
+    .btn-ios-nav { background: rgba(255,255,255,0.9); border: 1px solid rgba(0, 0, 0, 0.05); border-radius: 16px; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; color: var(--primary); box-shadow: 0 4px 12px rgba(0,0,0,0.05); position:relative;}
+    .btn-logout-icon { color: var(--danger); background: rgba(255, 59, 48, 0.1); border: 1px solid rgba(255, 59, 48, 0.2); border-radius: 16px; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(255,59,48,0.1); }
+    
+    .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;}
+    .menu-card { padding: 24px 16px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid rgba(0,0,0,0.02); border-radius:var(--radius); background:var(--card-bg); backdrop-filter:blur(24px);}
+    .stat-box { padding: 10px; border-radius: 16px; background: transparent; text-align:center;}
+    
+    .input-label { width: 100%; font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; padding-left: 8px; display:block; text-align:left; text-transform: uppercase; letter-spacing: 0.5px;}
+    .scan-wrapper { position: relative; width: 100%; display: flex; align-items: center; }
+    .scan-btn { position: absolute; right: 8px; width: 44px; height: 44px; background: rgba(0,122,255,0.1); color: var(--primary); border: none; border-radius: 14px; display: flex; align-items: center; justify-content: center; z-index: 100;}
+    
+    .img-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; width: 100%;}
+    .img-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; width: 100%;}
+    .img-upload-box { position: relative; width: 100%; height: 120px; border: 2px dashed rgba(0,0,0,0.1); border-radius: 20px; display: flex; align-items: center; justify-content: center; flex-direction: column; background: rgba(255,255,255,0.5); gap: 8px; overflow: hidden;}
+    .img-upload-box span { font-size: 13px; color: var(--text-main); font-weight: 600; z-index: 1;}
+    .img-upload-box .icon { color: var(--text-main); z-index: 1;}
+    .real-pic { position: absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; z-index: 0; filter: brightness(0.9);}
+
+    #sig-canvas { border: 1px solid rgba(0,0,0,0.1); border-radius: 20px; background-color: #ffffff; width: 100%; height: 180px; margin-bottom: 8px; box-shadow: inset 0 2px 10px rgba(0,0,0,0.02); display: flex; align-items: center; justify-content: center; flex-direction: column;}
+    
+    .hist-card { background: rgba(255, 255, 255, 0.85); border-radius: 24px; padding: 16px; display: flex; gap: 16px; align-items: flex-start; box-shadow: 0 4px 20px rgba(0,0,0,0.04); border: 1px solid rgba(255,255,255,0.8); margin-bottom: 16px;}
+    .hist-img-wrapper { position: relative; width: 65px; height: 65px; border-radius: 14px; flex-shrink: 0; background: #f0f0f5; display:flex; align-items:center; justify-content:center; border: 1px solid rgba(0,0,0,0.05); font-size: 28px; overflow: hidden;}
+    .hist-type-icon { position: absolute; bottom: 4px; right: 4px; background: rgba(255,255,255,0.95); padding: 4px; border-radius: 12px; font-size: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); z-index: 5;}
+    .hist-title { font-weight: 800; font-size: 15px; color: var(--text-main); margin-bottom: 2px; }
+    .hist-sub { font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 0;}
+    .filter-tabs { display: flex; gap: 8px; margin-bottom: 20px; background: rgba(0,0,0,0.04); padding: 6px; border-radius: 20px;}
+    .tab-btn { flex: 1; padding: 12px 16px; border: none; background: transparent; border-radius: 16px; font-weight: 700; color: var(--text-muted); font-size: 14px;}
+    .tab-btn.active { background: white; color: var(--primary); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+
+    .bulk-action-bar { display: flex; gap: 12px; margin-bottom: 20px; background: rgba(255,255,255,0.95); padding: 14px 20px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 1px solid rgba(0,0,0,0.05); align-items: center; justify-content: space-between;}
+    .bulk-btn { padding: 10px 16px; border-radius: 14px; font-weight: 700; font-size: 14px; border: none; }
+
+    .log-item { background: rgba(255,255,255,0.8); padding: 18px; border-radius: 20px; margin-bottom: 16px; border: 1px solid rgba(0,0,0,0.03); display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.02);}
+
+    /* UI Khusus Detail Rincian & Chat */
+    .ios-list-row { display: flex; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid rgba(0,0,0,0.04); align-items: center; }
+    .ios-label { font-size: 13px; color: var(--text-muted); font-weight: 600; }
+    .ios-value { font-size: 14px; color: var(--text-main); font-weight: 700; text-align: right;}
+    .chat-bubble { padding: 12px 16px; font-size: 13px; font-weight: 600; box-shadow: 0 4px 10px rgba(0,0,0,0.04); position: relative; line-height: 1.4; word-break: break-word;}
+    .chat-bubble.staff { background: white; color: var(--text-main); border-radius: 20px 20px 20px 4px; border: 1px solid rgba(0,0,0,0.04); }
+    .chat-bubble.admin { background: var(--primary); color: white; border-radius: 20px 20px 4px 20px; }
+    .chat-bubble.system { background: linear-gradient(135deg, #5E5CE6 0%, #3B38A8 100%); color: white; border-radius: 20px 20px 20px 4px; }
+    .chat-change-box { margin-top: 10px; padding: 10px 12px; background: rgba(0,0,0,0.04); border-radius: 12px; font-size: 11.5px; color: var(--text-main); border: 1px dashed rgba(0,0,0,0.08); }
+    .icon-action-btn { flex: 1; background: white; border: 1px solid rgba(0,0,0,0.05); border-radius: 16px; padding: 14px 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: var(--text-main); font-size: 12px; font-weight: 700;}
+
+    #toast { position: absolute; top: 40px; left: 50%; transform: translateX(-50%); background: rgba(25, 25, 27, 0.85); backdrop-filter: blur(20px); color: white; padding: 16px 24px; border-radius: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); font-weight: 600; z-index: 9999; text-align: center; width: 90%; font-size: 14px;}
+
+    /* =========================================================
+       LAYOUT PRESENTASI & MOCKUP HP
+       ========================================================= */
+    #presentation-wrapper { flex: 1; position: relative; width: 100%; max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: center; }
+
+    .slide { position: absolute; top: 0; left: 0; right: 0; bottom: 0; padding: 30px 40px; opacity: 0; pointer-events: none; transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); transform: translateY(20px) scale(0.95); display: flex; align-items: center; }
+    .slide.active { opacity: 1; pointer-events: auto; transform: translateY(0) scale(1); }
+    .slide.previous { transform: translateY(-20px) scale(0.95); }
+
+    .slide-layout { display: flex; gap: 50px; width: 100%; align-items: center; justify-content: space-between; }
+    .slide-text { flex: 1; padding-right: 20px; }
+    
+    .slide-text h1 { font-size: 42px; font-weight: 900; margin-bottom: 16px; letter-spacing: -1px; color: var(--text-main); }
+    .slide-text h2 { font-size: 30px; font-weight: 800; margin-bottom: 20px; letter-spacing: -0.5px; color: var(--primary); display:flex; align-items:center; gap:12px;}
+    .slide-text p { font-size: 18px; color: var(--text-muted); line-height: 1.6; margin-bottom: 24px; font-weight: 500; }
+    
+    ul.feature-list { list-style: none; }
+    ul.feature-list li { font-size: 17px; color: var(--text-main); line-height: 1.6; margin-bottom: 16px; padding-left: 36px; position: relative; font-weight: 600; }
+    ul.feature-list li::before { content: '👉'; position: absolute; left: 0; top: 0; font-size: 18px; }
+
+    .badge-admin { background: rgba(255, 149, 0, 0.15); color: var(--warning); border: 1px solid rgba(255, 149, 0, 0.3); padding: 6px 12px; border-radius: 12px; font-size: 13px; font-weight: 800; text-transform: uppercase; display:inline-block; margin-bottom:12px;}
+    .badge-error { background: rgba(255, 59, 48, 0.15); color: var(--danger); border: 1px solid rgba(255, 59, 48, 0.3); padding: 6px 12px; border-radius: 12px; font-size: 13px; font-weight: 800; text-transform: uppercase; display:inline-block; margin-bottom:12px;}
+    .badge-ai { background: linear-gradient(135deg, #5E5CE6 0%, #3B38A8 100%); color: white; padding: 6px 12px; border-radius: 12px; font-size: 13px; font-weight: 800; text-transform: uppercase; display:inline-block; margin-bottom:12px;}
+    .badge-tip { background: rgba(52, 199, 89, 0.15); color: var(--success); border: 1px solid rgba(52, 199, 89, 0.3); padding: 6px 12px; border-radius: 12px; font-size: 13px; font-weight: 800; text-transform: uppercase; display:inline-block; margin-bottom:12px;}
+
+    /* KONTEN MOCKUP HP - BISA DI SCROLL */
+    .phone-mockup {
+      width: 375px; height: 750px; background: var(--bg-color); border: 12px solid #1C1C1E; border-radius: 45px;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.2), inset 0 0 20px rgba(0,0,0,0.05); position: relative;
+      overflow-y: auto; overflow-x: hidden; flex-shrink: 0; scrollbar-width: none;
+    }
+    .phone-mockup::-webkit-scrollbar { display: none; }
+    .mockup-inner { padding: 24px; min-height: 100%; display:flex; flex-direction:column;}
+    .notch { position: sticky; top: 0; left: 50%; transform: translateX(-50%); width: 120px; height: 25px; background: #1C1C1E; border-bottom-left-radius: 16px; border-bottom-right-radius: 16px; z-index: 1000; margin-top: -24px; margin-bottom: 16px; }
+
+    /* CONTROLS BAWAH */
+    .controls { display: flex; justify-content: space-between; align-items: center; padding: 20px 40px; background: white; border-top: 1px solid rgba(0,0,0,0.05); z-index: 100; }
+    .nav-btn { background: var(--primary); color: white; border: none; padding: 14px 28px; border-radius: 20px; font-size: 15px; font-weight: 800; cursor: pointer; transition: 0.2s; box-shadow: 0 8px 20px rgba(0,122,255,0.25); display: flex; align-items: center; gap: 8px; }
+    .nav-btn:hover { transform: scale(1.05); }
+    .nav-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none;}
+    .progress-container { flex: 1; margin: 0 40px; height: 8px; background: rgba(0,0,0,0.05); border-radius: 4px; overflow: hidden; }
+    .progress-bar { height: 100%; background: var(--primary); width: 0%; transition: 0.4s ease; }
+    .slide-counter { font-weight: 800; color: var(--text-muted); font-size: 14px;}
+  </style>
+</head>
+<body>
+
+  <div id="presentation-wrapper">
+
+    <div class="slide active">
+      <div style="text-align: center; max-width: 900px; margin: 0 auto;">
+        <div class="brand-logo" style="width: 150px; height: 150px; margin-bottom: 40px; font-size: 28px;">
+    <img src="https://tgi-lpb.github.io/RePack/android-chrome-512x512.png" alt="Logo RePack" style="width: 100px; height: 100px; margin-bottom: 12px; border-radius: 24px; object-fit: contain;">
+    RePack
+</div>
+        <h1>Panduan Resmi RePack (Receipt & Packing)</h1>
+        <p style="font-size: 22px; max-width: 700px; margin: 0 auto 40px;">Sistem manajemen pengemasan (Packing) dan penyerahan paket (Receipt) untuk operasional Store yang cepat, aman, dan canggih.</p>
+        <p style="color:var(--text-muted); font-weight:bold;"></p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div style="text-align: center; max-width: 900px; margin: 0 auto;">
+        <h2 style="justify-content:center; font-size:36px;">Apa itu Sistem RePack?</h2>
+        <p style="font-size: 20px; max-width: 800px; margin: 0 auto 40px;">Aplikasi mobile yang memusatkan dokumentasi proses Receipt dan Packing sehingga setiap aktivitas penerimaan dan pengemasan barang dapat tercatat secara rapi dan terintegrasi.</p>
+        <div style="display:flex; gap:20px; justify-content:center; text-align:left;">
+            <div class="glass" style="padding: 24px; border-radius: 20px; width: 300px;">
+                <div style="font-size: 40px; margin-bottom: 12px;">📱</div>
+                <div style="font-weight: 800; font-size: 18px;">Bebas Ribet</div>
+                <div style="font-size: 14px; color: var(--text-muted); margin-top: 8px; line-height:1.5;">Tidak perlu ke komputer. Semua input resi, foto, dan tanda tangan kurir dilakukan di layar HP.</div>
+            </div>
+            <div class="glass" style="padding: 24px; border-radius: 20px; width: 300px;">
+                <div style="font-size: 40px; margin-bottom: 12px;">⚡</div>
+                <div style="font-weight: 800; font-size: 18px;">Anti Sinyal Hilang</div>
+                <div style="font-size: 14px; color: var(--text-muted); margin-top: 8px; line-height:1.5;">Toko sedang mati lampu/wifi putus? Aplikasi tetap bisa dipakai menyimpan data (Mode Offline).</div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div style="text-align: center; max-width: 900px; margin: 0 auto;">
+        <h2 style="justify-content:center; font-size:36px;">3 Pilar Keamanan (Audit)</h2>
+        <p style="font-size: 20px; margin-bottom: 40px;">Sistem ini dirancang tidak hanya untuk kecepatan, tapi juga mencegah kecurangan (Fraud).</p>
+        <div style="display:flex; flex-direction:column; gap:16px; text-align:left; max-width: 700px; margin:0 auto;">
+            <div class="glass" style="padding: 20px; border-radius: 20px; display:flex; align-items:center; gap:20px;">
+                <div style="font-size: 40px;">📍</div>
+                <div>
+                    <div style="font-weight: 800; font-size: 18px;">Cap Air Lokasi (Geo-Watermark)</div>
+                    <div style="font-size: 14px; color: var(--text-muted); margin-top: 4px;">Setiap foto yang diambil staf akan dikunci dengan alamat peta jalan, koordinat akurat, dan Jam Server. Tidak bisa dipalsukan.</div>
+                </div>
+            </div>
+            <div class="glass" style="padding: 20px; border-radius: 20px; display:flex; align-items:center; gap:20px;">
+                <div style="font-size: 40px;">🔏</div>
+                <div>
+                    <div style="font-weight: 800; font-size: 18px;">Sensor Privasi Pelanggan</div>
+                    <div style="font-size: 14px; color: var(--text-muted); margin-top: 4px;">Nomor handphone di dalam sistem akan disensor (disembunyikan). Jika staf memaksa melihatnya, Admin akan mendapat notifikasi.</div>
+                </div>
+            </div>
+            <div class="glass" style="padding: 20px; border-radius: 20px; display:flex; align-items:center; gap:20px;">
+                <div style="font-size: 40px;">🛡️</div>
+                <div>
+                    <div style="font-weight: 800; font-size: 18px;">Penangkal Peretasan (Brute-force)</div>
+                    <div style="font-size: 14px; color: var(--text-muted); margin-top: 4px;">Jika ada yang mencoba menebak kata sandi staf lebih dari 6 kali, akun tersebut akan dibekukan sementara.</div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2><span class="badge-tip">Sangat Mudah</span> <br>Akses Tanpa Download</h2>
+          <p>Anda tidak perlu mencari aplikasi ini di Play Store atau App Store yang memakan memori HP.</p>
+          <ul class="feature-list">
+            <li><b>Link Web:</b> Cukup buka tautan (*Link*) web yang diberikan oleh Admin  di *Browser* HP Anda (Chrome/Safari).</li>
+            <li><b>Jadikan Aplikasi Asli:</b> Anda bisa mengubah link web tersebut menjadi aplikasi sungguhan yang menempel di layar depan HP Anda.</li>
+            <li>Ikuti panduan di slide berikutnya untuk cara memasangnya (Install).</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner">
+             <div style="text-align:center; font-size:100px; margin-bottom:20px; margin-top:60px;">🌐</div>
+             <h3 style="text-align:center; margin-bottom:10px;">Buka via Web Browser</h3>
+             <p style="text-align:center; color:var(--text-muted); font-size:14px; line-height:1.6;">Ringan, Cepat, dan tidak menghabiskan penyimpanan (RAM) Handphone staf.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2>📲 Cara Install (Khusus Android)</h2>
+          <p>Agar aplikasi berjalan lebih stabil dan mendukung layar penuh (Full Screen).</p>
+          <ul class="feature-list">
+            <li>Buka link aplikasi RePack dari browser <b>Google Chrome</b>.</li>
+            <li>Di bawah kotak Login, akan otomatis muncul tombol hijau bertuliskan <b>"📲 Install Aplikasi RePack"</b>.</li>
+            <li>Ketuk tombol tersebut, lalu pilih "Install" pada pop-up yang muncul.</li>
+            <li>Selesai! Aplikasi kini ada di daftar menu HP Anda.</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner">
+            <div class="brand-logo" style="margin-top:0;">
+  <img src="https://tgi-lpb.github.io/RePack/android-chrome-512x512.png" alt="Logo RePack" style="width: 75px; height: 75px; margin-bottom: 8px; border-radius: 18px; object-fit: contain;">
+  RePack
+</div>
+            <div class="glass" style="padding: 30px 24px; opacity:0.5;">
+              <div class="input-group"><input type="text" class="custom-input" placeholder="Username" disabled></div>
+              <div class="input-group"><input type="password" class="custom-input" placeholder="Password" disabled></div>
+              <button class="btn-primary" style="margin-top: 16px;">Masuk</button>
+            </div>
+            <button style="width: 100%; padding: 18px; border-radius: 18px; font-size: 17px; font-weight: 700; margin-top: 24px; background: rgba(52, 199, 89, 0.15); color: var(--success); border: 2px solid rgba(52, 199, 89, 0.5); box-shadow: 0 0 20px rgba(52,199,89,0.3); animation: pulseUpload 1.5s infinite;">
+                📲 Install Aplikasi RePack
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2>📲 Cara Install (Khusus iPhone)</h2>
+          <p>Sistem Apple (iOS) memiliki langkah yang sedikit berbeda dari Android.</p>
+          <ul class="feature-list">
+            <li>Buka link aplikasi WAJIB menggunakan browser <b>Safari</b>.</li>
+            <li>Ketuk tombol hijau "Panduan Install iPhone" di layar.</li>
+            <li>Ikuti instruksi: Ketuk ikon <b>Share (Bagikan)</b> di bawah layar Safari.</li>
+            <li>Geser ke atas, cari tulisan <b>"Add to Home Screen"</b> (Tambah ke Layar Utama) lalu ketuk <b>Add</b>.</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner" style="background: rgba(0,0,0,0.5); padding:0; justify-content:flex-end;">
+             <div class="glass" style="width: 92%; margin: auto; padding: 32px 24px; text-align: center; background: white; margin-bottom: 24px;">
+                <div style="font-size: 48px; margin-bottom: 12px;">🧭</div>
+                <h3 style="font-size: 20px; font-weight:800; margin-bottom: 16px;">Cara Install di iOS</h3>
+                <p style="font-size: 15px; color: var(--text-main); margin-bottom: 24px; line-height: 1.6;">
+                  Apple tidak mengizinkan install otomatis. Silakan ikuti langkah ini:<br><br>
+                  1. Tap tombol <b>Share</b> <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin: 0 4px;"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg> di bawah layar.<br>
+                  2. Geser menu ke atas, pilih <br><b style="color: var(--primary);">"Add to Home Screen"</b> 📱<br>
+                  3. Tap <b>"Add"</b> di pojok kanan atas.
+                </p>
+                <button class="btn-primary" style="margin: 0;">Saya Mengerti</button>
+             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2>🔐 Tampilan Login Masuk</h2>
+          <p>Setelah aplikasi terbuka, staf diwajibkan untuk masuk dengan akun resmi mereka.</p>
+          <ul class="feature-list">
+            <li><b>Kredensial Resmi:</b> Masukkan Username (Nama Pengguna) dan Password (Sandi) yang diberikan oleh Manajemen Store.</li>
+            <li><b>Sistem Hash:</b> Sandi Anda dilindungi enkripsi acak rahasia dari belakang layar, sehingga Admin pun tidak bisa melihat sandi asli Anda.</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner">
+            <div class="brand-logo" style="margin-top:60px;">
+              <div style="font-size: 64px; margin-bottom:6px;">📦</div> RePack
+            </div>
+            <p style="color: var(--text-muted); font-size: 14px; margin-top:-10px; margin-bottom: 32px; text-align: center; font-weight:600;">Receipt & Packing</p>
+            <div class="glass" style="padding: 30px 24px;">
+              <div class="input-group"><input type="text" class="custom-input" placeholder="Username" value="Alfian_A"></div>
+              <div class="input-group" style="margin-bottom: 12px;">
+                <input type="password" class="custom-input" placeholder="Password" value="benar123">
+              </div>
+              <button class="btn-primary" style="margin-top: 16px;">Masuk</button>
+              <div style="color: var(--primary); font-size: 14px; font-weight: 600; text-align: center; margin-top: 20px;">Lupa Password?</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2>👁️ Fitur Intip Sandi</h2>
+          <p>Mencegah kesalahan ketik (typo) berulang yang bisa menyebabkan akun Anda diblokir.</p>
+          <ul class="feature-list">
+            <li><b>Cara Pakai:</b> Ketuk ikon 👁️ (Mata) di sisi kanan kotak password.</li>
+            <li>Sandi yang tadinya berbentuk bintang (*****) akan berubah menjadi huruf teks biasa.</li>
+            <li>Pastikan tidak ada orang lain yang melihat layar HP Anda saat menekan fitur ini.</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner">
+            <div class="brand-logo" style="margin-top:60px;">
+              <div style="font-size: 64px; margin-bottom:6px;">📦</div> RePack
+            </div>
+            <p style="color: var(--text-muted); font-size: 14px; margin-top:-10px; margin-bottom: 32px; text-align: center; font-weight:600;">Receipt & Packing</p>
+            <div class="glass" style="padding: 30px 24px;">
+              <div class="input-group"><input type="text" class="custom-input" value="Alfian_A" disabled></div>
+              <div class="input-group" style="margin-bottom: 12px;">
+                <input type="text" class="custom-input" value="SandiRahasia99" style="border-color:var(--primary);">
+                <button class="icon-btn" style="bottom: 16px; color:var(--primary);">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                </button>
+              </div>
+              <button class="btn-primary" style="margin-top: 16px;">Masuk</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2><span class="badge-error">Peringatan</span> <br>❌ Gagal Login (Salah Sandi)</h2>
+          <p>Sistem mencatat setiap kesalahan demi menghindari penyusup.</p>
+          <ul class="feature-list">
+            <li><b>Toast Peringatan:</b> Jika sandi salah, akan muncul kotak merah di atas layar.</li>
+            <li><b>Hitungan Sisa Coba:</b> Perhatikan teks di kotak merah! Sistem akan memberitahu Anda sudah gagal berapa kali (Misal: <i>"Percobaan gagal: 3/6"</i>).</li>
+            <li>Anda hanya memiliki <b>maksimal 6 kali</b> kesempatan menebak.</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner" style="position:relative;">
+            <div id="toast" style="background: rgba(255, 59, 48, 0.9);">Username atau Password salah! (Percobaan gagal: 3/6)</div>
+            <div class="brand-logo" style="margin-top:60px;">
+              <div style="font-size: 64px; margin-bottom:6px;">📦</div> RePack
+            </div>
+            <div class="glass" style="padding: 30px 24px; border: 1px solid var(--danger);">
+              <div class="input-group"><input type="text" class="custom-input" value="Alfian_A"></div>
+              <div class="input-group" style="margin-bottom: 12px;">
+                <input type="password" class="custom-input" value="salahketik123" style="color:var(--danger);">
+              </div>
+              <button class="btn-primary" style="margin-top: 16px;">Masuk</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2><span class="badge-error">Sistem Beku</span> <br>🚨 Akun Terkunci (Suspend)</h2>
+          <p>Apa yang terjadi jika gagal lebih dari 6 kali?</p>
+          <ul class="feature-list">
+            <li><b>Layar Memerah:</b> Akun Anda otomatis dibekukan sebagai pengamanan dari Hacker / Brute-force.</li>
+            <li><b>Hitung Mundur:</b> Tombol masuk akan mati (<i>Disabled</i>) dan berubah menjadi pengatur waktu. Anda harus menunggu <b>15 Menit</b>.</li>
+            <li><b>Hukuman Naik Level:</b> Jika setelah 15 menit Anda gagal lagi, hukuman akan dinaikkan menjadi 30 menit, dan seterusnya. Segera lapor Admin  jika hal ini terjadi!</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner" style="position:relative;">
+            <div id="toast" style="background: rgba(255, 59, 48, 0.9);">🔒 Akses ditahan. Coba lagi dalam 15 menit.</div>
+            <div class="brand-logo" style="margin-top:60px;">
+              <div style="font-size: 64px; margin-bottom:6px;">📦</div> RePack
+            </div>
+            <div class="glass" style="padding: 30px 24px; box-shadow: 0 0 20px rgba(255,59,48,0.2);">
+              <div class="input-group"><input type="text" class="custom-input" value="Alfian_A" disabled></div>
+              <div class="input-group" style="margin-bottom: 12px;">
+                <input type="password" class="custom-input" value="*****" disabled>
+              </div>
+              <button class="btn-danger" style="margin-top: 16px; opacity:0.8;">🔒 Terkunci (14:59)</button>
+              <div style="color: var(--primary); font-size: 14px; font-weight: 600; text-align: center; margin-top: 20px;">Lupa Password?</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2>🔑 Masalah: Lupa Password?</h2>
+          <p>Jika staf benar-benar lupa sandinya, tidak perlu panik. Anda bisa membuat sandi baru sendiri.</p>
+          <ul class="feature-list">
+            <li>Di bawah tombol "Masuk", terdapat tulisan warna biru <b>"Lupa Password?"</b>.</li>
+            <li>Ketuk tulisan tersebut untuk memunculkan kotak bantuan (*Pop-up*) pergantian sandi.</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner">
+            <div class="brand-logo" style="margin-top:60px;">
+              <div style="font-size: 64px; margin-bottom:6px;">📦</div> RePack
+            </div>
+            <div class="glass" style="padding: 30px 24px;">
+              <div class="input-group"><input type="text" class="custom-input" placeholder="Username"></div>
+              <div class="input-group" style="margin-bottom: 12px;">
+                <input type="password" class="custom-input" placeholder="Password">
+              </div>
+              <button class="btn-primary" style="margin-top: 16px;">Masuk</button>
+              <div style="color: var(--primary); font-size: 14px; font-weight: 800; text-align: center; margin-top: 20px; animation: pulseUpload 1.5s infinite; padding:10px; border-radius:10px; background:rgba(0,122,255,0.1);">👆 Lupa Password? Ketuk Disini</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2>🔑 Proses Lupa Password</h2>
+          <p>Tulis sandi impian Anda, namun harus melalui persetujuan atasan.</p>
+          <ul class="feature-list">
+            <li><b>Ketik Identitas:</b> Masukkan Username Anda yang sah.</li>
+            <li><b>Sandi Baru:</b> Ketik sandi yang mudah Anda ingat (Minimal 6 karakter, jangan gunakan spasi).</li>
+            <li><b>Pengajuan:</b> Klik "Simpan Perubahan". Aplikasi belum bisa dilogin langsung! Sandi baru ini akan <b>dikirim ke Admin  (Menu Admin)</b> untuk divalidasi dan disetujui. Beritahu atasan Anda!</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner" style="background: rgba(0,0,0,0.5); padding:0; justify-content:center;">
+             <div class="glass" style="width: 92%; margin: auto; padding: 32px 24px; background: white;">
+                <h2 style="text-align:center; margin-bottom: 8px; font-size:22px; font-weight:800;">Reset Password</h2>
+                <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 24px; text-align:center;">Masukkan data untuk konfirmasi reset.</p>
+                <div class="input-group"><input type="text" class="custom-input" placeholder="Username" value="Alfian_A"></div>
+                <div class="input-group">
+                  <input type="password" class="custom-input" placeholder="Password Baru (6-20 huruf)" value="sandibaru123">
+                  <button class="icon-btn" style="bottom: 16px;">👁️</button>
+                </div>
+                <button class="btn-primary" style="margin-top: 8px;">Simpan Perubahan</button>
+                <button class="btn-secondary" style="margin-top: 8px;">Batal</button>
+             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2>🏠 Beranda (Dashboard)</h2>
+          <p>Halaman pertama setelah Anda berhasil Login. Didesain agar nyaman di mata dan fokus pada kerjaan.</p>
+          <ul class="feature-list">
+            <li><b>Bersih & Luas:</b> Menggunakan desain tembus pandang (<i>Glassmorphism</i>) khas iPhone/iOS.</li>
+            <li><b>4 Area Utama:</b>
+                <br>1. Bagian Atas: Profil & Sinkronisasi
+                <br>2. Bagian Tengah: Jam & Kalender Filter
+                <br>3. Bagian Kartu: Ringkasan Angka (Statistik)
+                <br>4. Bagian Bawah: Menu Modul (Packing/Receipt)
+            </li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner">
+            <div class="dash-header">
+              <div class="profile-info">
+                <div class="profile-pic">👦🏻</div>
+                <div>
+                  <div style="font-size: 16px; font-weight: 800; letter-spacing:-0.5px; color:var(--text-main);">Hi, Alfian</div>
+                  <div style="font-weight: 600; font-size: 12px; color:var(--text-muted);">Staff Store</div>
+                </div>
+              </div>
+              <div style="display: flex; gap: 10px;">
+                <button class="btn-ios-nav"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6"></path><path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path><path d="M3 22v-6h6"></path><path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path></svg></button>
+              </div>
+            </div>
+            
+            <div style="display: flex; justify-content: center; width: 100%; margin-bottom: 20px;">
+              <div style="background: rgba(255, 255, 255, 0.85); border: 1px solid rgba(255,255,255,0.8); box-shadow: 0 10px 30px rgba(0,0,0,0.05); border-radius: 24px; padding: 12px 24px; display: inline-flex; align-items: center; gap: 16px;">
+                <div style="font-size: 24px; font-weight: 800; color: #000;">14:30:00 <span style="font-size: 12px; color:var(--text-muted);">WIB</span></div>
+              </div>
+            </div>
+
+            <div class="glass" style="padding:16px; margin-bottom:16px; display:flex; gap:8px;">
+                <div style="flex:1;"><span class="input-label" style="font-size:10px; margin-bottom:4px;">MULAI</span><input type="text" class="custom-input" value="2026-03-06" style="padding:10px; font-size:12px;"></div>
+                <div style="flex:1;"><span class="input-label" style="font-size:10px; margin-bottom:4px;">AKHIR</span><input type="text" class="custom-input" value="2026-03-06" style="padding:10px; font-size:12px;"></div>
+            </div>
+
+            <div class="glass" style="display:flex; justify-content:space-around; padding:16px 10px; margin-bottom:20px;">
+              <div class="stat-box"><div style="font-size:28px; font-weight:800; color:var(--primary);">45</div><div style="font-size:11px; font-weight:700; color:var(--text-muted);">PACKING</div></div>
+              <div style="width:1px; background:rgba(0,0,0,0.06); margin: 10px 0;"></div>
+              <div class="stat-box"><div style="font-size:28px; font-weight:800; color:var(--success);">32</div><div style="font-size:11px; font-weight:700; color:var(--text-muted);">RECEIPT</div></div>
+              <div style="width:1px; background:rgba(0,0,0,0.06); margin: 10px 0;"></div>
+              <div class="stat-box"><div style="font-size:28px; font-weight:800; color:var(--warning);">2</div><div style="font-size:11px; font-weight:700; color:var(--text-muted);">RETURN</div></div>
+            </div>
+
+            <h3 style="margin-bottom: 12px; font-size: 16px; font-weight:800;">Akses Staff</h3>
+            <div class="menu-grid">
+              <div class="glass menu-card"><div style="font-size:32px; margin-bottom:8px;">📦</div><div style="font-weight:800; font-size:14px;">Packing</div></div>
+              <div class="glass menu-card"><div style="font-size:32px; margin-bottom:8px;">🧾</div><div style="font-weight:800; font-size:14px;">Receipt</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2>🔄 Indikator Sync & Draft</h2>
+          <p>Aplikasi ini sangat canggih karena tahu kapan HP Anda kehilangan sinyal.</p>
+          <ul class="feature-list">
+            <li>Perhatikan tombol panah melingkar di sudut kanan atas. Tombol itu gunanya untuk <b>Refresh Data (Sync)</b>.</li>
+            <li><b>Lencana Angka Merah:</b> Jika muncul angka (misal angka 2), berarti ada <b>2 data pekerjaan Anda yang nyangkut di HP</b> karena tadi sinyal jelek.</li>
+            <li>Segera menyingkir ke area WiFi lancar, lalu <b>ketuk tombol tersebut</b> untuk mendorong datanya masuk ke Server Pusat secara manual.</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner">
+            <div class="dash-header">
+              <div class="profile-info" style="opacity:0.3;">
+                <div class="profile-pic">👦🏻</div>
+                <div>
+                  <div style="font-size: 16px; font-weight: 800;">Hi, Alfian</div>
+                </div>
+              </div>
+              <div style="display: flex; gap: 10px;">
+                <button class="btn-ios-nav" style="box-shadow: 0 0 20px rgba(255,149,0,0.5); border: 2px solid var(--warning);">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6"></path><path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path><path d="M3 22v-6h6"></path><path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path></svg>
+                  <div style="position:absolute; top:-4px; right:-4px; background:var(--danger); color:white; font-size:10px; font-weight:bold; padding:2px 6px; border-radius:10px; border:2px solid white; animation: pulseUpload 1.5s infinite;">2</div>
+                </button>
+              </div>
+            </div>
+            
+            <div style="display: flex; justify-content: center; width: 100%; margin-top:40px;">
+                <div style="text-align:center; padding:20px; background:rgba(255,149,0,0.1); border-radius:20px; color:var(--warning); font-weight:bold;">
+                    👆 Ketuk tombol ini jika WiFi sudah menyala agar 2 data Anda tidak hilang!
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2>⏱️ Jam Real-Time Otomatis</h2>
+          <p>Fitur penunjuk waktu pintar.</p>
+          <ul class="feature-list">
+            <li>Kotak putih panjang di bawah profil adalah Jam dan Tanggal hari ini.</li>
+            <li>Angka detiknya akan bergerak secara *live* setiap detik.</li>
+            <li><b>Cegah Manipulasi:</b> Tanggal dan Jam ini sangat penting karena menjadi dasar patokan Stempel Air (Watermark) pada foto pekerjaan Anda nantinya.</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner">
+            <div class="dash-header" style="opacity:0.3;">
+              <div class="profile-info"><div class="profile-pic">👦🏻</div><div><div style="font-size: 16px; font-weight: 800;">Hi, Alfian</div></div></div>
+              <button class="btn-ios-nav"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 2v6h-6"></path><path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path></svg></button>
+            </div>
+            
+            <div style="display: flex; justify-content: center; width: 100%; margin-bottom: 20px;">
+              <div style="background: rgba(255, 255, 255, 0.95); border: 2px solid var(--primary); box-shadow: 0 0 20px rgba(0,122,255,0.2); border-radius: 24px; padding: 16px 24px; display: inline-flex; align-items: center; gap: 16px; transform: scale(1.05);">
+                <div style="font-size: 28px; font-weight: 800; color: var(--primary);">14:30:45</div>
+                <div style="font-size: 12px; font-weight: 800; color: var(--text-muted); margin-top:8px;">WIB</div>
+                <div style="width: 2px; height: 32px; background: rgba(0,0,0,0.1); border-radius: 2px;"></div>
+                <div style="display: flex; flex-direction: column; text-align: left;">
+                  <span style="font-size: 11px; font-weight: 800; color: var(--text-muted);">HARI INI</span>
+                  <span style="font-size: 14px; font-weight: 700; color: var(--text-main);">Jumat, 6 Mar 2026</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2>📊 Statistik Kinerja Harian</h2>
+          <p>Melihat seberapa banyak paket yang telah Anda selesaikan hari ini.</p>
+          <ul class="feature-list">
+            <li><b>Rentang Tanggal (Mulai - Akhir):</b> Secara otomatis menyetel dari tanggal 1 hingga hari ini. Anda bisa mengetuk tanggal tersebut jika ingin mencari data bulan lalu.</li>
+            <li><b>Angka Indikator:</b> 
+               <br>🔵 Berapa barang yang sudah dilakban (Packing)
+               <br>🟢 Berapa barang yang sudah dibawa kurir (Receipt)
+               <br>🟠 Berapa barang yang ditolak kurir (Return)
+            </li>
+            <li><b>Tip Interaktif:</b> Anda bisa mengetuk angka tersebut untuk memunculkan <i>Pop-up</i> list resi apa saja yang membentuk angka tersebut.</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner">
+            <div class="dash-header" style="opacity:0.3;">
+              <div class="profile-info"><div class="profile-pic">👦🏻</div><div><div style="font-size: 16px; font-weight: 800;">Hi, Alfian</div></div></div>
+              <button class="btn-ios-nav"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 2v6h-6"></path><path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path></svg></button>
+            </div>
+
+            <div class="glass" style="padding:16px; margin-bottom:16px; display:flex; gap:8px;">
+                <div style="flex:1;"><span class="input-label" style="font-size:10px; margin-bottom:4px;">MULAI</span><input type="text" class="custom-input" value="2026-03-01" style="padding:10px; font-size:12px;"></div>
+                <div style="flex:1;"><span class="input-label" style="font-size:10px; margin-bottom:4px;">AKHIR</span><input type="text" class="custom-input" value="2026-03-06" style="padding:10px; font-size:12px;"></div>
+            </div>
+
+            <div class="glass" style="display:flex; justify-content:space-around; padding:16px 10px; margin-bottom:20px; box-shadow: 0 0 20px rgba(0,122,255,0.15); border:1px solid rgba(0,122,255,0.3);">
+              <div class="stat-box" style="background:rgba(0,122,255,0.05); cursor:pointer;"><div style="font-size:32px; font-weight:800; color:var(--primary);">145</div><div style="font-size:11px; font-weight:700; color:var(--text-muted);">PACKING</div></div>
+              <div style="width:1px; background:rgba(0,0,0,0.06); margin: 10px 0;"></div>
+              <div class="stat-box"><div style="font-size:28px; font-weight:800; color:var(--success);">132</div><div style="font-size:11px; font-weight:700; color:var(--text-muted);">RECEIPT</div></div>
+              <div style="width:1px; background:rgba(0,0,0,0.06); margin: 10px 0;"></div>
+              <div class="stat-box"><div style="font-size:28px; font-weight:800; color:var(--warning);">5</div><div style="font-size:11px; font-weight:700; color:var(--text-muted);">RETURN</div></div>
+            </div>
+            
+            <div style="text-align:center; font-size:12px; color:var(--primary); font-weight:bold;">👆 Ketuk angka 145 untuk melihat daftarnya.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2>🗂️ Menu Akses Cepat</h2>
+          <p>4 Pintu utama untuk melakukan pekerjaan di Store.</p>
+          <ul class="feature-list">
+            <li>📦 <b>Packing:</b> Menu membungkus barang (Tahap 1).</li>
+            <li>🧾 <b>Receipt:</b> Menu serah terima barang ke Ekspedisi (Tahap 2).</li>
+            <li>🕒 <b>History:</b> Menu Riwayat dan Perbaikan Data (Revisi Salah Input).</li>
+            <li>💡 <b>Bantuan:</b> Menu Pemandu jika Anda lupa SOP / Cara menggunakan aplikasi (Ada kontak WhatsApp Admin Support).</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner">
+            <div class="dash-header" style="opacity:0.3;">
+              <div class="profile-info"><div class="profile-pic">👦🏻</div><div><div style="font-size: 16px; font-weight: 800;">Hi, Alfian</div></div></div>
+              <button class="btn-ios-nav"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 2v6h-6"></path><path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path></svg></button>
+            </div>
+
+            <h3 style="margin-bottom: 12px; font-size: 16px; font-weight:800;">Akses Staff</h3>
+            <div class="menu-grid">
+              <div class="glass menu-card" style="box-shadow: 0 4px 15px rgba(0,0,0,0.1);"><div style="font-size:36px; margin-bottom:8px;">📦</div><div style="font-weight:800; font-size:15px;">Packing</div></div>
+              <div class="glass menu-card" style="box-shadow: 0 4px 15px rgba(0,0,0,0.1);"><div style="font-size:36px; margin-bottom:8px;">🧾</div><div style="font-weight:800; font-size:15px;">Receipt</div></div>
+              <div class="glass menu-card" style="box-shadow: 0 4px 15px rgba(0,0,0,0.1);"><div style="font-size:32px; margin-bottom:8px;">🕒</div><div style="font-weight:800; font-size:15px;">History</div></div>
+              <div class="glass menu-card" style="background: rgba(255,149,0,0.05); border-color:rgba(255,149,0,0.2);"><div style="font-size:32px; margin-bottom:8px;">💡</div><div style="font-weight:800; font-size:14px; color:var(--warning);">Bantuan</div></div>
+            </div>
+            <div style="text-align:center; padding: 10px 0; font-size: 11px; color: var(--text-muted); font-weight: 600;">Creator by Alfian Ananda</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2>👤 Profil Staf (Data Diri)</h2>
+          <p>Melihat informasi pengenal siapa yang sedang menggunakan aplikasi ini.</p>
+          <ul class="feature-list">
+            <li><b>Cara Buka:</b> Di Dashboard, ketuk kotak kecil yang berisi Foto dan Nama Anda di sudut Kiri Atas.</li>
+            <li>Sebuah Jendela (<i>Modal</i>) putih akan muncul dari tengah layar.</li>
+            <li>Anda bisa memeriksa Nama Lengkap, Username, dan Hak Akses (Staff / Admin).</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner" style="background: rgba(0,0,0,0.5); padding:0; justify-content:flex-end;">
+            <div class="glass" style="width: 92%; max-width: 440px; padding: 32px 24px; margin:auto; background:white; padding-bottom:50px;">
+              <h2 style="text-align: center; margin-bottom: 20px; font-weight:800; font-size:22px; color:var(--text-main);">Profil Saya</h2>
+              <div style="position: relative; width: 100px; height: 100px; border-radius: 50%; margin: 0 auto 20px; border: 3px solid var(--primary); display: flex; align-items: center; justify-content: center; background: #f0f0f5; font-size:48px;">👦🏻</div>
+              
+              <div style="margin-bottom: 10px; margin-top:30px;">
+                <div style="font-size: 14px; margin-bottom: 12px; display: flex; justify-content: space-between; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 12px;"><span style="color:var(--text-muted); font-weight:600;">Nama</span> <b style="color:var(--text-main);">Alfian</b></div>
+                <div style="font-size: 14px; margin-bottom: 12px; display: flex; justify-content: space-between; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 12px;"><span style="color:var(--text-muted); font-weight:600;">Username</span> <b style="color:var(--text-main);">Alfian_A</b></div>
+                <div style="font-size: 14px; margin-bottom: 12px; display: flex; justify-content: space-between; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 12px;"><span style="color:var(--text-muted); font-weight:600;">Hak Akses</span> <b style="color:var(--text-main);">Staff</b></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2>🏪 Indikator Lokasi Store</h2>
+          <p>Mencegah Staf salah menggunakan HP/Akun untuk Cabang lain.</p>
+          <ul class="feature-list">
+            <li>Di bawah Hak Akses, terdapat tulisan biru <b>Lokasi Store</b>.</li>
+            <li>Tulisan ini menunjukkan bahwa pekerjaan Anda saat ini dihitung sebagai produktivitas untuk Cabang tersebut.</li>
+            <li>Contoh: "Toys Kingdom LP Bintaro.</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner" style="background: rgba(0,0,0,0.5); padding:0; justify-content:flex-end;">
+            <div class="glass" style="width: 92%; max-width: 440px; padding: 32px 24px; margin:auto; background:white; padding-bottom:50px;">
+              <h2 style="text-align: center; margin-bottom: 20px; font-weight:800; font-size:22px; color:var(--text-main);">Profil Saya</h2>
+              <div style="position: relative; width: 100px; height: 100px; border-radius: 50%; margin: 0 auto 20px; border: 3px solid var(--primary); display: flex; align-items: center; justify-content: center; background: #f0f0f5; font-size:48px;">👦🏻</div>
+              
+              <div style="margin-bottom: 10px; margin-top:30px;">
+                <div style="font-size: 14px; margin-bottom: 12px; display: flex; justify-content: space-between; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 12px;"><span style="color:var(--text-muted); font-weight:600;">Nama</span> <b style="color:var(--text-main);">Alfian</b></div>
+                <div style="font-size: 14px; margin-bottom: 12px; display: flex; justify-content: space-between; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 12px; border:2px solid var(--primary); background:rgba(0,122,255,0.05); padding:12px; border-radius:12px;"><span style="color:var(--text-muted); font-weight:600;">Lokasi Store</span> <b style="color:var(--primary); font-size:16px;">Toys LP Bintaro</b></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2>📸 Mengubah Foto Profil</h2>
+          <p>Sangat diwajibkan menggunakan foto wajah asli staf untuk membantu investigasi keamanan.</p>
+          <ul class="feature-list">
+            <li>Terdapat 2 tombol kecil di bawah lingkaran foto:</li>
+            <li><b>Kamera:</b> Membuka kamera depan HP untuk langsung *Selfie*.</li>
+            <li><b>Galeri:</b> Memilih pas foto yang sudah ada di dalam HP.</li>
+            <li><i>Catatan:</i> Begitu foto dipilih, sistem akan otomatis melakukan kompresi (mengecilkan ukuran memori) dan langsung <b>Auto-Save (Tersimpan otomatis)</b>. Anda tidak perlu memencet tombol Simpan di bawah!</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner" style="background: rgba(0,0,0,0.5); padding:0; justify-content:flex-end;">
+            <div class="glass" style="width: 92%; max-width: 440px; padding: 32px 24px; margin:auto; background:white; padding-bottom:50px;">
+              <h2 style="text-align: center; margin-bottom: 20px; font-weight:800; font-size:22px; color:var(--text-main);">Profil Saya</h2>
+              
+              <div style="padding:16px; border:2px dashed var(--primary); border-radius:24px; background:rgba(0,122,255,0.05);">
+                  <div style="position: relative; width: 100px; height: 100px; border-radius: 50%; margin: 0 auto 20px; border: 3px solid var(--primary); display: flex; align-items: center; justify-content: center; background: #f0f0f5; font-size:48px;">👦🏻</div>
+                  <div style="display:flex; justify-content:center; gap:10px;">
+                      <button class="btn-secondary" style="width:auto; padding:8px 16px; margin:0; font-size:13px; background:rgba(0,0,0,0.8); color:white;">📸 Kamera</button>
+                      <button class="btn-secondary" style="width:auto; padding:8px 16px; margin:0; font-size:13px; border:1px solid #ccc;">🖼️ Galeri</button>
+                  </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2>🔐 Mengubah Password Sendiri</h2>
+          <p>Jika staf merasa sandinya sudah ketahuan teman lain, segera ubah sandinya.</p>
+          <ul class="feature-list">
+            <li><b>Gulir Layar:</b> Usap menu profil ke bagian bawah.</li>
+            <li><b>Validasi:</b> Anda TIDAK BISA mengganti sandi baru, jika Anda tidak mengetahui "Sandi Lama" Anda. Masukkan Sandi Lama di kotak pertama.</li>
+            <li><b>Sandi Baru:</b> Ketik sandi baru yang diinginkan (TIdak boleh sama dengan sandi lama).</li>
+            <li><b>Simpan Edit:</b> Ketuk tombol biru di paling bawah untuk memproses. Layar akan memunculkan status sukses ✅.</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner" style="background: rgba(0,0,0,0.5); padding:0; justify-content:flex-end;">
+            <div class="glass" style="width: 92%; max-width: 440px; padding: 24px; margin:auto; background:white;">
+              
+              <div class="input-group" style="margin-top: 0px;">
+                <label class="input-label" style="font-size:11px;">Password Lama (Wajib)</label>
+                <input type="password" class="custom-input" value="SandiLama123">
+                <button class="icon-btn" style="bottom: 16px;">👁️</button>
+              </div>
+              <div class="input-group">
+                <label class="input-label" style="font-size:11px;">Ganti Password Baru (6-20 Karakter)</label>
+                <input type="password" class="custom-input" value="SandiAman2026">
+                <button class="icon-btn" style="bottom: 16px;">👁️</button>
+              </div>
+              
+              <div style="display: flex; gap: 12px; margin-top: 24px;">
+                <button class="btn-secondary" style="margin: 0; flex: 1;">Tutup</button>
+                <button class="btn-primary" style="margin: 0; flex: 1; box-shadow: 0 8px 20px rgba(0,122,255,0.3);">Simpan Edit</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2>📦 Modul 1: Form Packing (Awal)</h2>
+          <p>Mari kita mulai bekerja! Ini adalah tahap saat Anda mengambil barang fisik dari Rak Store, dan bersiap membungkusnya.</p>
+          <ul class="feature-list">
+            <li><b>Fungsi:</b> Menandakan bahwa barang sudah dipersiapkan (QC OK) dan dipisahkan dari stok toko.</li>
+            <li><b>Tombol Navigasi:</b> Jika Anda tidak sengaja masuk ke menu ini, Anda bisa menekan tombol Panah Kiri (🔙) di sudut kiri atas untuk membuang form dan kembali ke Dashboard.</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner">
+            <div class="dash-header">
+              <button class="btn-ios-nav"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+              <h2 style="margin:0; font-size: 20px; font-weight:800; color:var(--text-main);">Form Packing</h2>
+              <div style="width:48px;"></div>
+            </div>
+            <div class="glass" style="padding:24px;">
+              <div class="input-group">
+                <label class="input-label">No. Dokumen / Resi</label>
+                <div class="scan-wrapper">
+                  <input type="text" class="custom-input" placeholder="Ketik atau Scan Barcode">
+                  <button class="scan-btn" style="background: #1C1C1E; color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"></path><path d="M17 3h2a2 2 0 0 1 2 2v2"></path><path d="M21 17v2a2 2 0 0 1-2 2h-2"></path><path d="M7 21H5a2 2 0 0 1-2-2v-2"></path><path d="M8 8v8"></path><path d="M12 8v8"></path><path d="M16 8v8"></path></svg>
+                  </button>
+                </div>
+              </div>
+              <label class="input-label" style="margin-top: 16px;">Foto Dokumentasi (Wajib)</label>
+              <div class="img-grid-3">
+                <div class="img-upload-box"><div class="icon">🖼️</div><span>Before</span></div>
+                <div class="img-upload-box"><div class="icon">📦</div><span>Packing</span></div>
+                <div class="img-upload-box"><div class="icon">✅</div><span>After</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2>📷 Cara Menggunakan Scanner</h2>
+          <p>Tinggalkan cara ketik manual yang lambat. Aplikasi ini dibekali pemindai (Scanner) setara mesin kasir industri.</p>
+          <ul class="feature-list">
+            <li><b>Akses Scanner:</b> Ketuk tombol kotak hitam bergambar Lensa di sebelah kanan input Resi.</li>
+            <li><b>Tampilan Kamera:</b> Layar HP akan menjadi pembidik dengan 4 sudut hijau dan garis laser jalan di tengah.</li>
+            <li>Arahkan kertas Print Resi Anda tepat ke tengah kotak tersebut. Sistem akan otomatis mendeteksi tanpa perlu memencet tombol jepret!</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner" style="background:#000; padding:0; justify-content:space-between; position:relative;">
+             
+             <div style="display:flex; justify-content:space-between; align-items:flex-start; padding: 40px 24px 20px 24px; background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, transparent 100%);">
+                 <button style="background: rgba(0,0,0,0.5); color:white; border:2px solid rgba(255,255,255,0.2); border-radius:50%; width:48px; height:48px; font-size:20px;">⚡</button>
+                 <button style="background: rgba(0,0,0,0.5); color:white; border:2px solid rgba(255,255,255,0.2); border-radius:50%; width:48px; height:48px; font-size:20px;">✖</button>
+             </div>
+
+             <div style="position:relative; width:65vw; height:65vw; max-width: 300px; max-height: 300px; margin:auto;">
+                 <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to right, var(--success) 4px, transparent 4px) 0 0, linear-gradient(to bottom, var(--success) 4px, transparent 4px) 0 0, linear-gradient(to left, var(--success) 4px, transparent 4px) 100% 0, linear-gradient(to bottom, var(--success) 4px, transparent 4px) 100% 0, linear-gradient(to right, var(--success) 4px, transparent 4px) 0 100%, linear-gradient(to top, var(--success) 4px, transparent 4px) 0 100%, linear-gradient(to left, var(--success) 4px, transparent 4px) 100% 100%, linear-gradient(to top, var(--success) 4px, transparent 4px) 100% 100%; background-repeat: no-repeat; background-size: 35px 35px; border-radius: 12px;"></div>
+                 <div style="width:100%; left:0; height:3px; background:var(--success); position:absolute; top:50%; box-shadow: 0 0 15px var(--success), 0 0 30px var(--success); border-radius: 3px;"></div>
+                 <div style="width: 6px; height: 6px; background-color: var(--danger); border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); box-shadow: 0 0 10px rgba(255, 59, 48, 0.8);"></div>
+             </div>
+
+             <div style="text-align:center; padding: 20px 24px 40px 24px; background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);">
+                 <div style="color: white; font-weight: 700; font-size: 15px; text-shadow: 0 2px 8px rgba(0,0,0,0.8); margin-bottom: 8px;">Arahkan Barcode / QR Code ke Bingkai</div>
+             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2><span class="badge-tip">Respon HP</span> <br>✅ Scan Berhasil</h2>
+          <p>Jika barcode terekam dengan jelas.</p>
+          <ul class="feature-list">
+            <li>Kamera otomatis tertutup rapat.</li>
+            <li>Kotak input No. Dokumen akan langsung terisi dengan kode resi (Misal: <b>INV-2026-XYZ99</b>).</li>
+            <li>Pesan Pop-up hijau <b>✅ Berhasil!</b> akan muncul di layar.</li>
+            <li>HP akan mengeluarkan bunyi Beep (Tit!) dan bergetar halus 1 kali di tangan Anda.</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner" style="position:relative;">
+            <div id="toast" style="background: rgba(52, 199, 89, 0.9); top:40px; display:block;">✅ Berhasil!</div>
+            <div class="dash-header">
+              <button class="btn-ios-nav"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+              <h2 style="margin:0; font-size: 20px; font-weight:800;">Form Packing</h2>
+              <div style="width:48px;"></div>
+            </div>
+            <div class="glass" style="padding:24px; border: 2px solid var(--success); box-shadow: 0 0 20px rgba(52,199,89,0.3);">
+              <div class="input-group">
+                <label class="input-label" style="color:var(--success);">No. Dokumen / Resi</label>
+                <div class="scan-wrapper">
+                  <input type="text" class="custom-input" value="INV-2026-XYZ99" style="border-color:var(--success); font-weight:bold; color:var(--text-main);">
+                  <button class="scan-btn" style="background: #1C1C1E; color: white;"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"></path><path d="M17 3h2a2 2 0 0 1 2 2v2"></path><path d="M21 17v2a2 2 0 0 1-2 2h-2"></path><path d="M7 21H5a2 2 0 0 1-2-2v-2"></path><path d="M8 8v8"></path><path d="M12 8v8"></path><path d="M16 8v8"></path></svg></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2><span class="badge-error">Peringatan</span> <br>⚠️ Anti-Duplikat Packing</h2>
+          <p>Mencegah staf melakukan pekerjaan sia-sia membungkus paket yang sama dua kali.</p>
+          <ul class="feature-list">
+            <li><b>Cek Real-time:</b> Saat barcode tertembak, sistem langsung mengecek apakah resi tersebut sudah pernah masuk dalam database Packing hari ini.</li>
+            <li><b>Penolakan Keras:</b> Jika terdeteksi duplikat, kotak input dikosongkan lagi, muncul pesan error merah, dan <b>HP Anda akan bergetar panjang berulang-ulang</b> sebagai *Physical Feedback*.</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner" style="position:relative;">
+            <div id="toast" style="background: rgba(255, 59, 48, 0.9); top:40px; display:block; padding:16px;">⚠️ Ditolak: INV-2026-001 sudah dipacking!</div>
+            <div class="dash-header">
+              <button class="btn-ios-nav"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+              <h2 style="margin:0; font-size: 20px; font-weight:800;">Form Packing</h2>
+              <div style="width:48px;"></div>
+            </div>
+            <div class="glass" style="padding:24px; border: 2px solid var(--danger); box-shadow: 0 0 20px rgba(255,59,48,0.2);">
+              <div class="input-group">
+                <label class="input-label" style="color:var(--danger);">No. Dokumen / Resi</label>
+                <div class="scan-wrapper">
+                  <input type="text" class="custom-input" value="INV-2026-001" style="border-color:var(--danger); background:rgba(255,59,48,0.05); color:var(--danger); font-weight:bold;">
+                  <button class="scan-btn" style="background: #1C1C1E; color: white;"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"></path><path d="M17 3h2a2 2 0 0 1 2 2v2"></path><path d="M21 17v2a2 2 0 0 1-2 2h-2"></path><path d="M7 21H5a2 2 0 0 1-2-2v-2"></path><path d="M8 8v8"></path><path d="M12 8v8"></path><path d="M16 8v8"></path></svg></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2>📦 SOP 3 Foto Dokumentasi</h2>
+          <p>Syarat mutlak di dalam gudang/store untuk mencegah komplain pelanggan "Barang isinya kosong / rusak".</p>
+          <ul class="feature-list">
+            <li><b>1. Before:</b> Bukti bahwa barang yang disiapkan dari rak benar, sesuai tipe, dan tidak cacat fisik.</li>
+            <li><b>2. Packing:</b> Bukti bahwa staf menggunakan standar pembungkusan yang aman (Bubble Wrap tebal / Kardus).</li>
+            <li><b>3. After:</b> Bukti bahwa paket sudah dilakban rapi dan kertas resi menempel dengan benar, siap diangkut kurir.</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner">
+            <div class="dash-header">
+              <button class="btn-ios-nav"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+              <h2 style="margin:0; font-size: 20px; font-weight:800;">Form Packing</h2>
+              <div style="width:48px;"></div>
+            </div>
+            <div class="glass" style="padding:24px;">
+              <label class="input-label" style="margin-bottom:12px; font-size:14px; color:var(--primary);">SOP Wajib Store (3 FOTO)</label>
+              
+              <div style="display:flex; flex-direction:column; gap:12px;">
+                  <div style="background:rgba(0,0,0,0.05); padding:12px; border-radius:12px; display:flex; align-items:center; gap:12px;">
+                      <div style="font-size:24px;">1️⃣</div>
+                      <div><b>Before</b><br><span style="font-size:12px; color:var(--text-muted);">Foto bentuk asli barang.</span></div>
+                  </div>
+                  <div style="background:rgba(0,0,0,0.05); padding:12px; border-radius:12px; display:flex; align-items:center; gap:12px;">
+                      <div style="font-size:24px;">2️⃣</div>
+                      <div><b>Packing</b><br><span style="font-size:12px; color:var(--text-muted);">Foto proses dibungkus pelindung.</span></div>
+                  </div>
+                  <div style="background:rgba(0,0,0,0.05); padding:12px; border-radius:12px; display:flex; align-items:center; gap:12px;">
+                      <div style="font-size:24px;">3️⃣</div>
+                      <div><b>After</b><br><span style="font-size:12px; color:var(--text-muted);">Paket siap, lakban rapat, resi tertempel.</span></div>
+                  </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2>📸 Foto 1: Before (Barang Asli)</h2>
+          <p>Klik kotak bertuliskan "Before". HP Anda akan langsung membuka Kamera.</p>
+          <ul class="feature-list">
+            <li>Pastikan barang diletakkan di atas meja kerja yang terang.</li>
+            <li>Pastikan merek atau bentuk fisik barang terlihat jelas di kamera.</li>
+            <li>Jika barang jelek/rusak, jangan difoto. Tukar dulu dengan stok yang bagus.</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner">
+            <div class="dash-header">
+              <button class="btn-ios-nav"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+              <h2 style="margin:0; font-size: 20px; font-weight:800;">Form Packing</h2>
+              <div style="width:48px;"></div>
+            </div>
+             <div class="glass" style="padding:24px;">
+              <label class="input-label">Foto Dokumentasi (Wajib)</label>
+              <div class="img-grid-3">
+                <div class="img-upload-box" style="border: 2px solid var(--primary); box-shadow: 0 0 15px rgba(0,122,255,0.3);">
+                    <img src="https://cdn.ruparupa.io/fit-in/850x850/filters:format(webp)/filters:watermark(content.ruparupa.io,products/wm/rr.png,0,-0,0,100,100)/ruparupa-com/image/upload/Products/10626489_1.jpg?auto=format&fit=crop&w=300&q=80" class="real-pic">
+                    <span style="position:relative; z-index:10; background:rgba(255,255,255,0.9); padding:2px 6px; border-radius:6px; font-weight:bold; color:var(--primary);">Before</span>
+                </div>
+                <div class="img-upload-box"><div class="icon">📦</div><span>Packing</span></div>
+                <div class="img-upload-box"><div class="icon">✅</div><span>After</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2>📸 Foto 2: Packing (Dibungkus)</h2>
+          <p>Tahapan ini adalah perlindungan ekstra yang menyelamatkan Store dari kerugian akibat kurir ugal-ugalan.</p>
+          <ul class="feature-list">
+            <li>Lilitkan <i>Bubble Wrap</i> tebal pada barang, atau masukkan ke dalam Box Kardus pelindung ekstra.</li>
+            <li>Ambil foto saat barang berada di dalam box atau di dalam lilitan pelindung tersebut.</li>
+            <li>Ketuk kotak tengah bertuliskan "Packing" untuk memotret.</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner">
+            <div class="dash-header">
+              <button class="btn-ios-nav"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+              <h2 style="margin:0; font-size: 20px; font-weight:800;">Form Packing</h2>
+              <div style="width:48px;"></div>
+            </div>
+             <div class="glass" style="padding:24px;">
+              <label class="input-label">Foto Dokumentasi (Wajib)</label>
+              <div class="img-grid-3">
+                <div class="img-upload-box">
+                    <img src="https://cdn.ruparupa.io/fit-in/850x850/filters:format(webp)/filters:watermark(content.ruparupa.io,products/wm/rr.png,0,-0,0,100,100)/ruparupa-com/image/upload/Products/10626489_1.jpg?auto=format&fit=crop&w=300&q=80" class="real-pic">
+                    <span style="position:relative; z-index:10; background:rgba(255,255,255,0.9); padding:2px 6px; border-radius:6px; font-weight:bold;">Before</span>
+                </div>
+                <div class="img-upload-box" style="border: 2px solid var(--primary); box-shadow: 0 0 15px rgba(0,122,255,0.3);">
+                    <img src="https://ljrlogistics.com/wp-content/uploads/2022/05/Bubble-Wrap-Ekspedisi-Pengiriman-Barang-Murah.jpeg?auto=format&fit=crop&w=300&q=80" class="real-pic">
+                    <span style="position:relative; z-index:10; background:rgba(255,255,255,0.9); padding:2px 6px; border-radius:6px; font-weight:bold; color:var(--primary);">Packing</span>
+                </div>
+                <div class="img-upload-box"><div class="icon">✅</div><span>After</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2>📸 Foto 3: After (Selesai Lakban)</h2>
+          <p>Paket sudah disegel mati dan siap diserahkan ke Ekspedisi/Kurir.</p>
+          <ul class="feature-list">
+            <li>SOP Ketat: Pastikan lakban keamanan Store sudah dililitkan dengan rapi tanpa celah (Anti-maling).</li>
+            <li>Tempelkan kertas Resi Dokumen pengiriman di area yang datar.</li>
+            <li>Ambil foto "After" yang memperlihatkan dengan jelas <b style="color:var(--primary);">Label Kertas Resi</b> menyatu dengan paket kardus tersebut.</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner">
+            <div class="dash-header">
+              <button class="btn-ios-nav"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+              <h2 style="margin:0; font-size: 20px; font-weight:800;">Form Packing</h2>
+              <div style="width:48px;"></div>
+            </div>
+             <div class="glass" style="padding:24px;">
+              <label class="input-label">Foto Dokumentasi (Wajib)</label>
+              <div class="img-grid-3">
+                <div class="img-upload-box">
+                    <img src="https://cdn.ruparupa.io/fit-in/850x850/filters:format(webp)/filters:watermark(content.ruparupa.io,products/wm/rr.png,0,-0,0,100,100)/ruparupa-com/image/upload/Products/10626489_1.jpg?auto=format&fit=crop&w=300&q=80" class="real-pic">
+                    <span style="position:relative; z-index:10; background:rgba(255,255,255,0.9); padding:2px 6px; border-radius:6px; font-weight:bold;">Before</span>
+                </div>
+                <div class="img-upload-box">
+                    <img src="https://ljrlogistics.com/wp-content/uploads/2022/05/Bubble-Wrap-Ekspedisi-Pengiriman-Barang-Murah.jpeg?auto=format&fit=crop&w=300&q=80" class="real-pic">
+                    <span style="position:relative; z-index:10; background:rgba(255,255,255,0.9); padding:2px 6px; border-radius:6px; font-weight:bold;">Packing</span>
+                </div>
+                <div class="img-upload-box" style="border: 2px solid var(--primary); box-shadow: 0 0 15px rgba(0,122,255,0.3);">
+                    <img src="https://static.desty.app/desty-omni/20230531/874b3a4dbdca4b339a7be480e4d175e5.jpeg?auto=format&fit=crop&w=300&q=80" class="real-pic">
+                    <span style="position:relative; z-index:10; background:rgba(255,255,255,0.9); padding:2px 6px; border-radius:6px; font-weight:bold; color:var(--primary);">After</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2>📝 Catatan Tambahan & Simpan</h2>
+          <p>Jika 3 foto sudah terisi, apa langkah selanjutnya?</p>
+          <ul class="feature-list">
+            <li><b>Kolom Catatan (Opsional):</b> Bisa dikosongkan. Namun wajib diisi jika ada *request* khusus dari pembeli (Misal: "Kardus penyok sedikit dari pabrik", "Warna merah habis, diganti biru"). Huruf akan kapital otomatis.</li>
+            <li><b>Tombol Simpan:</b> Setelah ditekan, sistem otomatis mengompres 3 gambar tersebut dan mem-Push-nya ke Server (Proses sekitar 2-4 detik tergantung sinyal).</li>
+            <li>Layar akan kembali bersih (*Reset*) agar Anda bisa melanjut scan paket berikutnya dengan lincah!</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner">
+            <div class="dash-header">
+              <button class="btn-ios-nav"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+              <h2 style="margin:0; font-size: 20px; font-weight:800;">Form Packing</h2>
+              <div style="width:48px;"></div>
+            </div>
+             <div class="glass" style="padding:24px;">
+              <div class="input-group">
+                <label class="input-label">Catatan (Opsional)</label>
+                <textarea class="custom-input" rows="2" placeholder="Tambahkan keterangan jika ada...">KARDUS ADA PENYOK SEDIKIT DARI SUPLIER.</textarea>
+              </div>
+
+              <button class="btn-primary" style="margin-top: 10px; background:var(--primary); box-shadow: 0 8px 20px rgba(0,122,255,0.3);">Simpan Data Packing</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2>📍 Rahasia di Balik Tombol Simpan</h2>
+          <p>Sistem ini menambahkan perlindungan tak kasat mata pada foto Anda: <b>Geo-Watermark</b>.</p>
+          <ul class="feature-list">
+            <li>Saat tombol diklik, aplikasi menarik titik satelit GPS HP Anda.</li>
+            <li>Sistem mencetak (*Stamping*) "Teks Berlapis" transparan di pojok kanan bawah foto aslinya.</li>
+            <li><b>Kegunaan:</b> Jika kurir nakal berbohong bahwa Anda menyerahkan kardus kosong, Admin punya bukti foto yang disahkan oleh Lokasi GPS dan Jam Google Server yang mustahil diedit pakai Photoshop!</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner" style="justify-content:center; align-items:center; background:#000;">
+            <div style="position:relative; width: 100%; aspect-ratio: 1/1; background:#333; border-radius: 20px; overflow:hidden;">
+               <img src="https://cdn.ruparupa.io/fit-in/850x850/filters:format(webp)/filters:watermark(content.ruparupa.io,products/wm/rr.png,0,-0,0,100,100)/ruparupa-com/image/upload/Products/10626489_1.jpg?auto=format&fit=crop&w=500&q=80" style="width:100%; height:100%; object-fit:cover;">
+               
+               <div style="position:absolute; bottom:0; left:0; width:100%; background:rgba(0,0,0,0.65); padding: 15px; color:rgba(255,255,255,0.95); font-family:sans-serif; text-align:right; font-size: 11px; line-height: 1.5;">
+                   <b>RePack (Receipt & Packing)</b><br>
+                   📍 Jl. Jend. Sudirman, Tangerang Selatan<br>
+                   -6.28312, 106.71123 ±10m<br>
+                   📅 06 Mar 2026 🕒 14:35 WIB<br>
+                   👤 Staff: Alfian Ananda
+               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2>🧾 Modul 2: Form Receipt (Serah Terima)</h2>
+          <p>Modul kedua ini digunakan ketika Mas Kurir (Ekspedisi) sudah tiba di Store dengan mobil/motornya untuk menjemput tumpukan paket.</p>
+          <ul class="feature-list">
+            <li><b>Cara Akses:</b> Klik menu "🧾 Receipt" di layar Dashboard.</li>
+            <li><b>Konsepnya:</b> Anda tidak perlu lagi menulis resi di buku besar ekspedisi, semua dicatat secara digital di aplikasi. 1 Kurir untuk banyak paket!</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner">
+            <div class="dash-header">
+              <button class="btn-ios-nav"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+              <h2 style="margin:0; font-size: 20px; font-weight:800; color:var(--text-main);">Form Receipt</h2>
+              <div style="width:48px;"></div>
+            </div>
+            
+            <div class="glass" style="padding:24px;">
+              <div class="input-group">
+                <label class="input-label">No. Dokumen (Bisa Multi Scan)</label>
+                <div class="scan-wrapper">
+                  <input type="text" class="custom-input" placeholder="Scan berulang...">
+                  <button class="scan-btn" style="background: #1C1C1E; color: white;"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"></path><path d="M17 3h2a2 2 0 0 1 2 2v2"></path><path d="M21 17v2a2 2 0 0 1-2 2h-2"></path><path d="M7 21H5a2 2 0 0 1-2-2v-2"></path><path d="M8 8v8"></path><path d="M12 8v8"></path><path d="M16 8v8"></path></svg></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2>🧾 Mode Pemindai Kasir (Multi-Scan)</h2>
+          <p>Bayangkan Anda adalah kasir Indomaret. Tembak barcode terus menerus tanpa henti!</p>
+          <ul class="feature-list">
+            <li>Ketuk ikon Scanner (Hitam). Kamera akan menyala.</li>
+            <li>Setiap kali Laser mengenai Barcode Resi, HP akan berbunyi "Bip!" tapi kamera <b>TIDAK AKAN MATI</b>.</li>
+            <li>Arahkan laser ke paket kedua, ketiga, keempat... Tembak semua tumpukan paket milik Kurir A tersebut.</li>
+            <li>Sistem otomatis merangkai resi tersebut dengan tanda koma (Misal: `INV-1, INV-2, INV-3`).</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner">
+            <div class="dash-header">
+              <button class="btn-ios-nav"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+              <h2 style="margin:0; font-size: 20px; font-weight:800; color:var(--text-main);">Form Receipt</h2>
+              <div style="width:48px;"></div>
+            </div>
+            
+            <div class="glass" style="padding:24px;">
+              <div class="input-group">
+                <label class="input-label">No. Dokumen (Multi Scan)</label>
+                <div class="scan-wrapper">
+                  <input type="text" class="custom-input" value="INV-01, INV-02, INV-03" style="padding-right: 160px; font-size:14px; font-weight:bold; color:var(--primary);">
+                  <button class="scan-btn" style="right: 106px; background: #1C1C1E; color: white;"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"></path><path d="M17 3h2a2 2 0 0 1 2 2v2"></path><path d="M21 17v2a2 2 0 0 1-2 2h-2"></path><path d="M7 21H5a2 2 0 0 1-2-2v-2"></path><path d="M8 8v8"></path><path d="M12 8v8"></path><path d="M16 8v8"></path></svg></button>
+                  <button class="scan-btn" style="right: 56px; background: var(--primary); color: white;">🔍</button>
+                  <button class="scan-btn" style="right: 6px; background: rgba(255,149,0,0.15); color: var(--warning);">📋</button>
+                </div>
+                <div style="font-size:11px; margin-top:8px; color:var(--text-muted);"><b>3 Resi</b> terpilih</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2>🔍 Pencarian Data Manual</h2>
+          <p>Bagaimana jika Barcode / QR Code pada kertas resi rusak, buram, dan tidak bisa di-scan oleh kamera?</p>
+          <ul class="feature-list">
+            <li>Ketuk tombol ikon <b>Kaca Pembesar (🔍)</b> berwarna biru di kotak No. Dokumen tadi.</li>
+            <li>Sebuah jendela <b>Daftar Paket Siap Kirim</b> akan muncul berisi semua barang yang sudah selesai di-Packing hari ini.</li>
+            <li>Gunakan kolom pencarian untuk mengetik sebagian nomor resi/nama, lalu tekan tombol <b>+ Tambah</b> untuk memasukkannya ke dalam keranjang.</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner" style="background: rgba(0,0,0,0.5); padding:0; justify-content:flex-end;">
+             <div class="glass" style="width: 100%; padding: 24px; background: white; border-bottom-left-radius:0; border-bottom-right-radius:0; height: 75vh; display:flex; flex-direction:column;">
+                <h3 style="margin:0 0 16px 0; font-weight:800; font-size:18px; text-align:center;">Cari Data Packing</h3>
+                
+                <div class="input-group" style="margin-bottom:16px;">
+                  <input type="text" class="custom-input" placeholder="Cari No. Resi..." style="padding:14px; font-size:14px; background: rgba(0,0,0,0.03);">
+                  <button class="icon-btn" style="right:12px;">🔍</button>
+                </div>
+
+                <div style="flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:10px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; padding:12px; border:1px solid rgba(0,0,0,0.05); border-radius:16px; background:rgba(0,122,255,0.02);">
+                        <div>
+                            <div style="font-weight:800; font-size:14px; color:var(--text-main);">INV-001</div>
+                            <div style="font-size:11px; color:var(--text-muted); font-weight:600;">📦 Siap Kirim</div>
+                        </div>
+                        <button style="background:var(--primary); color:white; border:none; padding:6px 12px; border-radius:10px; font-weight:800; font-size:12px; cursor:pointer;">+ Tambah</button>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; padding:12px; border:1px solid rgba(0,0,0,0.05); border-radius:16px;">
+                        <div>
+                            <div style="font-weight:800; font-size:14px; color:var(--text-main);">INV-002</div>
+                            <div style="font-size:11px; color:var(--text-muted); font-weight:600;">📦 Siap Kirim</div>
+                        </div>
+                        <button style="background:var(--primary); color:white; border:none; padding:6px 12px; border-radius:10px; font-weight:800; font-size:12px; cursor:pointer;">+ Tambah</button>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; padding:12px; border:1px solid rgba(0,0,0,0.05); border-radius:16px;">
+                        <div>
+                            <div style="font-weight:800; font-size:14px; color:var(--text-main);">INV-003</div>
+                            <div style="font-size:11px; color:var(--text-muted); font-weight:600;">📦 Siap Kirim</div>
+                        </div>
+                        <button style="background:var(--primary); color:white; border:none; padding:6px 12px; border-radius:10px; font-weight:800; font-size:12px; cursor:pointer;">+ Tambah</button>
+                    </div>
+                </div>
+
+                <button class="btn-secondary" style="margin-top:16px; width:100%; font-size:15px; padding:14px; box-shadow: 0 -10px 20px rgba(255,255,255,0.9);">Tutup</button>
+             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2>📋 Melihat Daftar (Keranjang Input)</h2>
+          <p>Kurir bertanya: <i>"Mas, sudah berapa paket yang di-scan buat saya?"</i></p>
+          <ul class="feature-list">
+            <li>Klik tombol ikon keranjang kuning (📋) di sebelah kotak input resi.</li>
+            <li>Muncul lembar Daftar Resi Masuk yang memanjang ke bawah.</li>
+            <li>Anda bisa menghitung jumlahnya (tertera jelas di angka pojok, misal: <b>3 Resi</b>).</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner" style="background: rgba(0,0,0,0.5); padding:0; justify-content:center;">
+             <div class="glass" style="width: 92%; margin: auto; padding: 24px; background: white;">
+                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+                     <h3 style="margin:0; font-weight:800; font-size:20px;">Daftar Resi Masuk</h3>
+                     <span style="background:var(--primary); color:white; padding:4px 12px; border-radius:12px; font-weight:800; font-size:12px;">3 Resi</span>
+                 </div>
+                 
+                 <div style="border: 1px solid rgba(0,0,0,0.05); border-radius: 16px; padding: 8px;">
+                     <div style="display: flex; align-items: center; justify-content:space-between; padding: 12px; border-bottom: 1px solid rgba(0,0,0,0.05);">
+                         <div style="display:flex; align-items:center; gap:12px;">
+                             <div style="background:var(--primary); color:white; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800;">1</div>
+                             <span style="font-weight:800; font-size:14px;">INV-001</span>
+                         </div>
+                         <button style="background:rgba(255,59,48,0.1); color:var(--danger); border:none; width:36px; height:36px; border-radius:12px; font-size:16px;">🗑️</button>
+                     </div>
+                     <div style="display: flex; align-items: center; justify-content:space-between; padding: 12px; border-bottom: 1px solid rgba(0,0,0,0.05);">
+                         <div style="display:flex; align-items:center; gap:12px;">
+                             <div style="background:var(--primary); color:white; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800;">2</div>
+                             <span style="font-weight:800; font-size:14px;">INV-002</span>
+                         </div>
+                         <button style="background:rgba(255,59,48,0.1); color:var(--danger); border:none; width:36px; height:36px; border-radius:12px; font-size:16px;">🗑️</button>
+                     </div>
+                     <div style="display: flex; align-items: center; justify-content:space-between; padding: 12px;">
+                         <div style="display:flex; align-items:center; gap:12px;">
+                             <div style="background:var(--primary); color:white; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800;">3</div>
+                             <span style="font-weight:800; font-size:14px;">INV-003</span>
+                         </div>
+                         <button style="background:rgba(255,59,48,0.1); color:var(--danger); border:none; width:36px; height:36px; border-radius:12px; font-size:16px;">🗑️</button>
+                     </div>
+                 </div>
+
+                 <button class="btn-primary" style="margin-top:20px;">Tutup List</button>
+             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2>🗑️ Menghapus Resi yang Salah Scan</h2>
+          <p>Kadang kurir berkata: <i>"Oh tunggu mas, paket yang ini tadi saya cek rusak plastiknya, saya retur aja."</i></p>
+          <ul class="feature-list">
+            <li>Buka Daftar List (Ikon 📋 Kuning).</li>
+            <li>Cari nomor resi paket tersebut di dalam daftar.</li>
+            <li>Ketuk tombol <b>Tong Sampah (🗑️ Merah)</b> di sebelah kanan resi.</li>
+            <li>Resi tercabut dari daftar, jumlahnya berkurang, dan paket siap Anda proses Retur nantinya.</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner" style="background: rgba(0,0,0,0.5); padding:0; justify-content:center;">
+             <div id="toast" style="background: rgba(52, 199, 89, 0.9); top:40px; display:block;">Resi INV-003 berhasil dihapus</div>
+             
+             <div class="glass" style="width: 92%; margin: auto; padding: 24px; background: white;">
+                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+                     <h3 style="margin:0; font-weight:800; font-size:20px;">Daftar Resi Masuk</h3>
+                     <span style="background:var(--primary); color:white; padding:4px 12px; border-radius:12px; font-weight:800; font-size:12px;">2 Resi</span>
+                 </div>
+                 
+                 <div style="border: 1px solid rgba(0,0,0,0.05); border-radius: 16px; padding: 8px;">
+                     <div style="display: flex; align-items: center; justify-content:space-between; padding: 12px; border-bottom: 1px solid rgba(0,0,0,0.05);">
+                         <div style="display:flex; align-items:center; gap:12px;">
+                             <div style="background:var(--primary); color:white; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800;">1</div>
+                             <span style="font-weight:800; font-size:14px;">INV-001</span>
+                         </div>
+                         <button style="background:rgba(255,59,48,0.1); color:var(--danger); border:none; width:36px; height:36px; border-radius:12px; font-size:16px;">🗑️</button>
+                     </div>
+                     <div style="display: flex; align-items: center; justify-content:space-between; padding: 12px;">
+                         <div style="display:flex; align-items:center; gap:12px;">
+                             <div style="background:var(--primary); color:white; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800;">2</div>
+                             <span style="font-weight:800; font-size:14px;">INV-002</span>
+                         </div>
+                         <button style="background:rgba(255,59,48,0.1); color:var(--danger); border:none; width:36px; height:36px; border-radius:12px; font-size:16px;">🗑️</button>
+                     </div>
+                 </div>
+
+                 <button class="btn-primary" style="margin-top:20px;">Tutup List</button>
+             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2><span class="badge-error">Validasi Keamanan</span> <br>⚠️ Filter "Data Tidak Ditemukan!"</h2>
+          <p>Apa yang terjadi jika Staf menscan resi paket yang sama sekali BELUM PERNAH diproses Packing hari ini?</p>
+          <ul class="feature-list">
+            <li>Sistem akan menolak nomor tersebut masuk ke keranjang. Scanner akan mati tiba-tiba.</li>
+            <li>Muncul Layar Peringatan Merah <b>"Data Tidak Ditemukan!"</b></li>
+            <li>Ini membuktikan sistem sadar paket tersebut *memotong jalur* (tidak ada dokumentasi 3 fotonya). Staf bisa menekan tombol Batal, lalu membungkusnya secara layak dulu di form Packing.</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner">
+             <div class="glass" style="padding:24px; filter:blur(4px); opacity:0.5;">
+              <div class="input-group">
+                <label class="input-label">No. Dokumen (Multi Scan)</label>
+                <div class="scan-wrapper">
+                  <input type="text" class="custom-input" value="INV-999">
+                </div>
+              </div>
+            </div>
+
+            <div style="background: white; border: 2px solid var(--danger); border-radius: 24px; padding: 24px; margin-top: -120px; box-shadow: 0 10px 40px rgba(255,59,48,0.2); text-align:center; z-index:100; position:relative;">
+                <div style="font-size:48px; margin-bottom:10px;">⚠️</div>
+                <div style="font-size: 18px; font-weight: 800; margin-bottom: 8px;">Data Tidak Ditemukan</div>
+                <div style="font-size: 13px; color: var(--text-main); margin-bottom: 16px;">Nomor Dokumen <b style="color:var(--danger); font-size:16px; display:block; margin:6px 0;">[INV-999]</b> tidak ada di data Packing.<br><br>Apakah kamu yakin ingin menambahkannya?</div>
+                <div style="display:flex; gap:10px;">
+                    <button style="flex:1; padding:14px; border-radius:14px; background:rgba(0,0,0,0.05); color:var(--text-main); border:none; font-weight:bold;">Batal</button>
+                    <button style="flex:1; padding:14px; border-radius:14px; background:var(--danger); color:white; border:none; font-weight:bold;">Paksa Tambah</button>
+                </div>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2>🚚 Pemilihan Ekspedisi</h2>
+          <p>Setelah sekumpulan resi terkumpul, Anda wajib mengisi data mobil/kurir yang membawa paket tersebut.</p>
+          <ul class="feature-list">
+            <li><b>Ikon Kaca Pembesar (🔍):</b> Ketuk tombol ini untuk membuka Database Ekspedisi Store Anda.</li>
+            <li>Sistem akan menyajikan daftar Kurir yang sudah langganan / terdaftar oleh Admin.</li>
+            <li>Pilih salah satu, misal: "J&T Express".</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner" style="background: rgba(0,0,0,0.5); padding:0; justify-content:flex-end;">
+            
+            <div style="background: white; border-top-left-radius: 24px; border-top-right-radius: 24px; padding: 24px; box-shadow: 0 -10px 40px rgba(0,0,0,0.1); height:85vh; overflow-y:auto;">
+                <h3 style="margin-bottom:16px; text-align:center; font-weight:800; font-size:18px;">Pilih Expedisi</h3>
+                <input type="text" class="custom-input" placeholder="Cari Nama Ekspedisi (J&T, Shopee...)" style="margin-bottom: 16px;">
+                
+                <div style="display:flex; flex-direction:column; gap:12px;">
+                    <div style="display:flex; align-items:center; gap:16px; padding: 12px; border-bottom: 1px solid rgba(0,0,0,0.05); background:rgba(0,122,255,0.05); border-radius:12px; border:1px solid var(--primary);">
+                        <div style="font-size:24px;">🚚</div>
+                        <div>
+                            <div style="font-weight:700; font-size:15px; color:var(--primary);">J&T Express</div>
+                            <div style="font-size:12px; color:var(--text-muted);">Supir: Budi | Plat: B 1234 XYZ</div>
+                        </div>
+                    </div>
+
+                    <div style="display:flex; align-items:center; gap:16px; padding: 12px; border-bottom: 1px solid rgba(0,0,0,0.05);">
+                        <div style="font-size:24px;">🚚</div>
+                        <div>
+                            <div style="font-weight:700; font-size:15px;">Shopee Express</div>
+                            <div style="font-size:12px; color:var(--text-muted);">Supir: Anton | Plat: B 9999 XX</div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn-secondary" style="margin-top:20px; width:100%;">Tutup</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2>⚡ Fitur Auto-Fill Cerdas</h2>
+          <p>Hemat waktu, tidak perlu mengetik nama supir berulang kali.</p>
+          <ul class="feature-list">
+            <li>Begitu Anda menekan "J&T Express" di daftar tadi, kolom <b>Nama Penerima</b>, <b>Plat Nomor</b>, dan <b>Nomor Handphone</b> akan <b>MENGISI OTOMATIS</b>.</li>
+            <li><b>Lalu bagaimana jika kurirnya orang baru (Cabutan)?</b> Anda tidak perlu panik, silakan hapus saja nama supir lama di kotak tersebut dan <b>Ketik Manual</b> nama kurir yang baru.</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner">
+            <div class="dash-header">
+              <button class="btn-ios-nav"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+              <h2 style="margin:0; font-size: 20px; font-weight:800;">Form Receipt</h2>
+              <div style="width:48px;"></div>
+            </div>
+            
+            <div class="glass" style="padding:24px;">
+              <div class="input-group" style="margin-bottom: 24px;">
+                <label class="input-label" style="margin-bottom: 10px;">Expedisi / Pengiriman (Wajib)</label>
+                <div class="scan-wrapper">
+                  <input type="text" class="custom-input" value="J&T Express" style="padding-right:60px; background:rgba(0,122,255,0.05); border-color:var(--primary); color:var(--primary); font-weight:bold;">
+                  <button class="scan-btn" style="right: 6px; background:transparent; font-size:18px;">🔍</button>
+                </div>
+              </div>
+
+              <div class="img-grid-2" style="margin-bottom:0;">
+                <div class="input-group">
+                    <label class="input-label" style="font-size:10px;">Nama Supir</label>
+                    <input type="text" class="custom-input" value="BUDI" style="background:rgba(52,199,89,0.05); border-color:var(--success);">
+                </div>
+                <div class="input-group">
+                    <label class="input-label" style="font-size:10px;">Plat Nomor</label>
+                    <input type="text" class="custom-input" value="B 1234 XYZ" style="background:rgba(52,199,89,0.05); border-color:var(--success);">
+                </div>
+              </div>
+              <div class="input-group">
+                  <label class="input-label" style="font-size:10px;">Nomor HP</label>
+                  <input type="tel" class="custom-input" value="+628123456789" style="background:rgba(52,199,89,0.05); border-color:var(--success);">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2><span class="badge-error">Privacy Security</span> <br>🔏 Enkripsi Nomor Handphone</h2>
+          <p>Store kami menjaga ketat kerahasiaan kontak kurir maupun pelanggan yang diinput.</p>
+          <ul class="feature-list">
+            <li><b>Auto-Correction:</b> Jika staf mengetik nomor dengan awalan `0` atau `8`, sistem otomatis menggantinya menjadi kode negara resmi `62`.</li>
+            <li><b>Two-Way Encryption:</b> Saat data di-klik Simpan, nomor HP yang dikirim ke database Google Sheet akan diacak secara matematis menjadi teks <i>cipher</i> <br>(Contoh: `ENC:dWJmaGEzMTE=`). Hal ini mencegah pencurian data jika file spreadsheet bocor.</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner">
+            <div class="dash-header">
+              <button class="btn-ios-nav"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+              <h2 style="margin:0; font-size: 20px; font-weight:800;">Form Receipt</h2>
+              <div style="width:48px;"></div>
+            </div>
+            <div class="glass" style="padding:24px; border:1px solid rgba(0,122,255,0.3);">
+              <div class="input-group">
+                <label class="input-label">No Handphone (Input di HP)</label>
+                <input type="tel" class="custom-input" value="08123456789">
+              </div>
+              <div style="text-align:center; font-size:24px; margin: 10px 0;">⬇️</div>
+              <div class="input-group">
+                <label class="input-label" style="color:var(--success);">Format Otomatis Sistem</label>
+                <input type="tel" class="custom-input" value="628123456789" disabled style="background:rgba(52,199,89,0.1); color:var(--success); border-color:rgba(52,199,89,0.3); font-weight:bold;">
+              </div>
+              <div style="text-align:center; font-size:24px; margin: 10px 0;">⬇️</div>
+              <div class="input-group">
+                <label class="input-label" style="color:var(--danger);">Disimpan ke Server / Database</label>
+                <input type="tel" class="custom-input" value="ENC:dWJmaGEzMTE=" disabled style="background:rgba(255,59,48,0.1); color:var(--danger); border-color:rgba(255,59,48,0.3); font-family:monospace;">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2>📸 Foto Bukti Serah Terima</h2>
+          <p>Pastikan wajah kurir terlihat agar bukti serah terima valid.</p>
+          <ul class="feature-list">
+            <li>Gulir sedikit ke bawah, terdapat kotak panjang bertuliskan "Tap untuk Foto Penerima".</li>
+            <li>Klik kotak tersebut, buka Kamera, lalu arahkan HP ke Kurir yang sedang memegang tumpukan paket (beserta resinya jika memungkinkan).</li>
+            <li>Foto ini yang akan menjadi tameng jika kurir menghilangkan paket!</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner">
+            <div class="dash-header">
+              <button class="btn-ios-nav"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+              <h2 style="margin:0; font-size: 20px; font-weight:800;">Form Receipt</h2>
+              <div style="width:48px;"></div>
+            </div>
+            <div class="glass" style="padding:24px;">
+              <label class="input-label" style="margin-top: 12px;">Foto Penerima / Bukti (Wajib)</label>
+              
+              <div class="img-upload-box" style="height:200px; margin-bottom: 20px; border-color:var(--primary); background:rgba(0,122,255,0.05); overflow:hidden;">
+                 <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSalX61q0dbW1EvpWbDHao1HSFbVf5MloGQag&s?auto=format&fit=crop&w=300&q=80" class="real-pic">
+                 <span style="position:relative; z-index:10; background:rgba(0,122,255,0.9); padding:4px 10px; border-radius:8px; font-weight:bold; color:white; margin-top:140px;">📸 Foto Tersimpan</span>
+              </div>
+              
+              <div class="input-group">
+                <label class="input-label">Tanda Tangan Penerima (Wajib)</label>
+                <div style="position: relative; width: 100%; margin-bottom: 8px;">
+                  <div id="sig-canvas">
+                      <span style="font-size:32px;">🔒</span>
+                      <span style="color:#007AFF; font-size:14px; font-weight:bold; margin-top:10px;">Ketuk untuk Mulai Tanda Tangan</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2><span class="badge-tip">Anti Coret Saku</span> <br>🔒 Sistem Gembok Tanda Tangan</h2>
+          <p>Pernahkah Anda berjalan dengan HP menyala lalu layar tercoret sendiri? Sistem ini mencegahnya!</p>
+          <ul class="feature-list">
+            <li>Layar Kanvas Tanda Tangan ini <b>terkunci (Terdapat ikon Gembok)</b> saat pertama kali muncul.</li>
+            <li>Anda dan kurir tidak bisa mencoretnya sebelum dibuka.</li>
+            <li><b>SOP yang Benar:</b> <u>Ketuk / Tap</u> satu kali pada layar gembok tersebut.</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner">
+            <div class="dash-header">
+              <button class="btn-ios-nav"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+              <h2 style="margin:0; font-size: 20px; font-weight:800;">Form Receipt</h2>
+              <div style="width:48px;"></div>
+            </div>
+            <div class="glass" style="padding:24px;">
+              
+              <div class="input-group">
+                <label class="input-label">Tanda Tangan Penerima (Wajib)</label>
+                <div style="position: relative; width: 100%; margin-bottom: 8px;">
+                  <div id="sig-canvas" style="background:#F9FAFB; border:2px dashed rgba(0,122,255,0.3);">
+                      <span style="font-size:36px; animation: pulseUpload 1.5s infinite;">🔒</span>
+                      <span style="color:#007AFF; font-size:14px; font-weight:bold; margin-top:10px;">Ketuk untuk Mulai Tanda Tangan</span>
+                      <span style="color:#8E8E93; font-size:11px; font-weight:600; margin-top:5px;">Dokumen diverifikasi & diamankan</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="input-group" style="margin-top: 8px;">
+                <label class="input-label">Catatan Note (Opsional)</label>
+                <textarea class="custom-input" rows="2" placeholder="Ketik rincian..."></textarea>
+              </div>
+
+              <button class="btn-primary" style="margin-top: 16px; background:var(--success); box-shadow: 0 8px 20px rgba(52,199,89,0.3);">Simpan Receipt</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2>✍️ Tanda Tangan Digital Asli</h2>
+          <p>Setelah diketuk, kanvas putih bersih siap dicoret!</p>
+          <ul class="feature-list">
+            <li>Sodorkan layar HP Anda kepada Kurir.</li>
+            <li>Mintalah mereka membubuhkan tanda tangannya di layar menggunakan jarinya.</li>
+            <li>Jika kurir merasa tanda tangannya terlalu jelek/salah, Anda cukup menekan tombol teks merah <b>"Hapus Tanda Tangan 🗑️"</b> yang ada di pojok kanan bawah. Kanvas akan kembali terkunci bersih.</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner">
+            <div class="dash-header">
+              <button class="btn-ios-nav"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+              <h2 style="margin:0; font-size: 20px; font-weight:800;">Form Receipt</h2>
+              <div style="width:48px;"></div>
+            </div>
+            <div class="glass" style="padding:24px;">
+              
+              <div class="input-group">
+                <label class="input-label">Tanda Tangan Penerima (Wajib)</label>
+                <div style="position: relative; width: 100%; margin-bottom: 8px;">
+                  <div id="sig-canvas" style="background:#fff; border:1px solid rgba(0,0,0,0.1); position:relative;">
+                      <svg viewBox="0 0 200 100" style="width:100%; height:100%; position:absolute;"><path d="M 30,50 Q 60,10 90,50 T 150,50" fill="transparent" stroke="black" stroke-width="4" stroke-linecap="round"/></svg>
+                  </div>
+                </div>
+                <div style="text-align:right; width: 100%;"><span style="font-size:14px; color:var(--danger); cursor:pointer; font-weight:700;">Hapus Tanda Tangan 🗑️</span></div>
+              </div>
+
+              <div class="input-group" style="margin-top: 8px;">
+                <label class="input-label">Catatan Note (Opsional)</label>
+                <textarea class="custom-input" rows="2" placeholder="Ketik rincian..."></textarea>
+              </div>
+
+              <button class="btn-primary" style="margin-top: 16px; background:var(--success); box-shadow: 0 8px 20px rgba(52,199,89,0.3);">Simpan Receipt</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2>🕒 Menu History Data</h2>
+          <p>Jika paket sudah diserahkan ke Kurir, pekerjaan Store dianggap selesai. Namun, bagaimana jika Anda ingin mengecek ulang?</p>
+          <ul class="feature-list">
+            <li><b>Akses:</b> Buka dari Dashboard utama, pilih menu "🕒 History".</li>
+            <li>Di sini adalah bank data dari segala yang Anda, maupun tim shift sebelumnya kerjakan.</li>
+            <li><b>Filter Atas:</b> Anda bisa mensortir hanya "Packing" saja, "Receipt" saja, atau "Return".</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner">
+            <div class="dash-header">
+              <button class="btn-ios-nav"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+              <h2 style="margin:0; font-size: 20px; font-weight:800; color:var(--text-main);">History Data</h2>
+              <button class="btn-ios-nav" style="color:var(--primary); background:rgba(0,122,255,0.1); border-color:rgba(0,122,255,0.2);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6"></path><path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path><path d="M3 22v-6h6"></path><path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path></svg>
+              </button>
+            </div>
+            
+            <div class="glass" style="padding:16px; margin-bottom:24px; display:flex; gap:12px; align-items:center;">
+               <select class="custom-input" style="flex:1; padding: 14px; font-weight: 700; min-width: 100px;">
+                  <option>Semua</option>
+               </select>
+               <input type="text" class="custom-input" style="flex:2; padding: 14px;" placeholder="Cari Dokumen...">
+            </div>
+
+            <div style="background: white; padding: 20px; border-radius: 20px; border: 1px solid rgba(0,0,0,0.05); margin-bottom: 12px; opacity:0.5;">Memuat Riwayat...</div>
+            <div style="background: white; padding: 20px; border-radius: 20px; border: 1px solid rgba(0,0,0,0.05); margin-bottom: 12px; opacity:0.3;">Memuat Riwayat...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2>🕒 Arti Warna Status Resi</h2>
+          <p>Setiap dokumen yang masuk memiliki "Label Status" di kanan atas kartunya.</p>
+          <ul class="feature-list">
+            <li><span style="background:rgba(52,199,89,0.15); color:var(--success); font-weight:bold; padding:2px 8px; border-radius:8px;">✅ SELESAI</span> Data Receipt komplit dan bersih.</li>
+            <li><span style="background:rgba(255,149,0,0.15); color:var(--warning); font-weight:bold; padding:2px 8px; border-radius:8px;">⏱️ SIAP KIRIM</span> Paket sudah Anda Packing, tapi belum diambil Kurir.</li>
+            <li><span style="background:rgba(255,149,0,0.15); color:var(--warning); font-weight:bold; padding:2px 8px; border-radius:8px;">⏳ PENG. EDIT</span> Anda mengajukan perbaikan, Admin belum membalasnya.</li>
+            <li><span style="background:rgba(255,59,48,0.15); color:var(--danger); font-weight:bold; padding:2px 8px; border-radius:8px;">🗑️ DIHAPUS</span> Resi berhasil dicoret dari sistem (Void).</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner">
+            <div class="dash-header">
+              <button class="btn-ios-nav"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+              <h2 style="margin:0; font-size: 20px; font-weight:800; color:var(--text-main);">History Data</h2>
+              <div style="width:48px;"></div>
+            </div>
+            <div class="card-list">
+                <div class="hist-card">
+                    <div class="hist-img-wrapper" style="background:#000; color:white;">📦</div>
+                    <div class="hist-info">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; width: 100%; gap: 8px;">
+                            <div style="overflow:hidden;">
+                                <div class="hist-title">INV-2026-999</div>
+                                <div class="hist-sub">Data Packing</div>
+                            </div>
+                            <div style="background:rgba(255,149,0,0.15); color:var(--warning); font-size:10px; font-weight:800; padding:4px 8px; border-radius:8px; white-space:nowrap; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">⏱️ SIAP KIRIM</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hist-card">
+                    <div class="hist-img-wrapper" style="background:#f0f0f5; color:black;">👨🏻‍✈️<div class="hist-type-icon">🧾</div></div>
+                    <div class="hist-info">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; width: 100%; gap: 8px;">
+                            <div style="overflow:hidden;">
+                                <div class="hist-title">INV-01, INV-02..</div>
+                                <div class="hist-sub">J&T Express <span style="color:var(--primary); font-weight:800; font-size:11px;">(+5 Set)</span></div>
+                            </div>
+                            <div style="background:rgba(52,199,89,0.15); color:var(--success); font-size:10px; font-weight:800; padding:4px 8px; border-radius:8px; white-space:nowrap; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">✅ SELESAI</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hist-card" style="border:1px solid rgba(255,149,0,0.3);">
+                    <div class="hist-img-wrapper" style="background:#000; color:white;">📦</div>
+                    <div class="hist-info">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; width: 100%; gap: 8px;">
+                            <div style="overflow:hidden;">
+                                <div class="hist-title">INV-2026-123</div>
+                                <div class="hist-sub">Data Packing</div>
+                            </div>
+                            <div style="background:rgba(255,149,0,0.15); color:var(--warning); font-size:10px; font-weight:800; padding:4px 8px; border-radius:8px; white-space:nowrap; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">⏳ PENG. EDIT</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2>🔍 Rincian Data Dokumen</h2>
+          <p>Ketuk salah satu kartu di daftar History tadi untuk melihat "jeroan" datanya.</p>
+          <ul class="feature-list">
+            <li><b>Header Identitas:</b> Melihat siapa persisnya yang mem-Packing resi ini beserta tanggal dan jam server pastinya.</li>
+            <li><b>Kapasitas Cek Ulang:</b> Berguna jika ada komplain pelanggan "Barang saya beda warna!". Anda bisa masuk ke sini untuk melihat 3 foto aslinya, membuktikan bahwa Anda tidak salah bungkus.</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner" style="background: rgba(0,0,0,0.5); padding:0; justify-content:flex-end;">
+            <div class="glass" style="width: 92%; max-width: 440px; padding: 24px; margin:auto; max-height:85vh; overflow-y:auto; background:white;">
+              <h3 style="font-size: 20px; font-weight:800; margin-bottom:20px; text-align:center;">Informasi Dokumen</h3>
+              
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                <div style="display:flex; align-items:center; gap:12px;">
+                  <img src="https://ui-avatars.com/api/?name=Alfian&background=007AFF&color=fff&bold=true" style="width:46px; height:46px; border-radius:50%; border:1px solid rgba(0,0,0,0.05); box-shadow:0 4px 12px rgba(0,0,0,0.08);">
+                  <div>
+                    <div style="font-weight:800; font-size:16px; color:var(--text-main); letter-spacing: -0.3px;">Alfian</div>
+                    <div style="font-size:12px; color:var(--text-muted); font-weight:600; margin-top:2px;">6 Mar 2026, 14:45 WIB</div>
+                  </div>
+                </div>
+                <span style="font-size:32px;">✅</span>
+              </div>
+
+              <div style="background: white; border-radius: 20px; padding: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.04); display: flex; align-items: center; gap: 16px;">
+                <div style="width: 48px; height: 48px; border-radius: 14px; background: rgba(0,122,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 24px;">📦</div>
+                <div>
+                    <div style="font-size:11px; color:var(--text-muted); font-weight:800; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px;">Dokumen Packing</div>
+                    <div style="font-size:18px; font-weight:800; color:var(--text-main);">INV-2026-999</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2>📦 Bukti 3 Foto & Catatan</h2>
+          <p>Melanjutkan tampilan sebelumnya di layar History.</p>
+          <ul class="feature-list">
+            <li><b>Foto bisa di-Zoom:</b> Staf dapat mengetuk foto *Before/Packing/After* untuk melihat detailnya secara layar penuh dan di-*Zoom* (cubit layar).</li>
+            <li><b>Note (Catatan):</b> Jika saat mem-Packing staf menulis keterangan "Dus agak lecek", catatannya akan muncul di dalam box kuning.</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner" style="background: rgba(0,0,0,0.5); padding:0; justify-content:flex-end;">
+            <div class="glass" style="width: 92%; max-width: 440px; padding: 24px; margin:auto; max-height:85vh; overflow-y:auto; background:white;">
+              
+              <div style="background: rgba(255,149,0,0.08); border-radius: 20px; padding: 16px; border: 1px solid rgba(255,149,0,0.15); margin-top:12px;">
+                <div style="font-size:12px; font-weight:800; color:var(--warning); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px;">📝 Catatan Dokumen</div>
+                <div style="font-size:14px; font-weight:600; color:var(--text-main); line-height:1.5;">KARDUS ADA PENYOK SEDIKIT.</div>
+              </div>
+
+              <div style="font-size:14px; font-weight:800; color:var(--text-main); margin-top: 16px; margin-bottom: 8px;">📸 Dokumentasi</div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div style="position:relative; aspect-ratio: 1/1;">
+                  <img src="https://cdn.ruparupa.io/fit-in/850x850/filters:format(webp)/filters:watermark(content.ruparupa.io,products/wm/rr.png,0,-0,0,100,100)/ruparupa-com/image/upload/Products/10626489_1.jpg?auto=format&fit=crop&w=300&q=80" style="width:100%; height:100%; border-radius:18px; object-fit:cover; border:1px solid rgba(0,0,0,0.06);">
+                  <div style="position: absolute; bottom: 8px; left: 8px; background: rgba(255,255,255,0.85); font-size: 11px; padding: 4px 10px; border-radius: 12px; font-weight: 800;">Before</div>
+                </div>
+                <div style="position:relative; aspect-ratio: 1/1;">
+                  <img src="https://ljrlogistics.com/wp-content/uploads/2022/05/Bubble-Wrap-Ekspedisi-Pengiriman-Barang-Murah.jpeg?auto=format&fit=crop&w=300&q=80" style="width:100%; height:100%; border-radius:18px; object-fit:cover; border:1px solid rgba(0,0,0,0.06);">
+                  <div style="position: absolute; bottom: 8px; left: 8px; background: rgba(255,255,255,0.85); font-size: 11px; padding: 4px 10px; border-radius: 12px; font-weight: 800;">Packing</div>
+                </div>
+                <div style="position:relative; grid-column: span 2; aspect-ratio: 16/9;">
+                  <img src="https://static.desty.app/desty-omni/20230531/874b3a4dbdca4b339a7be480e4d175e5.jpeg?auto=format&fit=crop&w=300&q=80" style="width:100%; height:100%; border-radius:18px; object-fit:cover; border:1px solid rgba(0,0,0,0.06);">
+                  <div style="position: absolute; bottom: 8px; left: 8px; background: rgba(255,255,255,0.85); font-size: 11px; padding: 4px 10px; border-radius: 12px; font-weight: 800;">After</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2>🧾 Rincian Ekspedisi & TTD</h2>
+          <p>Jika Anda melihat rincian dokumen *Receipt*, Anda akan disajikan data kurirnya.</p>
+          <ul class="feature-list">
+            <li><b>Info Kurir:</b> Terdapat Nama Ekspedisi, Penerima (Kurir), dan Plat Nomor Kendaraannya.</li>
+            <li><b>Dua Foto Utama:</b> Menampilkan foto wajah Kurir di sebelah kiri, dan Tanda Tangannya di sebelah kanan. Bisa di-*Zoom*.</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner" style="background: rgba(0,0,0,0.5); padding:0; justify-content:flex-end;">
+            <div class="glass" style="width: 92%; max-width: 440px; padding: 24px; margin:auto; max-height:85vh; overflow-y:auto; background:white;">
+              
+              <div style="background: white; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.04); overflow: hidden; margin-top:12px;">
+                 <div class="ios-list-row">
+                   <span class="ios-label">🚚 Expedisi</span><span class="ios-value">J&T Express</span>
+                 </div>
+                 <div class="ios-list-row">
+                   <span class="ios-label">👤 Penerima</span><span class="ios-value">Budi</span>
+                 </div>
+                 <div class="ios-list-row">
+                   <span class="ios-label">🚗 Plat Nomor</span><span class="ios-value">B 1234 XYZ</span>
+                 </div>
+              </div>
+
+              <div style="font-size:14px; font-weight:800; color:var(--text-main); margin-top: 16px; margin-bottom: 8px;">📸 Dokumentasi</div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div style="position:relative; aspect-ratio: 1/1;">
+                  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSalX61q0dbW1EvpWbDHao1HSFbVf5MloGQag&s?auto=format&fit=crop&w=300&q=80" style="width:100%; height:100%; border-radius:18px; object-fit:cover; border:1px solid rgba(0,0,0,0.06);">
+                  <div style="position: absolute; bottom: 8px; left: 8px; background: rgba(255,255,255,0.85); font-size: 11px; padding: 4px 10px; border-radius: 12px; font-weight: 800;">Resi/Penerima</div>
+                </div>
+                <div style="position:relative; aspect-ratio: 1/1; border:1px solid rgba(0,0,0,0.06); border-radius:18px; background:white;">
+                  <svg viewBox="0 0 200 100" style="width:100%; height:100%; position:absolute;"><path d="M 30,50 Q 60,10 90,50 T 150,50" fill="transparent" stroke="black" stroke-width="4" stroke-linecap="round"/></svg>
+                  <div style="position: absolute; bottom: 8px; left: 8px; background: rgba(255,255,255,0.85); font-size: 11px; padding: 4px 10px; border-radius: 12px; font-weight: 800;">Tanda Tangan</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2>📦 Integrasi Data Super Pintar (Accordion)</h2>
+          <p>Fitur inovatif untuk melihat *History di dalam History*.</p>
+          <ul class="feature-list">
+            <li><b>Masalah:</b> Pada layar rincian *Receipt*, Anda mem-packing 5 resi sekaligus. Bagaimana jika Anda ingin melihat *Foto Packing* dari salah satu paket tersebut tanpa harus keluar halaman?</li>
+            <li><b>Solusi Accordion:</b> Di bagian bawah rincian, terdapat baris "📦 Rincian Foto Packing".</li>
+            <li>Cukup ketuk tombol panah (▾) di nama paket tersebut, sistem akan langsung <b>menarik dan menampilkan 3 foto Packing-nya</b>.</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner" style="background: rgba(0,0,0,0.5); padding:0; justify-content:flex-end;">
+            <div class="glass" style="width: 92%; max-width: 440px; padding: 24px; margin:auto; max-height:85vh; overflow-y:auto; background:white;">
+              
+              <div style="font-size:14px; font-weight:800; margin-top: 16px; margin-bottom: 8px;">📦 Rincian Foto Packing</div>
+              
+              <div style="background: rgba(0,0,0,0.02); border-radius: 20px; border: 1px solid rgba(0,0,0,0.04); overflow: hidden; margin-bottom:12px;">
+                   <div style="padding: 16px; font-size: 13px; font-weight: 800; color: var(--primary); display: flex; justify-content: space-between; align-items: center; background: white;">
+                       <span style="display:flex; align-items:center; gap:8px;">
+                           <span style="background: var(--primary); color:white; width: 24px; height: 24px; display:flex; align-items:center; justify-content:center; border-radius:8px; font-size: 11px;">1</span>
+                           INV-001
+                       </span>
+                       <span style="font-size: 18px; color: var(--primary); transform: rotate(180deg);">▾</span>
+                   </div>
+                   <div style="padding: 16px;">
+                       <div style="font-size: 11px; color: var(--text-muted); font-weight: 700; margin-bottom: 12px;">👤 Dipacking oleh: <b style="color:var(--text-main);">Alfian</b></div>
+                       <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
+                          <img src="https://cdn.ruparupa.io/fit-in/850x850/filters:format(webp)/filters:watermark(content.ruparupa.io,products/wm/rr.png,0,-0,0,100,100)/ruparupa-com/image/upload/Products/10626489_1.jpg?auto=format&fit=crop&w=100&q=80" style="width:100%; aspect-ratio:1/1; border-radius:12px; object-fit:cover;">
+                          <img src="https://ljrlogistics.com/wp-content/uploads/2022/05/Bubble-Wrap-Ekspedisi-Pengiriman-Barang-Murah.jpeg?auto=format&fit=crop&w=100&q=80" style="width:100%; aspect-ratio:1/1; border-radius:12px; object-fit:cover;">
+                          <img src="https://static.desty.app/desty-omni/20230531/874b3a4dbdca4b339a7be480e4d175e5.jpeg?auto=format&fit=crop&w=100&q=80" style="width:100%; aspect-ratio:1/1; border-radius:12px; object-fit:cover;">
+                       </div>
+                   </div>
+               </div>
+
+               <div style="background: white; border-radius: 20px; border: 1px solid rgba(0,0,0,0.04); overflow: hidden;">
+                   <div style="padding: 16px; font-size: 13px; font-weight: 800; color: var(--primary); display: flex; justify-content: space-between; align-items: center;">
+                       <span style="display:flex; align-items:center; gap:8px;">
+                           <span style="background: var(--primary); color:white; width: 24px; height: 24px; display:flex; align-items:center; justify-content:center; border-radius:8px; font-size: 11px;">2</span>
+                           INV-002
+                       </span>
+                       <span style="font-size: 18px; color: var(--text-muted);">▾</span>
+                   </div>
+               </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2><span class="badge-error">Privacy First</span> <br>🔍 Perlindungan Nomor Telepon</h2>
+          <p>Mencegah staf menyalahgunakan data pelanggan/kurir untuk kepentingan di luar pekerjaan.</p>
+          <ul class="feature-list">
+            <li><b>Sensor Otomatis:</b> Di dalam layar rincian, Nomor HP (yang aslinya dienkripsi) otomatis dibaca lalu disensor huruf tengahnya. (Contoh: `62812****89`).</li>
+            <li><b>Ikon Mata:</b> Jika staf harus menelpon karena komplain urgen, mereka bisa menekan ikon Mata (👁️).</li>
+            <li><b>Jebakan Batman:</b> Saat ikon ditekan, nomor asli akan muncul, <b>TAPI sistem otomatis mengirim *Alert WARNING Merah* ke Panel Admin</b> bahwa Anda mengintip data privasi! Hati-hati.</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner" style="background: rgba(0,0,0,0.5); padding:0; justify-content:flex-end;">
+            <div id="toast" style="background: rgba(255, 59, 48, 0.9); top:40px; display:block;">⚠️ Keamanan: Membuka data privasi tercatat di server.</div>
+            
+            <div class="glass" style="width: 92%; max-width: 440px; padding: 24px; margin:auto; max-height:85vh; overflow-y:auto; background:white;">
+              <div style="background: white; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.04); overflow: hidden; margin-top:12px;">
+                 <div class="ios-list-row">
+                   <span class="ios-label">🚚 Expedisi</span><span class="ios-value">J&T Express</span>
+                 </div>
+                 
+                 <div class="ios-list-row">
+                   <span class="ios-label">📞 HP Kurir (Awal)</span>
+                   <span class="ios-value" style="display:flex; align-items:center; gap:10px;">
+                       <span style="font-family: monospace; font-size: 15px;">62812****89</span>
+                       <button style="background: rgba(0,122,255,0.1); color: var(--primary); border: none; padding: 4px 8px; border-radius: 8px; display: flex;">👁️</button>
+                   </span>
+                 </div>
+
+                 <div class="ios-list-row" style="background:rgba(255,59,48,0.05);">
+                   <span class="ios-label" style="color:var(--danger);">📞 Terbuka (Ditekan)</span>
+                   <span class="ios-value" style="display:flex; align-items:center; gap:10px;">
+                       <span style="font-family: monospace; font-size: 15px; color:var(--text-main);">628123456789</span>
+                   </span>
+                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2><span class="badge-ai">Inovasi Robot AI</span> <br>⏱️ Revisi: 10-Minute Auto Approve</h2>
+          <p>Bagaimana jika saat mengambil foto, ternyata gambarnya sangat buram dan Anda baru menyadarinya sesaat setelah diklik Simpan?</p>
+          <ul class="feature-list">
+            <li>Jika mengajukan perbaikan ke Admin, tentu butuh waktu lama untuk dibalas.</li>
+            <li><b>Solusi Grace Period:</b> Anda bisa langsung pergi ke "Menu History", pilih resi tersebut, dan klik <b>Edit</b>.</li>
+            <li>Sistem AI mendeteksi bahwa selisih waktu pembuatan dokumen dengan waktu ajuan *Edit* Anda <b>KURANG DARI 10 MENIT</b>.</li>
+            <li>Hasilnya? Ajuan Edit (atau Hapus) Anda akan <b>langsung disetujui seketika</b> (Auto-Approved) tanpa Admin!</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner" style="background: rgba(0,0,0,0.5); padding:0; justify-content:flex-end;">
+            <div class="glass" style="width: 92%; max-width: 440px; padding: 24px; margin:auto; background:white;">
+              
+              <div style="background: rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.05); border-radius: 16px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between;">
+                 <span style="font-size: 13px; font-weight: 800; color: var(--success);">✅ Pengajuan Disetujui Admin</span>
+                 <span style="color: var(--primary); font-weight: bold; font-size: 20px;">▴</span>
+              </div>
+
+              <div style="background: rgba(0,0,0,0.02); padding: 16px; border-radius: 20px; border: 1px solid rgba(0,0,0,0.05); margin-top: 12px;">
+                 
+                 <div style="display: flex; gap: 10px; align-items: flex-end; width: 100%; margin-bottom:14px;">
+                    <div style="width: 32px; height: 32px; border-radius: 50%; background:#f0f0f5; font-size:20px; display:flex; justify-content:center; align-items:center;">👦🏻</div>
+                    <div class="chat-bubble staff">
+                        <span style="font-size: 10px; font-weight: 800; margin-bottom: 6px; display: block; color: var(--text-muted);">ALFIAN • 10:05 WIB</span>
+                        <span style="font-weight: 800; font-size: 13px;">✏️ [Pengajuan Edit]</span><br>Alasan: Salah upload foto Before.
+                    </div>
+                 </div>
+
+                 <div style="display: flex; gap: 10px; align-items: flex-end; width: 100%; flex-direction:row-reverse;">
+                    <div style="width: 32px; height: 32px; border-radius: 50%; background:white; font-size:20px; display:flex; justify-content:center; align-items:center; border:2px solid #5E5CE6; box-shadow:0 4px 10px rgba(94,92,230,0.2);">🤖</div>
+                    <div class="chat-bubble system">
+                        <span style="font-size: 10px; font-weight: 800; margin-bottom: 6px; display: block; color: rgba(255,255,255,0.9); text-align:right;">⚡ SISTEM AUTO • 10:05 WIB</span>
+                        Perubahan disetujui otomatis (Grace period < 10 menit).
+                    </div>
+                 </div>
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2>✏️ Cara Mengajukan Edit</h2>
+          <p>Jika ingin memperbaiki *typo* huruf atau foto buram.</p>
+          <ul class="feature-list">
+            <li>Di bawah rincian History, terdapat 4 kotak. Pilih <b>✏️ Edit</b>.</li>
+            <li>Anda hanya perlu mengisi bagian yang salah.</li>
+            <li>Jika foto pertama salah, ketuk logo gambar di tulisan "Before", dan biarkan kotak "Packing" dan "After" kosong. Artinya sistem tidak akan menghapus foto lama Anda yang sudah benar.</li>
+            <li><b>Wajib Alasan:</b> Jika kosong, tombol ajukan tidak bisa ditekan.</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner" style="background: rgba(0,0,0,0.5); padding:0; justify-content:center;">
+             <div class="glass" style="width: 92%; margin: auto; padding: 32px 24px; background: white; text-align:center;">
+                <div style="font-size: 48px; margin-bottom: 16px;">✏️</div>
+                <h3 style="font-size: 22px; margin-bottom: 12px; font-weight:800;">Edit Data & Foto</h3>
+                <p style="font-size: 15px; color: var(--text-muted); margin-bottom: 24px;">Ubah teks dan pilih ulang foto jika perlu, lalu ajukan.</p>
+                
+                <div style="text-align:left;">
+                    <div class="input-group">
+                        <label class="input-label" style="font-size:11px;">No. Dokumen</label>
+                        <input type="text" class="custom-input" value="INV-2026-999">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label" style="font-size:11px; color:var(--danger);">Alasan Edit (Wajib)</label>
+                        <input type="text" class="custom-input" placeholder="Misal: Salah upload foto...">
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 12px; margin-top:20px;">
+                    <button class="btn-secondary" style="margin: 0; flex: 1;">Batal</button>
+                    <button class="btn-primary" style="margin: 0; flex: 1;">Ajukan Edit</button>
+                </div>
+             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2>🗑️ Cara Mengajukan Hapus Data</h2>
+          <p>Membatalkan / Void data karena dobel (*Double Input*).</p>
+          <ul class="feature-list">
+            <li>Pilih ikon <b>🗑️ Hapus</b>.</li>
+            <li>Jika disetujui, kartu *History* tidak hilang sepenuhnya, melainkan warna indikatornya berubah menjadi Merah "DIHAPUS".</li>
+            <li>Ini penting untuk *Audit Trail* (Jejak Rekam) bahwa pernah terjadi kesalahan dokumen di store.</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner" style="background: rgba(0,0,0,0.5); padding:0; justify-content:center;">
+             <div class="glass" style="width: 92%; margin: auto; padding: 32px 24px; background: white; text-align:center;">
+                <div style="font-size: 48px; margin-bottom: 16px;">🗑️</div>
+                <h3 style="font-size: 22px; margin-bottom: 12px; font-weight:800;">Hapus Data</h3>
+                <p style="font-size: 15px; color: var(--text-muted); margin-bottom: 24px;">Kirim permintaan hapus data [INV-2026-999] ke Admin?</p>
+                
+                <div style="text-align:left;">
+                    <div class="input-group">
+                        <label class="input-label" style="color:var(--danger);">Alasan Hapus (Wajib):</label>
+                        <input type="text" class="custom-input" placeholder="Misal: Salah input dobel...">
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 12px; margin-top:20px;">
+                    <button class="btn-secondary" style="margin: 0; flex: 1;">Batal</button>
+                    <button class="btn-danger" style="margin: 0; flex: 1;">Ajukan Hapus</button>
+                </div>
+             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2>🔄 Cara Mengajukan Return</h2>
+          <p>Jika paket ditolak oleh pelanggan atau rusak saat berada di tangan kurir.</p>
+          <ul class="feature-list">
+            <li>SOP ini biasa disebut "Barang Balik" atau Retur.</li>
+            <li>Pilih tombol <b>🔄 Return</b> pada dokumen <i>Receipt</i> yang sudah berhasil terkirim.</li>
+            <li>Jika disetujui, labelnya berubah dari Selesai menjadi <span style="color:var(--warning);">🔄 DIRETUR</span>, memberikan tanda khusus bagi admin gudang saat rekap stok akhir bulan.</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner" style="background: rgba(0,0,0,0.5); padding:0; justify-content:center;">
+             <div class="glass" style="width: 92%; margin: auto; padding: 32px 24px; background: white; text-align:center;">
+                <div style="font-size: 48px; margin-bottom: 16px;">🔄</div>
+                <h3 style="font-size: 22px; margin-bottom: 12px; font-weight:800;">Return Data</h3>
+                <p style="font-size: 15px; color: var(--text-muted); margin-bottom: 24px;">Kirim permintaan return paket [INV-2026-999] ke Admin?</p>
+                
+                <div style="text-align:left;">
+                    <div class="input-group">
+                        <label class="input-label" style="color:var(--warning);">Alasan Return (Wajib):</label>
+                        <input type="text" class="custom-input" placeholder="Alamat tidak jelas / Rusak...">
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 12px; margin-top:20px;">
+                    <button class="btn-secondary" style="margin: 0; flex: 1;">Batal</button>
+                    <button style="margin: 0; flex: 1; padding: 18px; border-radius: 18px; border:none; font-size:17px; font-weight:bold; background:rgba(255,149,0,0.1); color:var(--warning);">Ajukan Return</button>
+                </div>
+             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2><span class="badge-admin">Admin Only</span> <br>👑 Fitur Admin  (Admin)</h2>
+          <p>Jika Anda masuk (Login) menggunakan Username yang ber-hak akses "Admin", Dashboard Anda akan memunculkan menu rahasia.</p>
+          <ul class="feature-list">
+            <li><b>Menu Admin Terpisah:</b> Muncul tepat di atas menu "Akses Staff".</li>
+            <li><b>1. Approval:</b> Mengatur dan menilai semua surat pengajuan staf (Edit/Hapus).</li>
+            <li><b>2. System Log:</b> Catatan kaki digital keamanan server.</li>
+            <li><b>3. Monitoring Staff:</b> Radar yang membaca tingkah laku (IP, Koordinat, Ganti foto, Sensor HP) setiap staf detik demi detik secara Live. Ada lonceng notifikasi (1) merahnya!</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner">
+            <h3 style="margin:0; margin-bottom: 14px; font-size: 17px; font-weight:800; color:var(--text-main);">Menu Admin</h3>
+            <div class="menu-grid" style="grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:24px;">
+                <div class="glass menu-card" style="border: 1px solid rgba(52, 199, 89, 0.3); background: rgba(52, 199, 89, 0.05); padding: 20px 16px;">
+                  <div style="font-size: 32px; margin-bottom:8px;">📋</div>
+                  <div style="font-weight: 800; font-size: 15px; color: var(--success);">Approval</div>
+                </div>
+                <div class="glass menu-card" style="border: 1px solid rgba(0, 122, 255, 0.3); background: rgba(0, 122, 255, 0.05); padding: 20px 16px;">
+                  <div style="font-size: 32px; margin-bottom:8px;">🔐</div>
+                  <div style="font-weight: 800; font-size: 15px; color: var(--primary);">System Log</div>
+                </div>
+                <div class="glass menu-card" style="grid-column: span 2; border: 1px solid rgba(255, 149, 0, 0.3); background: rgba(255, 149, 0, 0.05); padding: 20px 16px; flex-direction: row; gap: 16px; justify-content: flex-start; position: relative;">
+                  <div style="position: absolute; top: -8px; right: -8px; background: var(--danger); color: white; font-size: 13px; font-weight: 900; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 3px solid white; box-shadow: 0 4px 10px rgba(255,59,48,0.4); animation: pulseUpload 1.5s infinite;">1</div>
+                  <div style="font-size: 36px;">🕵️‍♂️</div>
+                  <div style="text-align: left;">
+                      <div style="font-weight: 800; font-size: 16px; color: var(--warning);">Monitoring Staff</div>
+                      <div style="font-size: 12px; color: var(--text-muted); font-weight: 600; margin-top: 4px;">Pantau aktivitas, IP & status live</div>
+                  </div>
+                </div>
+            </div>
+            
+            <h3 style="margin-bottom: 12px; font-size: 17px; font-weight:800; opacity:0.5;">Akses Staff</h3>
+            <div class="menu-grid" style="opacity:0.5;">
+              <div class="glass menu-card"><div style="font-size:32px; margin-bottom:8px;">📦</div><div style="font-weight:800; font-size:14px;">Packing</div></div>
+              <div class="glass menu-card"><div style="font-size:32px; margin-bottom:8px;">🧾</div><div style="font-weight:800; font-size:14px;">Receipt</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2><span class="badge-admin">Admin Only</span> <br>📋 Approval Center</h2>
+          <p>Jika pengajuan staf melebihi batas 10 menit (Gagal disetujui robot AI), maka suratnya tertumpuk di sini.</p>
+          <ul class="feature-list">
+            <li><b>Tab Responsif:</b> Terbagi atas <i>Pending</i> (Butuh tindakan), <i>Disetujui</i> (Diterima), dan <i>Ditolak</i>.</li>
+            <li><b>Baca Alasan Staf:</b> Di dalam kotak abu-abu, terdapat jejak riwayat alasan kenapa staf ingin menghapus data tersebut (Misal: Tadi keliru dobel).</li>
+            <li>Pilih ❌ Tolak atau ✅ Setujui.</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner">
+            <div class="dash-header" style="margin-bottom: 16px;">
+              <button class="btn-ios-nav"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+              <h2 style="font-size: 20px; margin: 0; font-weight:800;">Approval Center</h2>
+              <button class="btn-ios-nav" style="color:var(--success); background:rgba(52,199,89,0.1);"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6"></path><path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path><path d="M3 22v-6h6"></path><path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path></svg></button>
+            </div>
+            
+            <div class="filter-tabs">
+               <button class="tab-btn active">Pending</button>
+               <button class="tab-btn">Disetujui</button>
+               <button class="tab-btn">Ditolak</button>
+            </div>
+
+            <div class="glass" style="padding: 20px; border-radius:24px; border: 1px solid rgba(0,0,0,0.05);">
+                <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px dashed rgba(0,0,0,0.08);">
+                    <div style="display:flex; align-items:center; gap:10px;"><input type="checkbox" style="width:20px; height:20px; accent-color: var(--primary);"> <span style="font-size: 12px; color: var(--text-muted); font-weight:700;">6 Mar 2026</span></div>
+                    <span style="font-size: 11px; padding: 6px 12px; border-radius: 12px; background: var(--warning); color: white; font-weight: 800;">PENDING APPROVAL</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+                    <div style="width:44px; height:44px; border-radius:50%; background:#007AFF; display:flex; align-items:center; justify-content:center; color:white; font-size:20px;">👦🏻</div>
+                    <div><div style="font-size: 16px; font-weight:800;">Alfian</div><div style="font-size: 13px; font-weight:800; color:var(--danger); margin-top:2px;">🗑️ Request Delete</div></div>
+                </div>
+                <div style="font-size: 13.5px; background: rgba(0,0,0,0.02); padding: 16px; border-radius: 16px; color: var(--text-main); line-height:1.5; border: 1px solid rgba(0,0,0,0.04);">
+                    <span style="font-weight:800; font-size:13px;">🗑️ [Pengajuan Hapus]</span><br>Alasan: Tadi keliru input nomor resi dobel...
+                </div>
+                
+                <div style="display: flex; gap: 12px; margin-top: 20px;">
+                    <button style="flex:1; padding:14px; border-radius:16px; border:none; background:rgba(255,59,48,0.1); color:var(--danger); font-weight:800;">❌ Tolak</button>
+                    <button style="flex:1; padding:14px; border-radius:16px; border:none; background:rgba(52,199,89,0.1); color:var(--success); font-weight:800;">✅ Setujui</button>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2><span class="badge-admin">Admin Only</span> <br>📋 Persetujuan Massal (Bulk)</h2>
+          <p>Jika jumlah pengajuannya menumpuk hingga 50 dokumen per hari, ini solusinya.</p>
+          <ul class="feature-list">
+            <li><b>Cara Pakai:</b> Terdapat kotak *Checkbox* di sebelah tulisan "Pilih Semua". Jika ditekan, puluhan dokumen di bawahnya akan ikut tercentang.</li>
+            <li><b>Aksi Singkat:</b> Klik tombol Setuju yang ada di baris *Pilih Semua* tersebut.</li>
+            <li><b>Wajib Catatan:</b> Sebuah *Pop-up* akan meminta Catatan. 1 kalimat catatan (Misal: "Sesuai rekapan akhir") akan langsung ditempelkan (di-copy) ke 50 dokumen staf tadi! Sangat menghemat waktu.</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner" style="background: rgba(0,0,0,0.5); padding:0; justify-content:center;">
+             <div class="glass" style="width: 92%; margin: auto; padding: 32px 24px; background: white; text-align:center;">
+                <div style="font-size: 48px; margin-bottom: 16px;">✅</div>
+                <h3 style="font-size: 22px; margin-bottom: 12px; font-weight:800;">Setujui 15 Pengajuan?</h3>
+                <p style="font-size: 15px; color: var(--text-muted); margin-bottom: 24px;">Admin wajib memberikan catatan untuk persetujuan massal ini.</p>
+                
+                <div style="text-align:left;">
+                    <div class="input-group">
+                        <label class="input-label" style="color:var(--success);">Catatan Admin (Wajib):</label>
+                        <textarea class="custom-input" rows="2">Telah di review massal akhir shift.</textarea>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 12px; margin-top:20px;">
+                    <button class="btn-secondary" style="margin: 0; flex: 1;">Batal</button>
+                    <button class="btn-primary" style="margin: 0; flex: 1; background:var(--success); box-shadow: 0 8px 20px rgba(52,199,89,0.3);">Simpan & Setujui Semua</button>
+                </div>
+             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2><span class="badge-admin">Admin Only</span> <br>🕵️‍♂️ Live Monitoring: Staf Aktif</h2>
+          <p>Melihat performa absensi dari jarak jauh.</p>
+          <ul class="feature-list">
+            <li><b>Indikator Titik Aktif AI:</b> 
+              <br>🟢 <b>Aktif</b> = Belum ada 30 menit sejak dia nge-klik aplikasi.
+              <br>🟡 <b>Away</b> = Lebih dari 30 menit aplikasi diam (sedang makan / tidur).
+              <br>⚫ <b>Offline</b> = Kosong tak tersentuh seharian.
+            </li>
+            <li>Barisan daftar staf otomatis terurut dari yang *paling rajin* (paling baru mengklik) berada di paling atas.</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+                <h3 style="margin:0; font-weight:800; font-size:20px;">🕵️‍♂️ Monitoring</h3>
+                <button class="btn-ios-nav" style="width:32px; height:32px; background:rgba(255,149,0,0.1); color:var(--warning); border:none;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 2v6h-6"></path><path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path><path d="M3 22v-6h6"></path><path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path></svg></button>
+            </div>
+            
+            <div style="font-size: 13px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px; letter-spacing: 0.5px;">👥 Tim Operasional</div>
+            
+            <div style="background: white; border-radius: 20px; padding: 18px 16px; display: flex; gap: 16px; align-items: center; margin-bottom: 12px; border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
+                <div style="position:relative; flex-shrink: 0;">
+                    <div style="width:56px; height:56px; border-radius:50%; background:#007AFF; display:flex; align-items:center; justify-content:center; color:white; font-size:24px;">👦🏻</div>
+                    <div style="position:absolute; bottom:0px; right:0px; background:var(--success); width:16px; height:16px; border-radius:50%; border:3px solid white;"></div>
+                </div>
+                <div style="flex:1; overflow: hidden;">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
+                        <div style="font-weight:800; font-size:15px;">Alfian</div>
+                        <span style="background:rgba(52,199,89,0.15); color:var(--success); padding:6px 10px; border-radius:10px; font-size:10px; font-weight:800;">🟢 AKTIF</span>
+                    </div>
+                    <div style="font-size:12px; color:var(--text-muted); font-weight:600; margin-bottom:4px;">@Alfian_A</div>
+                    <div style="font-size:11px; color:var(--text-main); font-weight:700;">⚡ Terakhir: <b style="color:var(--primary);">Simpan Packing</b></div>
+                </div>
+            </div>
+
+            <div style="background: white; border-radius: 20px; padding: 18px 16px; display: flex; gap: 16px; align-items: center; margin-bottom: 12px; border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
+                <div style="position:relative; flex-shrink: 0;">
+                    <div style="width:56px; height:56px; border-radius:50%; background:#8E8E93; display:flex; align-items:center; justify-content:center; color:white; font-size:24px;">👨‍💼</div>
+                    <div style="position:absolute; bottom:0px; right:0px; background:var(--warning); width:16px; height:16px; border-radius:50%; border:3px solid white;"></div>
+                </div>
+                <div style="flex:1; overflow: hidden;">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
+                        <div style="font-weight:800; font-size:15px;">Budi</div>
+                        <span style="background:rgba(255,149,0,0.15); color:var(--warning); padding:6px 10px; border-radius:10px; font-size:10px; font-weight:800;">🟡 AWAY</span>
+                    </div>
+                    <div style="font-size:12px; color:var(--text-muted); font-weight:600; margin-bottom:4px;">@budi_store</div>
+                    <div style="font-size:11px; color:var(--text-main); font-weight:700;">⚡ Terakhir: <b style="color:var(--primary);">Login</b></div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2><span class="badge-admin">Admin Only</span> <br>🕵️‍♂️ Alert: Ganti Foto Profil</h2>
+          <p>Karena foto staf akan tertempel di dokumen pengiriman, manipulasi foto dilarang keras.</p>
+          <ul class="feature-list">
+            <li>Jika staf mengubah fotonya menjadi gambar kartun/hitam (TIDAK ADA WAJAH), sistem mengirim sinyal ke Admin.</li>
+            <li>Di layar Anda, staf tersebut akan dikurung oleh kotak bersinar biru, dan lencana <b style="color:var(--primary);">📸 NEW PIC</b> berkedip.</li>
+            <li><b>Aksi Admin:</b> Ketuk saja foto tersebut. Layar akan membesar (Zoom) untuk Anda nilai apakah fotonya sah atau tidak.</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner">
+            <h3 style="margin:0; font-weight:800; font-size:20px; margin-bottom:20px;">🕵️‍♂️ Monitoring</h3>
+            
+            <div style="background: white; border-radius: 20px; padding: 18px 16px; display: flex; gap: 16px; align-items: center; margin-bottom: 12px; border: 2px solid var(--primary); box-shadow: 0 0 20px rgba(0,122,255,0.3);">
+                <div style="position:relative; flex-shrink: 0;">
+                    <div style="width:56px; height:56px; border-radius:50%; background:#007AFF; display:flex; align-items:center; justify-content:center; color:white; font-size:24px;">👦🏻</div>
+                    <div style="position:absolute; bottom:0px; right:0px; background:var(--success); width:16px; height:16px; border-radius:50%; border:3px solid white;"></div>
+                </div>
+                <div style="flex:1; overflow: hidden;">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
+                        <div style="font-weight:800; font-size:15px;">Alfian</div>
+                        <span style="background:rgba(52,199,89,0.15); color:var(--success); padding:6px 10px; border-radius:10px; font-size:10px; font-weight:800;">🟢 AKTIF</span>
+                    </div>
+                    <div style="font-size:12px; color:var(--text-muted); font-weight:600; margin-bottom:4px;">@Alfian_A 
+                        <span style="background:var(--primary); color:white; font-size:9px; padding:3px 6px; border-radius:6px; font-weight:900; margin-left:8px; animation: pulseUpload 1.5s infinite;">📸 NEW PIC</span>
+                    </div>
+                    <div style="font-size:11px; color:var(--text-main); font-weight:700;">⚡ Terakhir: <b style="color:var(--primary);">Update Profil</b></div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2><span class="badge-admin">Admin Only</span> <br>🕵️‍♂️ Alert: Akun Di Blokir</h2>
+          <p>Status Peringkat Merah jika terjadi serangan pada sistem keamanan Anda.</p>
+          <ul class="feature-list">
+            <li><b>Notifikasi Danger:</b> Jika ada orang (staf lupa/orang asing) mencoba menebak password staf Anda hingga 6x, akun staf tersebut langsung dikunci (Suspend).</li>
+            <li>Box profil staf akan bercahaya merah (<i>Red Glow</i>) menyala. Terdapat tulisan <b style="color:var(--danger);">🚨 ALERT</b>.</li>
+            <li>Ini peringatan bahwa staf tersebut sedang <i>stuck</i> tidak bisa bekerja. Ketuk kotaknya untuk mencari tahu!</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner">
+            <h3 style="margin:0; font-weight:800; font-size:20px; margin-bottom:20px;">🕵️‍♂️ Monitoring</h3>
+
+            <div style="background: white; border-radius: 20px; padding: 18px 16px; display: flex; gap: 16px; align-items: center; margin-bottom: 12px; border: 2px solid var(--danger); box-shadow: 0 0 20px rgba(255,59,48,0.3);">
+                <div style="position:relative; flex-shrink: 0;">
+                    <div style="width:56px; height:56px; border-radius:50%; background:#8E8E93; display:flex; align-items:center; justify-content:center; color:white; font-size:24px;">👨‍💼</div>
+                    <div style="position:absolute; bottom:0px; right:0px; background:var(--danger); width:16px; height:16px; border-radius:50%; border:3px solid white;"></div>
+                </div>
+                <div style="flex:1; overflow: hidden;">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
+                        <div style="font-weight:800; font-size:15px;">Joko (Shift Malam)</div>
+                        <span style="background:rgba(255,59,48,0.15); color:var(--danger); padding:6px 10px; border-radius:10px; font-size:10px; font-weight:800; border: 1px dashed rgba(255,59,48,0.3);">🚨 BLOKIR</span>
+                    </div>
+                    <div style="font-size:12px; color:var(--text-muted); font-weight:600; margin-bottom:4px;">@joko_gudang 
+                        <span style="background:var(--danger); color:white; font-size:9px; padding:3px 6px; border-radius:6px; font-weight:900; margin-left:8px; animation: pulseUpload 1.5s infinite;">🚨 ALERT</span>
+                    </div>
+                    <div style="font-size:11px; color:var(--text-main); font-weight:700;">⚡ Terakhir: <b style="color:var(--primary);">Sistem Keamanan</b></div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2><span class="badge-admin">Admin Only</span> <br>🔓 Detail & Buka Blokir (Bypass)</h2>
+          <p>Setelah Anda mengetuk staf bermasalah tadi, akan muncul menu Rincian Investigasi.</p>
+          <ul class="feature-list">
+            <li><b>Live Timer:</b> Terlihat jam hitung mundur (14:59) seberapa lama lagi hukuman staf tersebut berakhir.</li>
+            <li><b>Bypass Manual:</b> Karena Anda adalah Admin, Anda memegang kunci gemboknya!</li>
+            <li>Jika staf melapor: <i>"Pak, saya tadi typo password 6 kali, kekunci Pak."</i> Anda tinggal menekan tombol merah besar <b>"🔓 Bypass Blokir"</b>. Hitung mundur akan lenyap dari HP staf tersebut seketika!</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner" style="background: rgba(0,0,0,0.5); padding:0; justify-content:flex-end;">
+            <div class="glass" style="width: 100%; padding: 24px; background: #fdfdfd; border-bottom-left-radius:0; border-bottom-right-radius:0;">
+              
+              <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px dashed rgba(0,0,0,0.08);">
+                  <div style="width: 76px; height: 76px; border-radius: 50%; background: #8E8E93; color:white; font-size:32px; display:flex; align-items:center; justify-content:center; border: 3px solid var(--danger);">👨‍💼</div>
+                  <div>
+                      <div style="font-size: 18px; font-weight: 800;">Joko (Shift Malam)</div>
+                      <div style="font-size: 13px; color: var(--text-muted); font-weight: 600; margin-top: 4px;">Username: @joko_store</div>
+                  </div>
+              </div>
+
+              <div style="background: rgba(255, 59, 48, 0.1); border: 2px solid var(--danger); border-radius: 16px; padding: 16px; margin-bottom: 24px; text-align: center;">
+                  <div style="font-size: 28px; margin-bottom: 8px;">🚨</div>
+                  <div style="font-size: 15px; font-weight: 800; color: var(--danger); margin-bottom: 4px;">Akun Sedang Dibekukan!</div>
+                  <div style="font-size: 12px; font-weight: 600; color: var(--text-main); margin-bottom: 16px;">
+                      Sistem mendeteksi percobaan masuk paksa (Brute-force).<br>
+                      <div style="margin-top:8px; display:inline-block; padding:6px 12px; background:white; border-radius:12px; border:1px solid rgba(255,59,48,0.2);">
+                          <span style="font-size:11px; color:var(--text-muted); font-weight:800; text-transform:uppercase;">Terbuka dalam</span><br>
+                          <span style="color:var(--danger); font-weight:900; font-size:20px;">14:59</span>
+                      </div>
+                  </div>
+                  <button style="width: 100%; padding: 14px; background: var(--danger); color: white; border: none; border-radius: 14px; font-weight: 800; font-size: 13px; box-shadow: 0 4px 15px rgba(255,59,48,0.4);">🔓 Bypass Blokir</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2><span class="badge-admin">Admin Only</span> <br>🌍 Pelacakan IP & Titik Maps</h2>
+          <p>Jika Anda menggulir ke bawah di menu Rincian Investigasi, Anda bisa mendeteksi pemalsuan lokasi.</p>
+          <ul class="feature-list">
+            <li><b>Total IP Harian:</b> Sistem mendeteksi jika 1 akun dilogin dari *Wi-Fi Rumah* (192.x) dan *Wi-Fi Toko* (103.x) secara bersamaan (Ada potensi *Share Account* antar teman).</li>
+            <li><b>Buka Titik Peta:</b> Terdapat kotak-kotak riwayat log (Login/Keluar/Simpan). Pada setiap kotak terdapat tombol hijau <b>"📍 Maps"</b>.</li>
+            <li>Jika diketuk, HP Admin akan membuka aplikasi Google Maps ke titik jalan presisi dari mana HP Staf memencet layar tersebut.</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner" style="background: rgba(0,0,0,0.5); padding:0; justify-content:flex-end;">
+            <div class="glass" style="width: 100%; padding: 24px; background: #fdfdfd; border-bottom-left-radius:0; border-bottom-right-radius:0; min-height:60%;">
+              
+              <div style="background: rgba(0,122,255,0.05); border-radius: 20px; padding: 16px; border: 1px solid rgba(0,122,255,0.1);">
+                  <div style="font-size: 11px; font-weight: 800; color: var(--primary); text-transform: uppercase; margin-bottom: 8px;">🌐 Detail IP Address (2):</div>
+                  
+                  <div style="display:flex; justify-content:space-between; align-items:center; background: white; padding: 10px 14px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.06); margin-bottom:8px;">
+                      <span style="font-family: monospace; font-size: 13px; font-weight: 800;">103.111.222.33</span>
+                      <span style="background:rgba(52,199,89,0.1); color:var(--success); padding:4px 8px; border-radius:8px; font-size:10px; font-weight:800; border:1px solid rgba(52,199,89,0.2);">📍 Maps</span>
+                  </div>
+                  
+                  <div style="display:flex; justify-content:space-between; align-items:center; background: white; padding: 10px 14px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.06);">
+                      <span style="font-family: monospace; font-size: 13px; font-weight: 800; color:var(--danger);">192.168.1.1</span>
+                      <span style="background:rgba(255,59,48,0.05); color:var(--danger); padding:4px 8px; border-radius:8px; font-size:10px; font-weight:800; border:1px dashed rgba(255,59,48,0.2);">🚫 GPS Off</span>
+                  </div>
+              </div>
+
+              <div style="font-size: 13px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px; margin-top:24px;">📜 Riwayat Aktivitas Terakhir</div>
+              <div style="background: white; border: 1px solid rgba(0,0,0,0.05); border-radius: 20px; padding: 0 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.02);">
+                  <div style="display: flex; gap: 14px; border-bottom: 1px solid rgba(0,0,0,0.04); padding: 16px 0; border-left: 4px solid var(--danger); background: rgba(255,59,48,0.05); padding-left: 12px;">
+                      <div style="font-size: 11px; color: var(--text-muted); font-weight: 700; width: 55px; text-align:right;">14:35</div>
+                      <div style="flex:1;">
+                          <div style="font-size: 14px; font-weight: 800; color: var(--text-main); margin-bottom: 4px;">Sistem Keamanan</div>
+                          <div style="font-size: 11px; color: var(--danger); font-weight: 800; padding: 4px 8px; background: rgba(0,0,0,0.03); border-radius: 6px; display: inline-block;">WARNING</div>
+                          <div style="font-size: 11.5px; color: var(--text-main); margin-top:8px; line-height: 1.4;">Akun dikunci 15 menit karena brute-force</div>
+                      </div>
+                  </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2><span class="badge-admin">Admin Only</span> <br>🔐 System Log Keseluruhan</h2>
+          <p>Jika fitur Monitor adalah "Melihat Orang per Orang", maka ini adalah kotak Hitam (Black Box) Keseluruhan Perusahaan.</p>
+          <ul class="feature-list">
+            <li><b>Akurasi Log Menyeluruh:</b> Setiap klik "Simpan", setiap kali ada yang "Logout", atau pergantian TTD tercatat menjadi baris panjang di sini.</li>
+            <li><b>Filter Pencarian:</b> Admin cukup mengetik "Joko" pada *Search Bar*, maka seluruh gerak gerik Joko pada hari itu akan tampil rapi dan terekam di sistem *Cloud*.</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner">
+            <div class="dash-header">
+              <button class="btn-ios-nav"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+              <h2 style="margin:0; font-size: 20px; font-weight:800;">Log Aktivitas</h2>
+              <button class="btn-ios-nav" style="color:var(--primary); background:rgba(0,122,255,0.1); border-color:rgba(0,122,255,0.2);"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 2v6h-6"></path><path d="M3 12a9 9 0 0 1 15-6.7L21 8"></path><path d="M3 22v-6h6"></path><path d="M21 12a9 9 0 0 1-15 6.7L3 16"></path></svg></button>
+            </div>
+            
+            <div class="glass" style="padding: 24px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px;">
+                 <p style="font-size:12px; color:var(--text-muted); font-weight:600; margin:0;">Aktivitas Sistem.</p>
+                 <select class="custom-input" style="width:auto; padding:6px 12px; margin:0; font-size:12px;"><option>Terbaru</option></select>
+              </div>
+              <input type="text" class="custom-input" style="margin-bottom:20px; padding:12px;" placeholder="Cari Log (Username)...">
+              
+              <div style="display:flex; flex-direction:column;">
+                <div class="log-item">
+                  <div style="display:flex; flex-direction:column; gap:6px;">
+                    <div style="font-weight:800; font-size:15px; color:var(--primary);"><span style="margin-right:8px;">📦</span>Simpan Packing</div>
+                    <div style="font-size:12px; color:var(--text-muted); font-weight:600; display:flex; align-items:center; gap:6px;"><div style="width:20px; height:20px; border-radius:50%; background:#007AFF; color:white; display:flex; align-items:center; justify-content:center;">👦🏻</div> <span>Alfian_A (103.44.xx.xx)</span></div>
+                  </div>
+                  <div style="font-size: 11px; color: var(--text-muted); font-weight:600; text-align:right;">14:30<br>WIB</div>
+                </div>
+
+                <div class="log-item">
+                  <div style="display:flex; flex-direction:column; gap:6px;">
+                    <div style="font-weight:800; font-size:15px; color:var(--success);"><span style="margin-right:8px;">🔑</span>Login System</div>
+                    <div style="font-size:12px; color:var(--text-muted); font-weight:600; display:flex; align-items:center; gap:6px;"><div style="width:20px; height:20px; border-radius:50%; background:#007AFF; color:white; display:flex; align-items:center; justify-content:center;">👦🏻</div> <span>Alfian_A (103.44.xx.xx)</span></div>
+                  </div>
+                  <div style="font-size: 11px; color: var(--text-muted); font-weight:600; text-align:right;">08:00<br>WIB</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2><span class="badge-admin">Admin Only</span> <br>🚨 Deteksi Mata-mata Data</h2>
+          <p>Fitur rahasia (Jebakan Batman) yang berfungsi memantau penyalahgunaan kontak pelanggan.</p>
+          <ul class="feature-list">
+            <li>Seperti yang dijelaskan pada Modul History, nomor HP awalnya disamarkan (`****`).</li>
+            <li>Jika staf menekan **ikon mata (👁️)** dan melihat nomor pelanggan dengan mata kepalanya sendiri, sistem akan secara instan melempar log "WARNING" bergaris pinggir <b style="color:var(--danger);">Merah</b> ke layar ini.</li>
+            <li>Ini mempermudah staf *Quality Control/Audit* menciduk karyawan nakal yang mungkin "Mencuri data customer".</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner">
+            <div class="dash-header">
+              <button class="btn-ios-nav"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+              <h2 style="margin:0; font-size: 20px; font-weight:800;">Log Aktivitas</h2>
+              <div style="width:48px;"></div>
+            </div>
+            
+            <div class="glass" style="padding: 24px;">
+              <div style="display:flex; flex-direction:column;">
+                <div class="log-item" style="border-left: 4px solid var(--danger);">
+                  <div style="display:flex; flex-direction:column; gap:6px;">
+                    <div style="font-weight:800; font-size:15px; color:var(--danger);"><span style="margin-right:8px;">👁️</span>Melihat No. HP</div>
+                    <div style="font-size:12px; color:var(--text-muted); font-weight:600; display:flex; align-items:center; gap:6px;"><div style="width:20px; height:20px; border-radius:50%; background:#8E8E93; color:white; display:flex; align-items:center; justify-content:center;">👨‍💼</div> <span>joko_store (114.12...)</span></div>
+                  </div>
+                  <div style="font-size: 11px; color: var(--text-muted); font-weight:600; text-align:right;">14:35<br>WIB</div>
+                </div>
+              </div>
+            </div>
+
+            <div style="background: white; border-top-left-radius: 24px; border-top-right-radius: 24px; padding: 24px; box-shadow: 0 -10px 40px rgba(0,0,0,0.2); position:absolute; bottom:0; left:0; width:100%; border:1px solid rgba(0,0,0,0.1); z-index:100;">
+                <div style="font-size:12px; font-weight:800; color:var(--text-muted); text-transform:uppercase;">Status</div>
+                <div style="background:var(--danger); color:white; font-size:11px; font-weight:800; padding:4px 12px; border-radius:10px; display:inline-block; margin:6px 0 16px;">WARNING</div>
+                
+                <div style="font-size:12px; font-weight:800; color:var(--text-muted); margin-bottom:8px; text-transform:uppercase;">Detail Payload</div>
+                <div style="background:#1C1C1E; color:#34C759; padding:14px; border-radius:16px; font-family: monospace; font-size:12px; word-break:break-all; border: 1px solid rgba(255,255,255,0.1);">
+                    Membuka sensor data privasi (Klik logo 👁️) pada Dokumen Resi: INV-2026-999
+                </div>
+                <button class="btn-secondary" style="width:100%; border-radius:16px; font-weight:800; padding: 14px; margin-top:20px;">Tutup Detail</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2>💡 Pusat Bantuan & Edukasi Cepat</h2>
+          <p>Menu Pintas jika staf lapangan lupa Standard Operating Procedure (SOP).</p>
+          <ul class="feature-list">
+            <li><b>Akses:</b> Ketuk ikon lampu pijar (💡) di Dashboard.</li>
+            <li><b>SOP Aturan Main:</b> Menjabarkan dengan jelas bahwa memalsukan tanda tangan digital atau memanipulasi *cache* akan mendatangkan sanksi dari pihak Store.</li>
+            <li><b>Hubungi IT:</b> Terdapat tombol Hijau untuk langsung dilempar/Dialihkan ke chat WhatsApp Admin untuk menyelesaikan masalah jaringan HP.</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner" style="background: rgba(0,0,0,0.5); padding:0; justify-content:flex-end;">
+             <div class="glass" style="width: 92%; max-width: 440px; padding: 24px; margin:auto; max-height:85vh; overflow-y:auto; background:white;">
+                <div style="font-size:48px; margin-bottom:12px; text-align:center;">💡</div>
+                <h2 style="font-weight:800; margin-bottom: 8px; text-align:center; font-size:20px;">Pusat Bantuan</h2>
+                
+                <div style="background: rgba(255, 255, 255, 0.95); border-radius: 20px; padding: 20px; border: 1px solid rgba(0,0,0,0.04); box-shadow: 0 10px 30px rgba(0,0,0,0.04); margin-bottom:16px;">
+                    <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px dashed rgba(0,0,0,0.08);">
+                        <div style="width: 44px; height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; background: rgba(255, 149, 0, 0.1); color: var(--warning);">⚖️</div>
+                        <div style="font-weight: 800; font-size: 15px; color: var(--text-main);">SOP Integritas Kepatuhan</div>
+                    </div>
+                    <div style="background: rgba(255, 59, 48, 0.05); border: 1px solid rgba(255, 59, 48, 0.2); border-radius: 16px; padding: 16px;">
+                        <div style="font-weight:800; font-size:12px; color:var(--danger); margin-bottom:10px;">✕ PELANGGARAN KERAS</div>
+                        <ul style="font-size:12px; color:var(--text-main); line-height:1.5; padding-left:16px; margin:0;">
+                            <li style="margin-bottom:6px;"><b>Memalsukan TTD:</b> Dilarang keras mencoret TTD sendiri.</li>
+                            <li><b>Hapus Cache:</b> Dilarang melakukan <i>Clear History Browser</i> saat berstatus Offline karena data Draft akan hangus terbakar (Hilang).</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div style="display:flex; gap:12px; margin-top: 16px;">
+                    <button class="btn-primary" style="flex:1; background:#007AFF; font-size:12px; padding:14px; border-radius: 16px; margin:0;">📖 Unduh PDF</button>
+                    <button class="btn-primary" style="flex:1; background:#25D366; font-size:12px; padding:14px; border-radius: 16px; margin:0; box-shadow: 0 4px 10px rgba(37,211,102,0.3);">💬 Chat Admin</button>
+                </div>
+                <button class="btn-secondary" style="width:100%; margin-top:12px;">Tutup</button>
+             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-layout">
+        <div class="slide-text">
+          <h2>👋 Keluar Aplikasi (Logout)</h2>
+          <p>Demi menjaga keamanan, tutup sesi Anda saat operasional Store ditutup atau terjadi pergantian jam shift ke staf lain.</p>
+          <ul class="feature-list">
+            <li><b>Akses:</b> Ketuk tombol kotak merah di sudut kanan atas Dashboard.</li>
+            <li><b>Penghancuran Sesi Berantai:</b> Saat menekan Setuju, Sistem Google Apps Script akan menghapus secara permanen "Kunci Akses" tersebut dari Database Server.</li>
+            <li>Sistem <i>Memory HP</i> (Cache Browser) juga akan dilap (*wiped*) seketika. Meskipun orang tersebut memencet tombol "Back" berulang kali di HP-nya, akun Anda sudah terkunci rapat di gerbang Login.</li>
+          </ul>
+        </div>
+        <div class="phone-mockup">
+          <div class="notch"></div>
+          <div class="mockup-inner" style="background: rgba(0,0,0,0.5); padding:0; justify-content:center;">
+             <div class="glass" style="width: 92%; margin: auto; padding: 32px 24px; background: white; text-align:center;">
+                <div style="font-size: 48px; margin-bottom: 16px;">👋</div>
+                <h3 style="font-size: 22px; margin-bottom: 12px; font-weight:800;">Logout Sesi</h3>
+                <p style="font-size: 15px; color: var(--text-muted); margin-bottom: 24px;">Anda yakin ingin keluar dari aplikasi?</p>
+                
+                <div style="display: flex; gap: 12px; margin-top:20px;">
+                    <button class="btn-secondary" style="margin: 0; flex: 1;">Batal</button>
+                    <button class="btn-danger" style="margin: 0; flex: 1;">Ya, Logout</button>
+                </div>
+             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div style="text-align: center; max-width: 800px; margin: 0 auto;">
+        <div style="font-size: 80px; margin-bottom: 24px;">🎉</div>
+        <h1>Anda Telah Menyelesaikan Pelatihan!</h1>
+        <p style="font-size: 20px; margin-bottom: 40px; color:var(--text-muted);">Sekarang Anda siap mengoperasikan sistem *RePack* </p>
+        
+        <div class="glass" style="display:inline-block; padding: 20px 40px; text-align:center; border-bottom: 6px solid var(--success);">
+            <p style="font-size:16px; margin:0; font-weight:bold;">“Selamat Bertugas, Utamakan Ketelitian dan Keamanan Barang!” 📦</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="controls">
+    <button class="nav-btn" id="btn-prev" onclick="prevSlide()">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg> Mundur
+    </button>
+    
+    <div class="progress-container">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+    
+    <div class="slide-counter"><span id="current-page">1</span> / <span id="total-pages">66</span></div>
+    
+    <button class="nav-btn" id="btn-next" onclick="nextSlide()" style="margin-left: 40px;">
+      Lanjut <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
+    </button>
+  </div>
+
+  <script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+    
+    document.getElementById('total-pages').innerText = totalSlides;
+
+    function updatePresentation() {
+      slides.forEach((slide, index) => {
+        slide.classList.remove('active', 'previous');
+        if (index === currentSlide) {
+          slide.classList.add('active');
+        } else if (index < currentSlide) {
+          slide.classList.add('previous');
+        }
+      });
+
+      const progress = ((currentSlide + 1) / totalSlides) * 100;
+      document.getElementById('progress-bar').style.width = progress + '%';
+      document.getElementById('current-page').innerText = currentSlide + 1;
+
+      document.getElementById('btn-prev').disabled = currentSlide === 0;
+      if (currentSlide === totalSlides - 1) {
+          document.getElementById('btn-next').innerHTML = 'Selesai ✨';
+          document.getElementById('btn-next').disabled = true;
+      } else {
+          document.getElementById('btn-next').innerHTML = 'Lanjut <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>';
+          document.getElementById('btn-next').disabled = false;
+      }
+    }
+
+    function nextSlide() { if (currentSlide < totalSlides - 1) { currentSlide++; updatePresentation(); } }
+    function prevSlide() { if (currentSlide > 0) { currentSlide--; updatePresentation(); } }
+
+    // Mendukung Navigasi Keyboard (Spasi / Kanan / Kiri)
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') { nextSlide(); } 
+      else if (e.key === 'ArrowLeft') { prevSlide(); }
+    });
+
+    updatePresentation();
+  </script>
+</body>
+</html>
